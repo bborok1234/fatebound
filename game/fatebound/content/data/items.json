@@ -1,0 +1,3262 @@
+[
+  {
+    "item_id": "cheongjuk_dokbisu",
+    "name_ko": "청죽독비수",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "blade",
+      "hidden"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "청죽일자"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:청죽일자",
+        "target": "enemy",
+        "effect": "apply_poison",
+        "value": "1",
+        "duration": 3
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "apply_poison",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 14,
+    "stats": {
+      "hp": 0,
+      "atk": 2,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "푸른 대나무를 깎아 만든 가는 비수, 칼끝에 스민 독은 죽림의 안개처럼 소리 없이 스며든다.",
+    "build": "poison",
+    "balance_status": "over",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "doga_jeoldokchim",
+    "name_ko": "독아절독침",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "poison",
+      "hidden",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "amplify_poison_pct",
+        "value": "15",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "amplify_poison_pct",
+        "bonus_value": "10"
+      }
+    ],
+    "power_budget": 9.8,
+    "stats": {
+      "hp": 0,
+      "atk": 3,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "독니 모양으로 갈아낸 작은 부적, 곁에 둔 독기를 한층 더 사납게 끓어오르게 한다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "heungrin_gap",
+    "name_ko": "흑린갑",
+    "rarity": "common",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "poison",
+      "inner",
+      "counter"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "7",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "inner",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 9.6,
+    "stats": {
+      "hp": 40,
+      "atk": 0,
+      "def": 7,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "검은 비늘을 엮어 만든 경갑, 독을 다루는 자의 살갗을 제 독으로부터 지켜준다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "dokmu_sangong",
+    "name_ko": "독무산공",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "hidden",
+      "blade"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "독무산개"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:독무산개",
+        "target": "enemy",
+        "effect": "apply_weak",
+        "value": "0.2",
+        "duration": 2
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "apply_weak",
+        "bonus_value": "0.1"
+      }
+    ],
+    "power_budget": 13.5,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 0,
+      "spd": 1,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "흩뿌린 독무가 적의 기맥을 무르게 풀어, 휘두르는 칼날에 힘이 실리지 않게 한다.",
+    "build": "poison",
+    "balance_status": "over",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "hoesaeng_dan",
+    "name_ko": "회생단",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "potion",
+    "tags": [
+      "poison",
+      "inner",
+      "hidden"
+    ],
+    "dice_mod": [
+      {
+        "replace": "회복",
+        "with": "회생진기"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:회생진기",
+        "target": "self",
+        "effect": "heal",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "inner",
+        "bonus_effect": "heal",
+        "bonus_value": "0.1 * atk"
+      }
+    ],
+    "power_budget": 9,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "독초 사이에서 캐낸 영약을 빚은 단약, 독에 무뎌진 몸을 천천히 되살린다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "dokjeong_ju",
+    "name_ko": "독정주",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "poison",
+      "blade",
+      "crit"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "3",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "increase_crit",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 9,
+    "stats": {
+      "hp": 0,
+      "atk": 3,
+      "def": 0,
+      "spd": 0,
+      "crit": 5,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "응결된 독정을 박아넣은 부적, 독으로 무른 적의 급소를 더 또렷이 비춘다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "mandok_geom",
+    "name_ko": "만독검",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "sword",
+      "blade"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "만독참"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:만독참",
+        "target": "enemy",
+        "effect": "apply_poison",
+        "value": "1",
+        "duration": 3
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "apply_poison",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 18,
+    "stats": {
+      "hp": 0,
+      "atk": 6,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "만 가지 독을 머금은 장검, 베인 상처마다 검은 독혈이 멈추지 않고 번져나간다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "chilbo_talhonsan",
+    "name_ko": "칠보탈혼산",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "hidden",
+      "blade"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "칠보산독"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:칠보산독",
+        "target": "enemy",
+        "effect": "apply_poison",
+        "value": "1",
+        "duration": 3
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "amplify_poison_pct",
+        "value": "14",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "amplify_poison_pct",
+        "bonus_value": "8"
+      }
+    ],
+    "power_budget": 20.3,
+    "stats": {
+      "hp": 0,
+      "atk": 2,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "일곱 걸음 안에 혼을 앗는다는 산공독, 흩뿌리는 즉시 독기를 더욱 맹독으로 끓인다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "busik_rin_gap",
+    "name_ko": "부식린갑",
+    "rarity": "rare",
+    "size": [
+      2,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "poison",
+      "counter",
+      "inner"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "부식반탄"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:부식반탄",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "6",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "counter",
+        "bonus_effect": "counter",
+        "bonus_value": "0.1"
+      }
+    ],
+    "power_budget": 23.8,
+    "stats": {
+      "hp": 50,
+      "atk": 0,
+      "def": 6,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "독액에 절어 부식된 갑주, 적의 일격을 받아낼 때마다 독 묻은 비늘이 도리어 살을 갉는다.",
+    "build": "poison",
+    "balance_status": "over",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "cheondok_ji",
+    "name_ko": "천독지",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "poison",
+      "inner",
+      "hidden"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "amplify_poison_pct",
+        "value": "30",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "4",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "amplify_poison_pct",
+        "bonus_value": "12"
+      }
+    ],
+    "power_budget": 19.3,
+    "stats": {
+      "hp": 0,
+      "atk": 4,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 3
+    },
+    "flavor_ko": "하늘이 내린 독의 이치가 새겨진 옥지, 곁에 둔 모든 독을 천기와 함께 증폭한다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "danjang_chohonryeong",
+    "name_ko": "단장초혼령",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "blade",
+      "hidden"
+    ],
+    "dice_mod": [
+      {
+        "replace": "집중",
+        "with": "단장초혼"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:단장초혼",
+        "target": "enemy",
+        "effect": "apply_vulnerable",
+        "value": "0.25",
+        "duration": 2
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "apply_vulnerable",
+        "bonus_value": "0.1"
+      }
+    ],
+    "power_budget": 19,
+    "stats": {
+      "hp": 0,
+      "atk": 3,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "창자를 끊고 혼을 부른다는 극독, 독에 절은 적의 방벽을 허물어 모든 일격을 깊이 새기게 한다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "odok_bantangyeong",
+    "name_ko": "오독반탄경",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "poison",
+      "counter",
+      "inner"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "오독반탄"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:오독반탄",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "counter",
+        "bonus_value": "0.1"
+      }
+    ],
+    "power_budget": 19.4,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 3,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "다섯 가지 독을 머금은 호심경, 적의 손속이 닿는 순간 독기를 되쏘아 보낸다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "azure_bamboo_venom_dagger",
+    "name_ko": "청죽독비수",
+    "rarity": "epic",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "blade",
+      "hidden"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "청죽독자(靑竹毒刺)"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:청죽독자",
+        "target": "enemy",
+        "effect": "apply_poison",
+        "value": "1",
+        "duration": 3
+      },
+      {
+        "condition": "on_face:청죽독자",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "adjacency",
+        "target": "enemy",
+        "effect": "amplify_poison_pct",
+        "value": "15",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "amplify_poison_pct",
+        "bonus_value": "15"
+      }
+    ],
+    "power_budget": 40.0,
+    "stats": {
+      "hp": 0,
+      "atk": 9,
+      "def": 0,
+      "spd": 4,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 5
+    },
+    "flavor_ko": "푸른 대나무를 깎아 만든 가느다란 비수, 스친 자리마다 한 점 독기가 스며든다. 곁에 독이 흐를수록 그 독성은 더욱 짙어진다.",
+    "build": "poison",
+    "balance_status": "over",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "myriad_venom_gu",
+    "name_ko": "만독고",
+    "rarity": "epic",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "poison",
+      "hidden",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "amplify_poison_pct",
+        "value": "25",
+        "duration": 0
+      },
+      {
+        "condition": "every_3_turns",
+        "target": "enemy",
+        "effect": "apply_poison",
+        "value": "1",
+        "duration": 3
+      },
+      {
+        "condition": "adjacency",
+        "target": "self",
+        "effect": "amplify_poison_pct",
+        "value": "10",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "amplify_poison_pct",
+        "bonus_value": "10"
+      }
+    ],
+    "power_budget": 34.5,
+    "stats": {
+      "hp": 50,
+      "atk": 0,
+      "def": 6,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 8
+    },
+    "flavor_ko": "온갖 독충을 한 항아리에 가두어 마지막까지 살아남은 단 한 마리, 그 응축된 독기가 시술자의 모든 독을 끓어오르게 한다. 곁에 독진이 깔리면 고독은 한층 흉포해진다.",
+    "build": "poison",
+    "balance_status": "ok",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "heavenly_venom_blood_demon_sword",
+    "name_ko": "천독혈마검",
+    "rarity": "legendary",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "poison",
+      "blade",
+      "sword"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "천독혈무(天毒血舞)"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:천독혈무",
+        "target": "enemy",
+        "effect": "apply_poison",
+        "value": "1",
+        "duration": 3
+      },
+      {
+        "condition": "on_face:천독혈무",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "on_crit",
+        "target": "enemy",
+        "effect": "amplify_poison_pct",
+        "value": "20",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "-2",
+        "duration": 0
+      },
+      {
+        "condition": "adjacency",
+        "target": "enemy",
+        "effect": "amplify_poison_pct",
+        "value": "10",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "poison",
+        "bonus_effect": "amplify_poison_pct",
+        "bonus_value": "10"
+      }
+    ],
+    "power_budget": 65.4,
+    "stats": {
+      "hp": 0,
+      "atk": 15,
+      "def": 0,
+      "spd": 5,
+      "crit": 8,
+      "crit_dmg": 1.5,
+      "luk": 6
+    },
+    "flavor_ko": "혈마교 비전의 검, 칼날에 천 가지 독을 머금어 한 번 휘두를 때마다 적의 피가 검은 안개로 끓는다. 무거운 검신이 보법을 둔하게 하나, 치명의 일격이 독기를 폭주시킨다.",
+    "build": "poison",
+    "balance_status": "over",
+    "target_nominal": 55
+  },
+  {
+    "item_id": "throwing_blade_azure_phoenix",
+    "name_ko": "청봉비도",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "sword",
+      "crit"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "6",
+        "duration": 0
+      }
+    ],
+    "power_budget": 10.2,
+    "stats": {
+      "hp": 0,
+      "atk": 3,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "손끝을 떠난 비도가 봉황의 깃처럼 푸르게 번뜩인다. 급소를 노리는 자의 첫 무기.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "hawkeye_headband",
+    "name_ko": "응안두건",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "armor",
+    "tags": [
+      "crit"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "3",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit_dmg",
+        "value": "0.3",
+        "duration": 0
+      }
+    ],
+    "power_budget": 9.6,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "매의 눈을 두른 자는 적의 빈틈을 읽는다. 한 번의 적중이 곧 치명이 되리라.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "swift_wind_boots",
+    "name_ko": "쾌풍혜",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "armor",
+    "tags": [
+      "crit",
+      "agility"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "6",
+        "duration": 0
+      }
+    ],
+    "power_budget": 10.2,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "바람보다 먼저 내딛고, 적보다 먼저 벤다. 선수를 쥔 자만이 급소를 가른다.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "drawsword_manual",
+    "name_ko": "발검비급",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "sword",
+      "crit"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "발검"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:발검",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "3",
+        "duration": 0
+      }
+    ],
+    "power_budget": 9.6,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "칼집에서 빛이 솟구치기도 전에 승부는 끝난다. 발검의 한 수에 모든 것을 건다.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "blood_claw_gauntlet",
+    "name_ko": "혈조수투",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "crit",
+      "blade"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "3",
+        "duration": 0
+      }
+    ],
+    "power_budget": 6.6,
+    "adjacency": [
+      {
+        "direction": "east",
+        "required_tag": "sword",
+        "bonus_effect": "increase_crit",
+        "bonus_value": "5"
+      }
+    ],
+    "stats": {
+      "hp": 0,
+      "atk": 3,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "핏빛 손톱이 살을 헤집는다. 곁에 검을 든 벗이 있으면 그 발톱은 더욱 날카로워진다.",
+    "build": "crit",
+    "balance_status": "under",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "keen_focus_band",
+    "name_ko": "예심대",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "crit",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "6",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "-3",
+        "duration": 0
+      }
+    ],
+    "power_budget": 9.6,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "오로지 적의 급소만을 응시한다. 제 몸을 지키는 일조차 잊은 광기 어린 집중.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "swift_short_sword",
+    "name_ko": "쾌검단봉",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "sword",
+      "crit"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "쾌검"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:쾌검",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "8",
+        "duration": 0
+      }
+    ],
+    "power_budget": 15.6,
+    "adjacency": [
+      {
+        "direction": "west",
+        "required_tag": "sword",
+        "bonus_effect": "increase_crit_dmg",
+        "bonus_value": "0.2"
+      }
+    ],
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "쾌(快)는 곧 치명. 베는 것이 보이기 전에 적은 이미 갈라져 있다. 또 다른 검이 곁에 있으면 그 일격은 더욱 무겁다.",
+    "build": "crit",
+    "balance_status": "under",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "oncrit_pierce_ring",
+    "name_ko": "관혈지환",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "crit",
+      "sword"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "on_crit",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "0.5 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "8",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit_dmg",
+        "value": "0.2",
+        "duration": 0
+      }
+    ],
+    "power_budget": 16.6,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "급소를 꿰뚫은 검끝이 한 번 더 비틀린다. 치명이 또 다른 치명을 부른다.",
+    "build": "crit",
+    "balance_status": "under",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "tiger_fang_ring",
+    "name_ko": "호아지환",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "crit",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit_dmg",
+        "value": "0.5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "5",
+        "duration": 0
+      }
+    ],
+    "power_budget": 15,
+    "adjacency": [
+      {
+        "direction": "north",
+        "required_tag": "crit",
+        "bonus_effect": "increase_crit",
+        "bonus_value": "5"
+      }
+    ],
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "호랑이 어금니를 본뜬 반지. 한 번 물면 살을 찢어발긴다. 치명의 벗이 위에 있으면 그 송곳니는 더 깊이 박힌다.",
+    "build": "crit",
+    "balance_status": "under",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "finisher_killing_intent",
+    "name_ko": "필살살의",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "crit",
+      "sword"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "필살"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:필살",
+        "target": "enemy",
+        "effect": "apply_vulnerable",
+        "value": "25",
+        "duration": 2
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "power_budget": 18.4,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "살의를 담은 한 점이 적의 방어를 무너뜨린다. 갈라진 틈으로 치명의 일격이 쏟아진다.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "chain_link_sword",
+    "name_ko": "연환쾌검",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "sword",
+      "crit",
+      "agility"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "연환검"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:연환검",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "8",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "power_budget": 18.6,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "검로(劍路)가 사슬처럼 이어진다. 먼저 움직여 끊임없이 급소를 노리는 연환의 검.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "demon_heart_blade",
+    "name_ko": "혈심마검",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "crit",
+      "sword",
+      "blade"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "8",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit_dmg",
+        "value": "0.5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "3",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "-5",
+        "duration": 0
+      }
+    ],
+    "power_budget": 18.6,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "마기를 머금은 검은 주인의 살을 베어서라도 적을 죽인다. 방어를 버린 자만이 쥘 수 있는 한 자루.",
+    "build": "crit",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "danhon_seomgeom",
+    "name_ko": "단혼섬검",
+    "rarity": "epic",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "sword",
+      "crit"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "단혼섬"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_crit",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 34.8,
+    "stats": {
+      "hp": 0,
+      "atk": 9,
+      "def": 0,
+      "spd": 2,
+      "crit": 8,
+      "crit_dmg": 1.8,
+      "luk": 2
+    },
+    "flavor_ko": "혼을 끊는 한 줄기 섬광, 치명의 순간에 검이 스스로 운다. 적의 급소를 찾아낸 칼날은 한 번 더 파고든다.",
+    "build": "crit",
+    "adjacency": [],
+    "balance_status": "ok",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "hoegwang_geomgap",
+    "name_ko": "회광검갑",
+    "rarity": "epic",
+    "size": [
+      2,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "sword",
+      "crit",
+      "counter"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "6",
+        "duration": 0
+      }
+    ],
+    "power_budget": 39.4,
+    "stats": {
+      "hp": 70,
+      "atk": 2,
+      "def": 12,
+      "spd": 0,
+      "crit": 6,
+      "crit_dmg": 1.7,
+      "luk": 4
+    },
+    "flavor_ko": "빛을 되돌리는 갑주는 검수의 호흡을 지킨다. 곁에 검이 있으면 그 예기를 빌려 급소를 노린다.",
+    "build": "crit",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "sword",
+        "bonus_effect": "increase_crit",
+        "bonus_value": "6"
+      }
+    ],
+    "balance_status": "over",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "cheongeom_hyeollak",
+    "name_ko": "천검혈락",
+    "rarity": "legendary",
+    "size": [
+      1,
+      3
+    ],
+    "type": "weapon",
+    "tags": [
+      "sword",
+      "crit"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "천검혈락참"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_crit",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.2 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 51.6,
+    "stats": {
+      "hp": 0,
+      "atk": 14,
+      "def": 0,
+      "spd": 4,
+      "crit": 10,
+      "crit_dmg": 2,
+      "luk": 4
+    },
+    "flavor_ko": "하늘의 검이 혈락을 가르니, 치명의 일격마다 핏빛 검흔이 겹쳐 떨어진다. 검수 곁에 검을 두면 천명괘가 더 깊은 급소를 일러준다.",
+    "build": "crit",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "sword",
+        "bonus_effect": "increase_crit_dmg",
+        "bonus_value": "0.4"
+      }
+    ],
+    "balance_status": "ok",
+    "target_nominal": 55
+  },
+  {
+    "item_id": "iron_palm_gauntlet",
+    "name_ko": "반탄소수투",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "armor",
+    "tags": [
+      "fist",
+      "counter",
+      "guard"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "below_30_hp",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 10.4,
+    "stats": {
+      "hp": 10,
+      "atk": 0,
+      "def": 3,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "거친 수투에 적의 힘을 되돌리는 반탄지력을 새겼다. 궁지에 몰릴수록 손바닥은 더 매섭게 받아친다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "protective_qi_shell",
+    "name_ko": "호신강기",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "inner",
+      "guard"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "호신강기"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:호신강기",
+        "target": "self",
+        "effect": "gain_shield",
+        "value": "0.5 * atk",
+        "duration": 1
+      }
+    ],
+    "power_budget": 9.8,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 1,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "내공을 끌어올려 몸 둘레에 한 겹의 기막을 두른다. 짧은 한 호흡이면 칼날도 비껴간다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "blue_steel_pauldron",
+    "name_ko": "청강견갑",
+    "rarity": "common",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "guard",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "8",
+        "duration": 0
+      }
+    ],
+    "power_budget": 9.4,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 8,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "한천비곡의 푸른 강철을 두드려 만든 어깨 보호구. 무겁지만 어지간한 도검은 튕겨낸다.",
+    "build": "guard",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "guard",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "2"
+      }
+    ],
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "minor_recovery_pill",
+    "name_ko": "소회단",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "potion",
+    "tags": [
+      "inner",
+      "guard"
+    ],
+    "dice_mod": [
+      {
+        "replace": "회복",
+        "with": "소회단"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:소회단",
+        "target": "self",
+        "effect": "heal",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 9,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "약왕곡의 흔한 환약이나 버티는 싸움엔 제격이다. 곁에 든든한 동료가 있으면 더 마음이 놓인다.",
+    "build": "guard",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "guard",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "2"
+      }
+    ],
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "dulling_strike_axe",
+    "name_ko": "둔공부",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "fist",
+      "guard",
+      "counter"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "둔공일격"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:둔공일격",
+        "target": "enemy",
+        "effect": "apply_weak",
+        "value": "0.2",
+        "duration": 2
+      }
+    ],
+    "power_budget": 9.3,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 1,
+      "spd": -1,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "무겁고 둔한 한 수로 적의 기세를 꺾는다. 휘두르는 자도 느려지나 맞은 자의 힘은 더 빠진다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "bedrock_heart_method",
+    "name_ko": "반석심결",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "inner",
+      "guard"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "7",
+        "duration": 0
+      }
+    ],
+    "power_budget": 9.6,
+    "stats": {
+      "hp": 40,
+      "atk": 0,
+      "def": 7,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "마음을 반석처럼 가라앉히는 입문 심결. 흔들리지 않는 자세가 곧 가장 단단한 갑옷이다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "rebound_heart_mirror",
+    "name_ko": "반탄호심경",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "counter",
+      "inner",
+      "guard"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 19.8,
+    "stats": {
+      "hp": 10,
+      "atk": 0,
+      "def": 6,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "가슴을 지키는 호심경에 반탄의 묘리를 깃들였다. 때리는 자가 도리어 제 힘에 다친다.",
+    "build": "guard",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "counter",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "3"
+      }
+    ],
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "four_ounce_thousand_catty",
+    "name_ko": "사량발천근",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "counter",
+      "fist",
+      "guard"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "사량발천근"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:사량발천근",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 15,
+    "stats": {
+      "hp": 10,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "네 냥의 힘으로 천 근을 받아넘기는 절묘한 화경의 수. 곁의 반격 초식과 어우러질 때 방패가 곧 칼이 된다.",
+    "build": "guard",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "counter",
+        "bonus_effect": "gain_shield",
+        "bonus_value": "0.5 * atk"
+      }
+    ],
+    "balance_status": "under",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "armor_breaking_hand",
+    "name_ko": "파갑수",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "fist",
+      "guard",
+      "counter"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "파갑수"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:파갑수",
+        "target": "enemy",
+        "effect": "apply_vulnerable",
+        "value": "0.25",
+        "duration": 2
+      }
+    ],
+    "power_budget": 20,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 5,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "단단한 외문을 깨뜨려 빈틈을 벌리는 강맹한 장법. 버티며 한 대를 먹인 뒤 동료의 일격을 부른다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "immovable_king_body",
+    "name_ko": "부동명왕신",
+    "rarity": "rare",
+    "size": [
+      2,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "inner",
+      "guard"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "14",
+        "duration": 0
+      },
+      {
+        "condition": "every_3_turns",
+        "target": "self",
+        "effect": "heal",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 19.7,
+    "stats": {
+      "hp": 50,
+      "atk": 0,
+      "def": 14,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "나한사의 호신 절학을 익힌 자는 명왕처럼 흔들림이 없다. 세 호흡마다 상한 기혈이 절로 다스려진다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "soul_shattering_strike",
+    "name_ko": "쇄혼격",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "fist",
+      "guard",
+      "counter"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "쇄혼격"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:쇄혼격",
+        "target": "enemy",
+        "effect": "apply_stun",
+        "value": "0.3",
+        "duration": 1
+      }
+    ],
+    "power_budget": 20.2,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 4,
+      "spd": -2,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "혼을 부수는 묵직한 일권. 발이 느려지는 대가로 적의 다음 한 수를 통째로 멎게 한다.",
+    "build": "guard",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "heaven_returning_counter",
+    "name_ko": "회천반격수",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "artifact",
+    "tags": [
+      "counter",
+      "inner",
+      "guard"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "below_30_hp",
+        "target": "self",
+        "effect": "heal",
+        "value": "0.3 * atk",
+        "duration": 0
+      }
+    ],
+    "power_budget": 19.9,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 3,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "하늘을 돌이키듯 적의 살초를 되갚는 반격의 묘결. 빈사에 몰릴수록 끌어올린 진기가 상처를 메운다.",
+    "build": "guard",
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "counter",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "2"
+      }
+    ],
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "mirror_reverse_heart_guard",
+    "name_ko": "반탄호심경",
+    "rarity": "epic",
+    "size": [
+      1,
+      1
+    ],
+    "type": "armor",
+    "tags": [
+      "counter",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "counter",
+        "value": "0.3",
+        "duration": 0
+      },
+      {
+        "condition": "below_50_hp",
+        "target": "self",
+        "effect": "heal",
+        "value": "0.3 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "16",
+        "duration": 0
+      }
+    ],
+    "power_budget": 31.3,
+    "adjacency": [
+      {
+        "direction": "west",
+        "required_tag": "counter",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "5"
+      }
+    ],
+    "stats": {
+      "hp": 40,
+      "atk": 0,
+      "def": 16,
+      "spd": -2,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "전대 고수의 호심강기가 어린 청동 거울. 적의 살초가 거울 면에 부딪쳐 고스란히 되돌아간다. 다만 그 무게가 발끝을 무겁게 한다.",
+    "build": "guard",
+    "balance_status": "under",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "armor_guardian_qi_plate",
+    "name_ko": "호신강기갑",
+    "rarity": "epic",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "inner",
+      "counter"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "호신강기"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:호신강기",
+        "target": "self",
+        "effect": "gain_shield",
+        "value": "0.5 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "on_face:호신강기",
+        "target": "self",
+        "effect": "counter",
+        "value": "0.3",
+        "duration": 1
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "6",
+        "duration": 0
+      }
+    ],
+    "power_budget": 29.8,
+    "adjacency": [
+      {
+        "direction": "south",
+        "required_tag": "fist",
+        "bonus_effect": "increase_attack",
+        "bonus_value": "5"
+      }
+    ],
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 6,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "내공을 끌어올려 온몸에 강기의 막을 두른다. 막이 펼쳐진 한 합 동안은 적의 칼끝이 닿는 족족 되받아친다.",
+    "build": "guard",
+    "balance_status": "under",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "fist_avalanche_counter",
+    "name_ko": "반탄붕산권",
+    "rarity": "epic",
+    "size": [
+      1,
+      1
+    ],
+    "type": "weapon",
+    "tags": [
+      "fist",
+      "counter"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "붕산권"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:붕산권",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "on_face:붕산권",
+        "target": "self",
+        "effect": "counter",
+        "value": "0.3",
+        "duration": 1
+      }
+    ],
+    "power_budget": 30.8,
+    "adjacency": [
+      {
+        "direction": "west",
+        "required_tag": "inner",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "5"
+      }
+    ],
+    "stats": {
+      "hp": 0,
+      "atk": 6,
+      "def": 6,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "flavor_ko": "산을 무너뜨리는 권격. 막아낸 힘을 그대로 실어 되치니, 받아낼수록 주먹이 무거워진다.",
+    "build": "guard",
+    "balance_status": "under",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "cheongi_soban",
+    "name_ko": "천기소반",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "fate",
+      "inner",
+      "luck"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "1",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "fate",
+        "bonus_effect": "increase_luck",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 9.5,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 2,
+      "spd": 1,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 5
+    },
+    "flavor_ko": "천명반의 파편 하나가 손바닥 위에서 가만히 돈다. 운명의 결을 읽는 자, 한 수 앞을 본다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "bobeop_chohye",
+    "name_ko": "보법초혜",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "armor",
+    "tags": [
+      "agility",
+      "fate",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "3",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_luck",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "agility",
+        "bonus_effect": "increase_speed",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 9.6,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 0,
+      "spd": 3,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 2
+    },
+    "flavor_ko": "삼류 죽림에서 익힌 첫 보법용 신. 밑창이 닳도록 구르면 발끝이 먼저 운명을 안다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "so_cheonmyeong_pae",
+    "name_ko": "소천명패",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "fate",
+      "inner"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "천명복기"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:특수",
+        "target": "self",
+        "effect": "reroll_token",
+        "value": "1",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "fate",
+        "bonus_effect": "reroll_token",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 16,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 0
+    },
+    "flavor_ko": "괘가 어그러지면 다시 던지라. 작은 패 하나가 천명의 한 글자를 고쳐 쓴다.",
+    "build": "dice",
+    "balance_status": "over",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "unryong_gyeonggong",
+    "name_ko": "운룡경공",
+    "rarity": "common",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "agility",
+      "inner",
+      "fate"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "3",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_luck",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "inner",
+        "bonus_effect": "increase_defense",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 10.1,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 3,
+      "spd": 2,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 2
+    },
+    "flavor_ko": "구름을 밟고 용처럼 휘도는 신법. 적의 검이 닿기도 전에 몸은 이미 다른 괘 위에 있다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "hosim_sogyeong",
+    "name_ko": "호심소경",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "armor",
+    "tags": [
+      "inner",
+      "fate"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "호심반탄"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:방어",
+        "target": "self",
+        "effect": "gain_shield",
+        "value": "0.5 * atk",
+        "duration": 1
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "inner",
+        "bonus_effect": "gain_shield",
+        "bonus_value": "0.2 * atk"
+      }
+    ],
+    "power_budget": 12.2,
+    "stats": {
+      "hp": 10,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 0
+    },
+    "flavor_ko": "심장을 지키는 작은 호심경. 방어의 괘가 떠오르면 얇은 기막이 가슴을 감싼다.",
+    "build": "dice",
+    "balance_status": "over",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "cheongnang_haengun_bu",
+    "name_ko": "청낭행운부",
+    "rarity": "common",
+    "size": [
+      1,
+      1
+    ],
+    "type": "rune",
+    "tags": [
+      "fate",
+      "luck",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_luck",
+        "value": "6",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "3",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "fate",
+        "bonus_effect": "increase_luck",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 9.9,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 3,
+      "crit_dmg": 0,
+      "luk": 6
+    },
+    "flavor_ko": "약왕곡 청낭에서 흘러나온 행운부. 품에 지니면 주사위의 눈이 슬그머니 제 편을 든다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 10
+  },
+  {
+    "item_id": "geongon_jaejo_ban",
+    "name_ko": "건곤재조반",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "artifact",
+    "tags": [
+      "fate",
+      "inner",
+      "luck"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "건곤재조"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:특수",
+        "target": "self",
+        "effect": "reroll_token",
+        "value": "1",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_luck",
+        "value": "5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "fate",
+        "bonus_effect": "increase_luck",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 18.7,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 0,
+      "spd": 2,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 5
+    },
+    "flavor_ko": "하늘과 땅을 다시 짜는 천명반의 정수. 어그러진 괘를 갈아엎고 한 번 더 운명을 묻는다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "cheongi_dungap",
+    "name_ko": "천기둔갑",
+    "rarity": "rare",
+    "size": [
+      2,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "fate",
+      "inner",
+      "agility"
+    ],
+    "dice_mod": [
+      {
+        "replace": "집중",
+        "with": "천기고정"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:집중",
+        "target": "self",
+        "effect": "lock_face",
+        "value": "1",
+        "duration": 1
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "inner",
+        "bonus_effect": "lock_face",
+        "bonus_value": "1"
+      }
+    ],
+    "power_budget": 25.8,
+    "stats": {
+      "hp": 20,
+      "atk": 0,
+      "def": 2,
+      "spd": 2,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 0
+    },
+    "flavor_ko": "기운을 모아 천기를 한 자리에 못박는 둔갑술. 떠오른 괘를 다음 패까지 붙들어 둔다.",
+    "build": "dice",
+    "balance_status": "over",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "pungnoe_bobeop",
+    "name_ko": "풍뢰보법",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "agility",
+      "fate",
+      "inner"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "6",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_luck",
+        "value": "5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "agility",
+        "bonus_effect": "increase_speed",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 19.2,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 0,
+      "spd": 6,
+      "crit": 2,
+      "crit_dmg": 0,
+      "luk": 5
+    },
+    "flavor_ko": "바람보다 빠르고 우레보다 먼저 닿는 절정의 신법. 한천비곡의 칼바람 속에서 완성되었다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "bantan_cheonmyeong_gyeong",
+    "name_ko": "반탄천명경",
+    "rarity": "rare",
+    "size": [
+      2,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "inner",
+      "counter",
+      "fate"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "천명반탄"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:방어",
+        "target": "enemy",
+        "effect": "counter",
+        "value": "0.3 * atk",
+        "duration": 1
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "2",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "1",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "counter",
+        "bonus_effect": "counter",
+        "bonus_value": "0.1 * atk"
+      }
+    ],
+    "power_budget": 22.9,
+    "stats": {
+      "hp": 30,
+      "atk": 0,
+      "def": 2,
+      "spd": 1,
+      "crit": 0,
+      "crit_dmg": 0,
+      "luk": 0
+    },
+    "flavor_ko": "적의 살수를 거울처럼 천명에 비추어 되돌려보낸다. 방어의 괘가 곧 반격의 괘가 된다.",
+    "build": "dice",
+    "balance_status": "over",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "cheonun_boju",
+    "name_ko": "천운보주",
+    "rarity": "rare",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "fate",
+      "luck",
+      "crit"
+    ],
+    "dice_mod": [],
+    "effects": [
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_luck",
+        "value": "9",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "7",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit_dmg",
+        "value": "0.2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "fate",
+        "bonus_effect": "increase_luck",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 18.5,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 0,
+      "crit": 7,
+      "crit_dmg": 0.2,
+      "luk": 9
+    },
+    "flavor_ko": "만보상단이 값을 매기지 못한 천운의 구슬. 쥔 자의 모든 괘에 행운의 무게가 실린다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "cheongeop_seom",
+    "name_ko": "천겁섬",
+    "rarity": "rare",
+    "size": [
+      1,
+      2
+    ],
+    "type": "weapon",
+    "tags": [
+      "sword",
+      "crit",
+      "fate"
+    ],
+    "dice_mod": [
+      {
+        "replace": "검격",
+        "with": "천겁일섬"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:검격",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.4 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "5",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      }
+    ],
+    "adjacency": [
+      {
+        "direction": "any",
+        "required_tag": "crit",
+        "bonus_effect": "increase_crit",
+        "bonus_value": "2"
+      }
+    ],
+    "power_budget": 19.8,
+    "stats": {
+      "hp": 10,
+      "atk": 0,
+      "def": 0,
+      "spd": 2,
+      "crit": 5,
+      "crit_dmg": 0,
+      "luk": 0
+    },
+    "flavor_ko": "천명의 결을 읽어 단 한 줄기 검광으로 겁(劫)을 가른다. 검격의 괘가 떠오르는 순간 승부는 끝난다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 20
+  },
+  {
+    "item_id": "artifact_heaven_compass_seal",
+    "name_ko": "천기건곤령",
+    "rarity": "epic",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "fate",
+      "inner",
+      "agility"
+    ],
+    "dice_mod": [
+      {
+        "replace": "집중",
+        "with": "건곤전도"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:건곤전도",
+        "target": "self",
+        "effect": "lock_face",
+        "value": "12",
+        "duration": 1
+      },
+      {
+        "condition": "on_face:건곤전도",
+        "target": "self",
+        "effect": "reroll_token",
+        "value": "1",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "1",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "0",
+        "duration": 0
+      }
+    ],
+    "power_budget": 35.5,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 1,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 10
+    },
+    "adjacency": [
+      {
+        "direction": "east",
+        "required_tag": "fate",
+        "bonus_effect": "reroll_token",
+        "bonus_value": "1"
+      }
+    ],
+    "flavor_ko": "천기노조가 단전에 새긴 구궁의 축. 한 손으로 하늘과 땅을 뒤집어, 빈 괘를 메우고 천명을 다시 뽑는다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "armor_returning_heaven_robe",
+    "name_ko": "회천묘리갑",
+    "rarity": "epic",
+    "size": [
+      1,
+      2
+    ],
+    "type": "armor",
+    "tags": [
+      "fate",
+      "inner"
+    ],
+    "dice_mod": [
+      {
+        "replace": "방어",
+        "with": "회천세"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:회천세",
+        "target": "self",
+        "effect": "gain_shield",
+        "value": "0.5 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "on_face:회천세",
+        "target": "self",
+        "effect": "reroll_token",
+        "value": "1",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_defense",
+        "value": "10",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "2",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "-5",
+        "duration": 0
+      }
+    ],
+    "power_budget": 27.9,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 10,
+      "spd": 2,
+      "crit": 0,
+      "crit_dmg": 1.5,
+      "luk": 0
+    },
+    "adjacency": [
+      {
+        "direction": "south",
+        "required_tag": "inner",
+        "bonus_effect": "gain_shield",
+        "bonus_value": "0.5 * atk"
+      }
+    ],
+    "flavor_ko": "두꺼운 내공으로 짠 호심갑. 막아낸 기운을 되돌려 천명을 다시 굴리나, 무거운 진기가 운(運)의 흐름을 무디게 한다.",
+    "build": "dice",
+    "balance_status": "under",
+    "target_nominal": 35
+  },
+  {
+    "item_id": "artifact_defying_heaven_blade_charm",
+    "name_ko": "역천참부",
+    "rarity": "epic",
+    "size": [
+      1,
+      1
+    ],
+    "type": "artifact",
+    "tags": [
+      "fate",
+      "agility",
+      "inner"
+    ],
+    "dice_mod": [
+      {
+        "replace": "특수",
+        "with": "역천참"
+      }
+    ],
+    "effects": [
+      {
+        "condition": "on_face:역천참",
+        "target": "enemy",
+        "effect": "deal_damage",
+        "value": "1.0 * atk",
+        "duration": 0
+      },
+      {
+        "condition": "on_face:역천참",
+        "target": "self",
+        "effect": "reroll_token",
+        "value": "1",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_speed",
+        "value": "4",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_crit",
+        "value": "3",
+        "duration": 0
+      },
+      {
+        "condition": "passive",
+        "target": "self",
+        "effect": "increase_attack",
+        "value": "0",
+        "duration": 0
+      }
+    ],
+    "power_budget": 31.9,
+    "stats": {
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "spd": 4,
+      "crit": 3,
+      "crit_dmg": 1.5,
+      "luk": 6
+    },
+    "adjacency": [
+      {
+        "direction": "west",
+        "required_tag": "agility",
+        "bonus_effect": "increase_speed",
+        "bonus_value": "3"
+      }
+    ],
+    "flavor_ko": "하늘이 정한 패를 거스르는 부적. 한 합을 베어내며 어긋난 천명을 다시 뽑아, 정해진 운명을 비틀어 버린다.",
+    "build": "dice",
+    "balance_status": "ok",
+    "target_nominal": 35
+  }
+]

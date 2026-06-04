@@ -1,0 +1,28 @@
+/* 천명회귀 · Fatebound — 수묵(ink-wash) 무협 테마 (17 §2.1) */
+Screen { background: #1a1a1f; color: #e8e2d4; }
+
+/* ── 메인 게임 화면 레이아웃 (17 §3.3) ── */
+#topbar { dock: top; height: 1; background: #26262e; color: #c8a24a; padding: 0 1; }
+#actionbar { dock: bottom; height: 1; background: #26262e; color: #9a958a; padding: 0 1; }
+
+#main { height: 1fr; }
+#gugung-pane { width: 32; border: round #444; padding: 0 1; }
+#log-pane { width: 1fr; border: round #444; padding: 0 1; }
+#status-pane { width: 30; border: round #555; padding: 0 1; }
+
+/* ── 구궁 위젯 ── */
+GugungWidget { height: auto; }
+.cell { width: 9; height: 3; content-align: center middle; text-align: center; border: round #3a3a42; }
+.cell.syn { border: round #5aa67c; }
+.cell.cursor { border: heavy #c8a24a; background: #2a2a33; }
+.cell.empty { color: #444; }
+
+/* ── 상태 패널 ── */
+#hpbar { color: #c2453a; }
+#qibar { color: #4a90a4; }
+.label { color: #9a958a; }
+
+/* ── 타이틀 ── */
+#title-art { content-align: center middle; height: 1fr; color: #c8a24a; }
+#title-menu { align: center middle; height: auto; }
+#title-menu Button { width: 24; margin: 0 0 1 0; }

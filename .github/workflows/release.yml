@@ -1,0 +1,116 @@
+name: Release
+
+# 태그(vX.Y.Z) 푸시 시 — 3-OS 스탠드얼론 바이너리 + 휠/sdist 빌드 → GitHub Release 첨부.
+# (선택) PyPI Trusted Publishing 은 저장소 변수 PUBLISH_PYPI=true 일 때만.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ── 스탠드얼론 바이너리 (Python 불필요, 다운로드 후 실행) ──
+  binaries:
+    name: binary · ${{ matrix.asset }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset: fatebound-linux-x86_64
+            bin: dist/fatebound
+          - os: macos-latest
+            asset: fatebound-macos-arm64
+            bin: dist/fatebound
+          - os: windows-latest
+            asset: fatebound-windows-x86_64.exe
+            bin: dist/fatebound.exe
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+          enable-cache: true
+          working-directory: game
+      - run: uv sync --locked --dev
+      - name: Build standalone binary (PyInstaller --onefile)
+        run: uv run pyinstaller --onefile --name fatebound --collect-all textual --collect-data fatebound --noconfirm _entry.py
+      - name: Smoke (frozen --selftest)
+        shell: bash
+        run: ./${{ matrix.bin }} --selftest
+      - name: Rename asset
+        shell: bash
+        run: cp "${{ matrix.bin }}" "${{ matrix.asset }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: game/${{ matrix.asset }}
+
+  # ── 휠 + sdist ──
+  wheels:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with: { version: "latest", enable-cache: true, working-directory: game }
+      - run: uv build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-wheels
+          path: game/dist/*
+
+  # ── GitHub Release 에 바이너리·휠 첨부 ──
+  release:
+    needs: [binaries, wheels]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Collect assets
+        run: |
+          mkdir -p release
+          find artifacts -type f \( -name 'fatebound-*' -o -name '*.whl' -o -name '*.tar.gz' \) -exec cp {} release/ \;
+          ls -la release
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+          generate_release_notes: true
+          body: |
+            ## 천명회귀 · Fatebound ${{ github.ref_name }}
+
+            **바이너리(파이썬 불필요)** — OS에 맞는 파일을 받아 실행:
+            - Linux: `fatebound-linux-x86_64`
+            - macOS(Apple Silicon): `fatebound-macos-arm64`
+            - Windows: `fatebound-windows-x86_64.exe`
+
+            **파이썬 사용자** — `uvx fatebound` 또는 `uv tool install fatebound` / `pipx install fatebound`.
+
+  # ── (선택) PyPI Trusted Publishing — 저장소 변수 PUBLISH_PYPI=true 에서만 ──
+  publish-pypi:
+    needs: wheels
+    if: ${{ vars.PUBLISH_PYPI == 'true' }}
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write   # OIDC — 토큰 없는 신뢰 게시(PyPI Trusted Publisher 사전 설정 필요)
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with: { version: "latest", working-directory: game }
+      - run: uv build
+      - run: uv publish

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 토론 / 질문
+    url: https://github.com/bborok1234/fatebound/discussions
+    about: 콘텐츠·밸런스 방향 제안, 사용법 질문, 일반 토론은 여기서.
+  - name: 🔒 보안 취약점
+    url: https://github.com/bborok1234/fatebound/security/policy
+    about: 보안 이슈는 공개 이슈가 아니라 보안 정책 절차로 신고해 주세요.

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test ${{ matrix.os }} · py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.11", "3.12", "3.13"]
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv  # v8도 가능 — 최신 태그 확인 후 bump
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+          enable-cache: true
+          working-directory: game
+          python-version: ${{ matrix.python }}
+
+      - name: Install (locked)
+        run: uv sync --locked --dev
+
+      - name: Import sanity
+        run: uv run python -c "import fatebound; print('import', fatebound.__version__)"
+
+      - name: Unit tests (결정론·수식안전·C1 가드)
+        run: uv run pytest -q
+
+      - name: Selftest (데이터 번들·엔진 — frozen 경로와 동일)
+        run: uv run python _entry.py --selftest

@@ -1,0 +1,60 @@
+name: 🐛 버그 리포트
+description: 게임이 의도대로 동작하지 않을 때
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그를 신고해 주셔서 고맙습니다. 재현 가능한 정보를 주실수록 빨리 고칠 수 있어요.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 무슨 일이 일어났나요?
+      description: 기대한 동작과 실제 동작을 적어 주세요.
+      placeholder: "전투 중 비장의 수가 발동하지 않고..."
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 재현 절차
+      description: 단계별로 적어 주세요. 가능하면 사용한 무공 기틀/구궁 배치도요.
+      placeholder: |
+        1. 주사위 빌드로 새 게임
+        2. 죽림 보스전 진입
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 버전
+      description: "`fatebound --version` 출력"
+      placeholder: "fatebound 0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: 설치 방법
+      options:
+        - uvx / uv tool
+        - pipx
+        - 스탠드얼론 바이너리
+        - 소스에서 빌드
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 환경
+      description: OS · 터미널 · Python(해당 시)
+      placeholder: "macOS 15 · iTerm2 · Python 3.13"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 로그 / 스크린샷
+      description: 오류 메시지나 화면 캡처가 있으면 붙여 주세요.

@@ -1,0 +1,1382 @@
+[
+  {
+    "event_id": "bamboo_maimed_warhound",
+    "zone": "bamboo_grove",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "다리 잘린 사냥개",
+    "text_ko": "댓잎이 바람에 쓸리는 길목, 덫에 뒷다리가 으스러진 들개 한 마리가 이빨을 드러낸 채 떨고 있다. 목엔 산적패의 낡은 줄이 묶여 있다 — 한때 누군가의 사냥개였던 모양이다. \"…주인에게 버림받았군.\" 회귀자가 나직이 중얼거린다.",
+    "choices": [
+      {
+        "label_ko": "상처를 싸매 풀어준다",
+        "require": "",
+        "effects": {
+          "gold": -15,
+          "shards": 0,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "천을 찢어 다리를 동여매자 들개가 손등을 핥는다. 절뚝이며 대숲으로 사라지기 전, 한 번 돌아본다. 강호의 무정함 속, 작은 온기 하나.",
+        "branch": ""
+      },
+      {
+        "label_ko": "고통을 끊어준 뒤 가죽과 송곳니를 취한다",
+        "require": "",
+        "effects": {
+          "gold": 35,
+          "shards": 6,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "단숨에 숨통을 끊는다. 살자(殺者)의 자비라 자위하나, 가죽을 벗기는 손끝이 익숙해 씁쓸하다. 송곳니는 제법 값이 나간다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "독을 풀어 편히 보낸다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 0,
+          "shards": 8,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "독에 밝은 그대, 고통 없이 잠들게 하는 산독(散毒) 한 방울을 떨군다. 들개는 꿈결처럼 눈을 감는다. 남은 약초를 갈무리하니 파편이 손에 남는다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "bamboo_cutter_shakedown",
+    "zone": "bamboo_grove",
+    "weight": 4,
+    "once_per_run": true,
+    "title_ko": "댓짐을 빼앗기는 노인",
+    "text_ko": "대를 베어 지고 가던 늙은 죽공(竹工)을 산적 둘이 둘러싸고 통행세를 뜯고 있다. \"이 길은 흑풍당 나리들 땅이야!\" 노인은 마른 손으로 댓짐을 끌어안을 뿐이다. 멀찍이 떨어진 길, 못 본 척 돌아갈 수도 있다.",
+    "choices": [
+      {
+        "label_ko": "산적을 베고 노인을 구한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 4,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -12,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "두 합 만에 산적이 나뒹군다. 가벼운 상처를 입었으나, 노인이 떨리는 손으로 댓짐에서 마른 죽순 몇 개를 쥐여준다. \"대협… 이 은혜를.\"",
+        "branch": "unlock_npc:bamboo_woodcutter"
+      },
+      {
+        "label_ko": "대신 통행세를 물어준다",
+        "require": "",
+        "effects": {
+          "gold": -40,
+          "shards": 0,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "은자 몇 닢에 산적이 히죽이며 물러난다. 노인은 연신 머리를 조아리지만, 회귀자는 안다 — 이런 자들은 또 온다는 것을.",
+        "branch": ""
+      },
+      {
+        "label_ko": "산적 편에 서서 노인의 댓짐을 가로챈다",
+        "require": "",
+        "effects": {
+          "gold": 55,
+          "shards": 0,
+          "essence": 0,
+          "karma": -3,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "\"형씨, 이 늙은이 몫은 내 거요.\" 산적들이 낄낄대며 자릿세를 떼어준다. 노인의 절규를 등지고 떠난다. 강해지는 데엔 길을 가리지 않는다… 그렇게 되뇐다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "못 본 척 돌아간다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "남의 일이다. 발길을 돌리는 등 뒤로 노인의 흐느낌이 댓잎 소리에 묻힌다. 사이다는 없고, 그림자만 한 줌.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "bamboo_hollow_cache",
+    "zone": "bamboo_grove",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "속 빈 대나무의 비밀",
+    "text_ko": "유난히 굵은 왕대 하나가 칼자국으로 갈라져 있다. 두드려보니 속이 비었고, 안에서 무언가 짤랑인다 — 누군가 급히 숨긴 노자(路資)다. 허나 대 둘레엔 가느다란 실이 매여 있어, 섣불리 손대면 머리 위 통발이 떨어질 듯하다.",
+    "choices": [
+      {
+        "label_ko": "함정을 살핀 뒤 침착히 꺼낸다",
+        "require": "",
+        "effects": {
+          "gold": 70,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "전생의 손끝이 실의 길을 읽는다. 통발을 고정하고 노자를 꺼내니 제법 묵직하다. \"…이 정도 잔재주에 당할 내가 아니지.\"",
+        "branch": ""
+      },
+      {
+        "label_ko": "통발째 부수고 거칠게 챙긴다",
+        "require": "",
+        "effects": {
+          "gold": 90,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": -18,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "기다릴 것 없다. 왕대를 쪼개자 통발이 쏟아져 어깨를 찧지만, 안에는 숨겨둔 은자까지 더 있었다. 피 몇 방울 값은 한 셈.",
+        "branch": ""
+      },
+      {
+        "label_ko": "건드리지 않고 표식만 남겨둔다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 10,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "남의 비상금에 손대 화를 부를 것 없다. 대신 주변에 흩어진 빈 대통과 마른 칡넝쿨을 갈무리하니, 분해할 잡재료가 한 아름이다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "bamboo_crimson_dew_spring",
+    "zone": "bamboo_grove",
+    "weight": 2,
+    "once_per_run": true,
+    "title_ko": "붉게 물든 샘",
+    "text_ko": "죽림 안쪽 옹달샘이 어슴푸레 핏빛으로 흐려 있다. 물을 길어 마신 민초 서넛이 샘가에 쓰러져 식은땀을 흘리고, 우물 바닥엔 손톱만 한 핏빛 결정 조각이 박혀 있다 — 혈정(血晶)이다. \"…벌써 이런 변방까지.\" 회귀자의 눈빛이 가라앉는다.",
+    "choices": [
+      {
+        "label_ko": "혈정 조각을 캐내어 갈무리한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 12,
+          "essence": 4,
+          "karma": -1,
+          "hp_pct": -8,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "맨손으로 결정을 뽑아내자 비릿한 한기가 경맥을 타고 오른다. 쓰러진 이들을 뒤로한 채 단서를 챙긴다. 힘을 위해선 외면도 익숙해져야 한다.",
+        "branch": "hint:blood_crystal_origin"
+      },
+      {
+        "label_ko": "협의로 민초부터 구완한다",
+        "require": "karma>=2",
+        "effects": {
+          "gold": -10,
+          "shards": 0,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": 0,
+          "grant_item": "minor_recovery_pill",
+          "apply_status": ""
+        },
+        "result_ko": "지닌 환약을 갈라 먹이고 등의 진기를 흘려넣자 민초들이 가까스로 숨을 고른다. \"대협이 아니었다면…\" 한 노파가 품에서 소환단 한 알을 쥐여준다.",
+        "branch": "unlock_npc:bamboo_villagers"
+      },
+      {
+        "label_ko": "샘을 막고 마을에 알린 뒤 떠난다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 5,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "큰 돌로 샘을 덮고 길목에 경고 표식을 새긴다. 근본은 못 막았으나, 더는 모르고 마실 이가 없을 것이다. 혈정의 그림자가 마음에 남는다.",
+        "branch": "hint:blood_crystal_origin"
+      }
+    ]
+  },
+  {
+    "event_id": "bamboo_hao_clan_whisper",
+    "zone": "bamboo_grove",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "거지의 귓속말",
+    "text_ko": "다 떨어진 누더기를 걸친 하오문 거지가 댓그늘에서 손짓한다. \"형씨, 이 일대 산적 길목이며 두목 거처… 다 꿰고 있수다. 한데 공짜는 없지.\" 누런 이를 드러내며 빈 손바닥을 펴 보인다. 정보엔 값이 있고, 그 값을 치르는 길도 여럿이다.",
+    "choices": [
+      {
+        "label_ko": "은자를 치르고 정보를 산다",
+        "require": "",
+        "effects": {
+          "gold": -35,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "은자가 손바닥에서 사라지자 거지가 술술 분다. 산적 매복과 두목의 약점, 그리고 \"요즘 핏돌이 흑풍당으로 흘러간다\"는 말까지. 다음 길이 한결 환해진다.",
+        "branch": "hint:bandit_chief_weakness"
+      },
+      {
+        "label_ko": "협의로 적선부터 베푼다",
+        "require": "karma>=3",
+        "effects": {
+          "gold": -20,
+          "shards": 0,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "so_cheonmyeong_pae",
+          "apply_status": ""
+        },
+        "result_ko": "값을 묻기 전에 먼저 마른 떡과 은자를 건넨다. 거지의 눈빛이 달라진다. \"…협객이셨군.\" 정보는 물론, 품에서 손때 묻은 행운패 하나를 꺼내 쥐여준다. 하오문은 의리를 기억한다.",
+        "branch": "unlock_npc:hao_clan_beggar"
+      },
+      {
+        "label_ko": "멱살을 잡고 강제로 토하게 한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": -2,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": "wanted_lower_clan"
+        },
+        "result_ko": "멱살을 틀어쥐자 거지가 겁에 질려 아는 것을 게운다. 정보는 얻었으나, 하오문은 밑바닥까지 거미줄이다 — 이 무례, 어딘가에 새겨졌을 것이다.",
+        "branch": "hint:bandit_chief_weakness"
+      }
+    ]
+  },
+  {
+    "event_id": "bwf_blackwind_toll",
+    "zone": "black_wind_forest",
+    "weight": 4,
+    "once_per_run": false,
+    "title_ko": "흑풍림 길목의 통행세",
+    "text_ko": "검은 숲 어귀, 흑풍당 졸개들이 통나무로 길을 막고 비웃는다. \"이 길은 흑풍당의 것이다. 통행세를 내든지, 가진 걸 다 두고 가든지.\" 졸개 뒤편 수레엔 빼앗은 민초의 봇짐이 산처럼 쌓였다.",
+    "choices": [
+      {
+        "label_ko": "순순히 통행세를 낸다",
+        "require": "",
+        "effects": {
+          "gold": -40,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "동전 몇 닢에 길이 열린다. 등 뒤에서 졸개들의 낄낄대는 웃음이 따라붙지만, 피 한 방울 흘리지 않았다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "졸개를 베고 빼앗긴 봇짐을 민초에게 돌려준다",
+        "require": "",
+        "effects": {
+          "gold": 15,
+          "shards": 0,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -12,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "검광 한 줄기에 길막이 통나무가 두 동강 난다. 숨어 지켜보던 민초들이 봇짐을 끌어안고 절을 올린다.",
+        "branch": "bwf_villager_grateful"
+      },
+      {
+        "label_ko": "졸개 두목을 매수해 흑풍당 내부 정보를 캔다",
+        "require": "karma<=0",
+        "effects": {
+          "gold": -25,
+          "shards": 3,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "은자가 손에 쥐어지자 두목이 입을 연다. \"혈정 수레가 사흘에 한 번 안쪽 골짜기로 든다…\" 민초의 봇짐은 그대로 수레에 남았다.",
+        "branch": "bwf_blood_crystal_deal"
+      }
+    ]
+  },
+  {
+    "event_id": "bwf_sunwoo_hyuk_first_meet",
+    "zone": "black_wind_forest",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "청운검문 선우혁",
+    "text_ko": "숲 한복판, 흑풍당 무리에 포위된 청년이 푸른 검을 휘두르고 있다. 청운검문의 자제 선우혁 — 거만한 눈매로 너를 흘긋 보더니 외친다. \"지나가는 무명소졸이냐? 끼어들 거면 발이나 맞춰라.\"",
+    "choices": [
+      {
+        "label_ko": "등을 맞대고 함께 적을 베어낸다",
+        "require": "",
+        "effects": {
+          "gold": 30,
+          "shards": 2,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": -8,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "호흡이 맞아떨어지자 포위가 순식간에 무너진다. 선우혁이 검을 거두며 콧방귀를 뀐다. \"제법이군. 이름 정도는 기억해 두지.\"",
+        "branch": "bwf_sunwoo_rivalry"
+      },
+      {
+        "label_ko": "전생의 절초로 적을 일소해 격을 과시한다",
+        "require": "build:crit",
+        "effects": {
+          "gold": 40,
+          "shards": 3,
+          "essence": 1,
+          "karma": 0,
+          "hp_pct": -4,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "단 한 수에 적의 급소가 모조리 갈라진다. 선우혁의 거만하던 표정이 처음으로 굳는다. \"…그 검로(劍路), 어디서 익혔지?\"",
+        "branch": "bwf_sunwoo_suspicion"
+      },
+      {
+        "label_ko": "흑풍당이 선우혁을 처리하게 두고 어부지리를 노린다",
+        "require": "",
+        "effects": {
+          "gold": 55,
+          "shards": 0,
+          "essence": 0,
+          "karma": -2,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "수풀에 몸을 숨긴 채 양쪽이 지치길 기다렸다 흘린 전리품을 챙긴다. 선우혁이 가까스로 빠져나가며 네가 숨었던 자리를 노려본다.",
+        "branch": "bwf_sunwoo_grudge"
+      }
+    ]
+  },
+  {
+    "event_id": "bwf_blood_crystal_deal",
+    "zone": "black_wind_forest",
+    "weight": 3,
+    "once_per_run": false,
+    "title_ko": "혈정 암거래",
+    "text_ko": "폐가에 차려진 비밀 장터, 핏빛 결정이 등불 아래 음산하게 빛난다. 흑풍당 거간꾼이 능글맞게 속삭인다. \"혈정 한 점이면 그 어떤 무공도 두 배는 빨라지지. 살 텐가, 팔 텐가?\" 회귀자만은 안다 — 이것이 혈마 부활의 제물임을.",
+    "choices": [
+      {
+        "label_ko": "혈정을 사들여 힘으로 삼는다",
+        "require": "",
+        "effects": {
+          "gold": -60,
+          "shards": 0,
+          "essence": 2,
+          "karma": -2,
+          "hp_pct": 0,
+          "grant_item": "blood_crystal_charm",
+          "apply_status": ""
+        },
+        "result_ko": "손바닥에 닿은 혈정이 정기를 빨아들이듯 박동한다. 힘이 차오르지만, 그만큼 등골이 서늘해진다.",
+        "branch": "bwf_blood_corruption"
+      },
+      {
+        "label_ko": "독으로 거간꾼을 제압하고 혈정 유통로를 끊는다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 20,
+          "shards": 5,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "술잔에 스민 무색의 독이 거간꾼을 쓰러뜨린다. 장부를 뒤지자 혈정이 흘러드는 골짜기의 위치가 드러난다.",
+        "branch": "bwf_crystal_route_found"
+      },
+      {
+        "label_ko": "혈정 무더기를 모조리 불태운다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 3,
+          "hp_pct": -15,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "불길에 휩싸인 혈정이 비명 같은 소리를 내며 부서진다. 격분한 거간꾼 패거리와 한바탕 부딪쳤으나, 제물 한 무더기를 세상에서 지웠다.",
+        "branch": "bwf_blood_cult_alerted"
+      }
+    ]
+  },
+  {
+    "event_id": "bwf_caged_villagers",
+    "zone": "black_wind_forest",
+    "weight": 3,
+    "once_per_run": false,
+    "title_ko": "흑풍당의 인간 우리",
+    "text_ko": "골짜기 깊은 곳, 대나무 우리에 갇힌 민초들이 신음한다. 흑풍당이 혈정 정련의 '재료'로 쓰려 끌고 온 자들이다. 보초는 둘, 그러나 안쪽엔 더 많은 그림자가 어른거린다.",
+    "choices": [
+      {
+        "label_ko": "정면 돌파해 우리를 부수고 모두 구한다",
+        "require": "karma>=2",
+        "effects": {
+          "gold": 0,
+          "shards": 4,
+          "essence": 0,
+          "karma": 3,
+          "hp_pct": -20,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "피투성이가 되도록 싸운 끝에 우리가 열린다. 풀려난 민초 하나가 품에서 낡은 비급 한 권을 꺼내 쥐여준다. \"은인께… 이거라도.\"",
+        "branch": "bwf_villager_manual"
+      },
+      {
+        "label_ko": "보초만 조용히 처리하고 한 사람만 빼낸 뒤 빠진다",
+        "require": "",
+        "effects": {
+          "gold": 10,
+          "shards": 1,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": -6,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "가장 약해 보이는 노인 하나를 들쳐업고 어둠 속으로 사라진다. 등 뒤 우리에 남은 자들의 눈빛이 평생 잊히지 않을 듯하다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "흑풍당에 밀고하고 포상을 받는다",
+        "require": "",
+        "effects": {
+          "gold": 70,
+          "shards": 0,
+          "essence": 0,
+          "karma": -3,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "두둑한 은자가 손에 쥐어진다. 우리 속 민초들의 절규를 등지고 돌아서는 발걸음이, 묘하게 가볍지 않다.",
+        "branch": "bwf_blackwind_favor"
+      }
+    ]
+  },
+  {
+    "event_id": "bwf_poisoned_spring_trap",
+    "zone": "black_wind_forest",
+    "weight": 4,
+    "once_per_run": false,
+    "title_ko": "검은 숲의 독샘",
+    "text_ko": "갈증에 시달리던 차, 맑아 보이는 샘이 나타난다. 그러나 샘가 이끼는 기이하게 검붉고, 물 위엔 아지랑이가 인다. 흑풍당이 추격자를 노려 풀어둔 독샘인지도 모른다.",
+    "choices": [
+      {
+        "label_ko": "독성을 간파해 샘을 정화하고 약재를 채취한다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 0,
+          "shards": 3,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 8,
+          "grant_item": "black_marsh_antidote_herb",
+          "apply_status": ""
+        },
+        "result_ko": "독 다루는 손이 물밑의 독초 뿌리를 단번에 알아본다. 정화한 샘물로 목을 축이고, 귀한 해독 약재까지 챙긴다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "위험을 무릅쓰고 그냥 들이켠다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": -18,
+          "grant_item": "",
+          "apply_status": "apply_poison"
+        },
+        "result_ko": "한 모금에 목이 타들어가고 시야가 흐려진다. 가까스로 게워냈으나 독기가 핏줄을 타고 돈다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "샘을 버리고 마른 길로 우회한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": -5,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "미련 없이 돌아선다. 갈증에 입술은 갈라졌지만, 함정이었다면 목숨을 건진 셈이다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "frost_consumed_woodcutter",
+    "zone": "frost_spring_valley",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "잠식된 나무꾼",
+    "text_ko": "눈 덮인 비곡 어귀, 한 나무꾼이 도끼를 끌며 다가온다. 그의 눈에는 핏빛 결정이 박혀 빛나고, 입에서는 알 수 없는 주문이 새어나온다. 이미 혈정에 정신을 반쯤 먹힌 자다.",
+    "choices": [
+      {
+        "label_ko": "단번에 베어 고통을 끝낸다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 8,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "검광 한 줄기에 나무꾼이 스러진다. 핏빛 안개가 걷히며 잠시 맑아진 눈이 고마움을 전하지만, 구하지 못한 자를 벤 무게가 가슴에 남는다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "혈정만 뽑아내고 살려본다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -12,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "독공으로 혈정의 기운을 갈라내고 핏빛 결정을 빼낸다. 반탄지기에 내상을 입지만, 나무꾼이 제정신으로 무릎 꿇어 운다. 구할 수 있는 자도 있었다.",
+        "branch": "unlock_npc:frost_woodcutter"
+      },
+      {
+        "label_ko": "물러나 길을 내준다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "그를 지나쳐 비곡 깊은 곳으로 향한다. 등 뒤로 도끼 끄는 소리가 점점 멀어지지만, 그 소리는 오래도록 귓가에 남는다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "frost_ritual_altar",
+    "zone": "frost_spring_valley",
+    "weight": 2,
+    "once_per_run": true,
+    "title_ko": "혈정 제단",
+    "text_ko": "동굴 안쪽, 얼어붙은 시신들을 둘러싼 핏빛 제단이 맥동한다. 혈천마교 잔당이 부활 의식의 전초를 새긴 진법이다. 제단 중앙의 혈정 결정이 그대의 정기를 부르듯 떨린다.",
+    "choices": [
+      {
+        "label_ko": "진법을 파훼해 의식을 늦춘다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 6,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -10,
+          "grant_item": "blood_crystal_shard",
+          "apply_status": ""
+        },
+        "result_ko": "진기를 역류시켜 제단의 맥을 끊는다. 반동으로 피를 토하나, 의식은 한 박자 늦춰졌다. 굴러나온 혈정 조각이 다음 단서를 속삭인다.",
+        "branch": "clue:revival_ritual"
+      },
+      {
+        "label_ko": "혈정의 힘을 단전에 받아들인다",
+        "require": "karma<=-2",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 14,
+          "karma": -3,
+          "hp_pct": 10,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "사도의 길에 선 그대, 핏빛 정기를 끌어다 단전을 채운다. 힘이 차오르나 손끝이 차갑게 떨린다. 혈마가 그대를 향해 미소 짓는 환영이 스친다.",
+        "branch": "flag:blood_taint"
+      },
+      {
+        "label_ko": "제단의 혈정을 챙겨 빠져나온다",
+        "require": "",
+        "effects": {
+          "gold": 90,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "결정을 자루에 쓸어담고 발길을 돌린다. 암시장에 내다 팔면 큰 값이 되겠지만, 이것이 누군가의 굳은 정기였음을 그대는 안다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "frost_frozen_supplicant",
+    "zone": "frost_spring_valley",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "얼음 속 애원",
+    "text_ko": "한천(寒泉)의 얼음 아래, 반쯤 얼어붙은 사내가 손을 뻗고 있다. \"제발… 혈정을 주시오. 그것만이 이 추위를 멈추게 하오.\" 그의 다리는 이미 검게 잠식되어 가고 있다.",
+    "choices": [
+      {
+        "label_ko": "얼음을 깨고 끌어내 치료한다",
+        "require": "item:any",
+        "effects": {
+          "gold": -40,
+          "shards": 0,
+          "essence": 0,
+          "karma": 3,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "지닌 영약과 내공을 쏟아 잠식을 멈춘다. 사내가 흐느끼며 절을 올린다. 재화는 줄었으나, 한 명을 더 강호에 돌려보냈다.",
+        "branch": "unlock_npc:frost_survivor"
+      },
+      {
+        "label_ko": "원하는 대로 혈정을 쥐여준다",
+        "require": "",
+        "effects": {
+          "gold": 30,
+          "shards": 0,
+          "essence": 0,
+          "karma": -3,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "핏빛 결정을 손에 쥐여주자 사내의 눈이 광기로 물든다. 대가로 품은 은전을 내밀지만, 그 비명을 등지고 떠나는 발걸음이 무겁다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "차마 보지 못해 자리를 뜬다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": "apply_weak"
+        },
+        "result_ko": "외면하고 돌아선다. 등 뒤의 애원이 진기를 어지럽혀 한동안 마음이 흔들린다(잠시 쇠약).",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "frost_defector_remnant",
+    "zone": "frost_spring_valley",
+    "weight": 2,
+    "once_per_run": true,
+    "title_ko": "배교한 잔당",
+    "text_ko": "눈보라 속, 핏빛 교복을 벗어던진 사내가 길을 막는다. \"나는 혈천마교를 등졌소. 의식의 다음 절차를 알려줄 테니… 비곡을 빠져나가게 비호해 주시오.\" 그의 손은 떨리고, 등 뒤로 추격의 발소리가 멀지 않다.",
+    "choices": [
+      {
+        "label_ko": "약속하고 의식의 비밀을 듣는다",
+        "require": "karma>=2",
+        "effects": {
+          "gold": 0,
+          "shards": 10,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "협의로운 그대의 눈을 믿은 사내가 모든 것을 토해낸다. 혈정자의 의식이 보름달에 완성된다는 것. 그를 길 너머로 무사히 보낸다.",
+        "branch": "clue:hyeoljeongja_ritual"
+      },
+      {
+        "label_ko": "정보만 빼낸 뒤 추격자에게 넘긴다",
+        "require": "",
+        "effects": {
+          "gold": 60,
+          "shards": 5,
+          "essence": 0,
+          "karma": -2,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "비밀을 캐낸 뒤 사내를 추격자 앞에 던진다. 그들이 던진 사례금과 단서가 손에 들어오나, 배신당한 자의 눈빛이 등에 박힌다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "함정을 의심해 단칼에 벤다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 4,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": -8,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "검을 뽑아 베어버린다. 품에서 굴러나온 것은 함정이 아닌 진짜 밀서였다. 의심이 한 사람을 죽였다는 사실이 검끝에 서린다.",
+        "branch": "clue:hyeoljeongja_ritual"
+      }
+    ]
+  },
+  {
+    "event_id": "frost_echo_of_past_life",
+    "zone": "frost_spring_valley",
+    "weight": 1,
+    "once_per_run": true,
+    "title_ko": "한천의 메아리",
+    "text_ko": "얼어붙은 비곡 호수에 그대 자신의 모습이 비친다. 그러나 수면의 그는 늙고 지친, 전생의 천기노조다. \"또 여기까지 왔는가… 몇 번을 돌아와도 혈정자는 구하지 못했지.\" 천명반이 차갑게 울린다.",
+    "choices": [
+      {
+        "label_ko": "이번엔 다르다고 답한다",
+        "require": "karma>=3",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 18,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "협의로 쌓아온 길을 들어 전생의 자신을 마주본다. 수면의 노인이 옅게 웃으며 흩어진다. 천명반이 따스하게 공명하며 깨달음이 차오른다.",
+        "branch": "meta:recursion_resolve"
+      },
+      {
+        "label_ko": "힘이 부족했을 뿐이라 답한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 10,
+          "karma": -1,
+          "hp_pct": -6,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "더 강해지면 된다고 되뇐다. 수면의 노인이 서글피 고개 젓는다. \"강해질수록 혈마도 강해지거늘.\" 한기가 단전을 파고든다.",
+        "branch": "meta:recursion_doubt"
+      },
+      {
+        "label_ko": "얼음을 깨뜨려 환영을 지운다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 12,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "검으로 호면을 내리쳐 비친 모습을 깨부순다. 갈라진 얼음 틈에서 혈정 부스러기가 반짝이지만, 메아리는 가시지 않고 가슴 깊이 남는다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "meta_seen_this_before",
+    "zone": "meta",
+    "weight": 3,
+    "once_per_run": true,
+    "title_ko": "이미 본 풍경",
+    "text_ko": "길모퉁이를 돌자 발이 먼저 멈춘다. 저 비틀린 노송, 이끼 낀 돌무더기 — 분명 처음인데, 뼛속이 기억한다. \"…여길, 전에도 지났던가.\" 천명반이 단전에서 미약하게 진동한다.",
+    "choices": [
+      {
+        "label_ko": "기억을 믿고 함정을 앞질러 피한다",
+        "require": "",
+        "effects": {
+          "gold": 40,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "몸이 먼저 비켜선 자리에 화살이 박힌다. 누군가 파 둔 함정 옆, 약탈자가 흘린 전대가 굴러 있다. 전생의 잔향이 길을 일러준 셈이다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "천명반으로 이 자리의 천명괘를 거꾸로 읽는다",
+        "require": "dao:fate",
+        "effects": {
+          "gold": 0,
+          "shards": 18,
+          "essence": 1,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": "insight"
+        },
+        "result_ko": "기문에 밝은 그대가 풍경에 겹친 옛 패를 짚어낸다. 같은 자리를 몇 번이고 지났다는 확신 — 그리고 다음 길의 수가 한 수 먼저 보인다.",
+        "branch": "meta_fate_thread"
+      },
+      {
+        "label_ko": "착각이라 떨치고 그냥 지나친다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": -6,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "\"…부질없는 생각.\" 발을 떼는 순간 보지 못한 줄에 정강이가 긁힌다. 그래도 마음만은 가볍다 — 굴레에 매이지 않겠다는 다짐 하나.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "meta_cracked_dial",
+    "zone": "meta",
+    "weight": 2,
+    "once_per_run": true,
+    "title_ko": "천명반의 균열",
+    "text_ko": "운기 도중 단전이 시리다. 천명반 표면에 머리카락 같은 금이 한 줄 번지더니, 그 틈에서 목소리가 새어 나온다. \"…몇 번을 돌아와도, 끝은 같다.\" 누구의 음성인지 알 수 없다.",
+    "choices": [
+      {
+        "label_ko": "진기를 쏟아 균열을 봉한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": -2,
+          "karma": 0,
+          "hp_pct": -8,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "내공을 갈아 넣자 금이 천천히 아문다. 목소리도 잦아든다. 대가로 단전이 텅 비었으나, 적어도 그 음성은 더 듣지 않아도 된다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "목소리에 귀를 기울여 그 말을 캐묻는다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 12,
+          "essence": 0,
+          "karma": -2,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": "cracked_dial"
+        },
+        "result_ko": "\"…돌아올수록, 봉인은 풀린다.\" 금은 더 벌어졌으나 깨달음 한 조각이 남는다. 천명반은 구원이자 저주임을 — 등골이 서늘하다.",
+        "branch": "meta_seal_loosens"
+      },
+      {
+        "label_ko": "취옹에게 균열을 보여 묻는다",
+        "require": "karma>=2",
+        "effects": {
+          "gold": -30,
+          "shards": 0,
+          "essence": 1,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "취옹이 술을 끊고 한참 금을 들여다본다. \"…이 늙은이도 한 번 본 적 있지.\" 술값을 쥐여주자 운기 비결 한 줄을 일러준다 — 균열은 남았으나 마음은 덜 외롭다.",
+        "branch": "meta_chwiong_hint"
+      }
+    ]
+  },
+  {
+    "event_id": "meta_blood_demon_knows",
+    "zone": "meta",
+    "weight": 2,
+    "once_per_run": true,
+    "title_ko": "기다리던 손님",
+    "text_ko": "혈천마교 잔당 하나가 칼을 거꾸로 쥔 채 웃는다. \"또 왔구나. 교주께서 이르셨다 — 그자는 반드시 다시 온다고.\" 곁엔 영문 모르고 끌려온 민초 하나가 떨고 있다.",
+    "choices": [
+      {
+        "label_ko": "민초를 등 뒤로 감추고 맞선다",
+        "require": "karma>=3",
+        "effects": {
+          "gold": 0,
+          "shards": 15,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -12,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "협의가 칼끝을 무디게 한다. 한 사람을 지켜내고 잔당을 베어 넘기나, 옆구리에 핏물이 번진다. \"혈마가 굴레를 안다…\" 그 한마디가 가슴에 박힌다.",
+        "branch": "meta_demon_warning"
+      },
+      {
+        "label_ko": "잔당을 추궁해 혈마의 말을 캐낸다",
+        "require": "",
+        "effects": {
+          "gold": 20,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": -6,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "민초의 비명을 뒤로하고 잔당의 멱살을 잡는다. \"네 회귀가 봉인을 푼다.\" 그 말을 토해낸 자는 스스로 혀를 깨물어 죽는다. 떡밥 하나, 죄책감 하나가 남는다.",
+        "branch": "meta_demon_warning"
+      },
+      {
+        "label_ko": "목격자를 입막음하고 조용히 자리를 뜬다",
+        "require": "",
+        "effects": {
+          "gold": 50,
+          "shards": 0,
+          "essence": 0,
+          "karma": -3,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "후환을 없애려 민초마저 침묵시키고 전대를 챙긴다. 강호의 무정함이라 되뇌어 보지만, 그림자가 한 뼘 더 길어진다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "meta_mirror_of_lives",
+    "zone": "meta",
+    "weight": 1,
+    "once_per_run": true,
+    "title_ko": "전생의 거울",
+    "text_ko": "안개가 갈라진 자리에 거울 같은 수면이 놓여 있다. 비치는 건 지금의 얼굴이 아니다 — 칼에 꿰뚫리고, 독에 무너지고, 혈마 앞에 무릎 꿇는 수많은 '나'. 죽음마다 천명반이 굴렀다.",
+    "choices": [
+      {
+        "label_ko": "모든 죽음을 똑바로 마주본다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 1,
+          "karma": 2,
+          "hp_pct": -15,
+          "grant_item": "",
+          "apply_status": "resolve"
+        },
+        "result_ko": "수백 번 무너진 자신을 끝까지 응시한다. 가슴이 찢어질 듯 아프나, 그 끝에 단단한 무언가가 선다 — \"이번엔, 다르게.\" 의지가 진기로 영근다.",
+        "branch": "meta_resolve_thread"
+      },
+      {
+        "label_ko": "거울을 깨뜨려 환영을 흩는다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 8,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "장력 한 줄기에 수면이 산산이 깨진다. 깨진 조각이 핏빛으로 반짝이다 사라진다 — 환영의 잔재가 손에 쥐어진다. 보고 싶지 않은 건 보지 않는 편이 낫다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "고개를 돌려 지나친다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "외면한 채 발을 옮긴다. 등 뒤에서 물결치는 소리 — 마치 누군가 같이 가자며 부르는 듯하나, 돌아보지 않는다. 마음 한구석이 무겁다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "any_inn_brawl_arrogant_swordsman",
+    "zone": "any",
+    "weight": 3,
+    "once_per_run": false,
+    "title_ko": "객잔의 시비",
+    "text_ko": "낡은 객잔 한구석, 술기운에 거나해진 검객이 점소이의 멱살을 잡고 호통친다. 좌중의 눈이 슬그머니 그대에게 모인다. 강호의 시비란 이런 식으로 사람을 시험하는 법.",
+    "choices": [
+      {
+        "label_ko": "점소이를 감싸고 검객을 꾸짖는다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -10,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "검객의 주먹이 어깨를 스쳤으나, 그대의 기개에 좌중이 술잔을 들어 호응한다. 점소이가 깊이 고개 숙인다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "술값을 대신 치러 자리를 무마한다",
+        "require": "",
+        "effects": {
+          "gold": -40,
+          "shards": 0,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "은자 몇 닢에 검객의 노기가 풀린다. 점소이가 따끈한 차를 슬며시 내온다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "검객의 호승심을 부추겨 내기 비무를 건다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 60,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "독수에 밝은 그대, 술잔에 슬쩍 손을 쓴다. 검객은 손이 풀려 비무에 지고 은자를 토해낸다. 점소이는 못 본 척한다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "못 본 척 술만 비운다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "강호의 무정함이라 되뇌며 잔을 비운다. 점소이의 비명이 등 뒤로 멀어진다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "any_manbo_caravan_escort",
+    "zone": "any",
+    "weight": 3,
+    "once_per_run": false,
+    "title_ko": "만보상단의 호송 의뢰",
+    "text_ko": "만보상단의 표사가 그대를 붙든다. 산길에 산적이 들끓어 비단 수레 하나를 객잔까지 지켜달라는 청이다. 보수는 후하나, 그 길이 무사하리란 보장은 없다.",
+    "choices": [
+      {
+        "label_ko": "정면으로 호송을 맡아 산길을 돌파한다",
+        "require": "",
+        "effects": {
+          "gold": 90,
+          "shards": 0,
+          "essence": 0,
+          "karma": 1,
+          "hp_pct": -20,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "매복한 산적 둘을 베어넘기고 수레를 지켜냈다. 표사가 약속한 은자에 덤까지 얹어준다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "샛길을 안내해 위험을 피한다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 50,
+          "shards": 12,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "독초 우거진 샛길은 그대에겐 앞마당이라, 산적이 못 드는 길로 무사히 빠진다. 상단이 파편 든 주머니를 더 쥐여준다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "수레의 비단을 빼돌리고 산적 핑계를 댄다",
+        "require": "",
+        "effects": {
+          "gold": 120,
+          "shards": 0,
+          "essence": 0,
+          "karma": -3,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "비단 몇 필이 그대의 봇짐으로 사라진다. 은자는 두둑하나, 하오문에 그대의 손버릇이 한 줄 적힌다.",
+        "branch": "flag:haomun_distrust"
+      },
+      {
+        "label_ko": "의뢰를 정중히 사양한다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "표사는 아쉬운 낯으로 다른 낭인을 찾아 떠난다. 강호의 인연은 또 흐른다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "any_chwiong_drinking_wager",
+    "zone": "any",
+    "weight": 2,
+    "once_per_run": true,
+    "title_ko": "취옹의 술내기",
+    "text_ko": "길목 평상에서 취옹이 호리병을 흔들며 히죽인다. \"끅— 애송이, 늙은이와 한 잔 내기 어떠냐. 이기면 좋은 걸 주마, 지면 술값은 네가 내고.\" 그 눈빛만은 취하지 않았다.",
+    "choices": [
+      {
+        "label_ko": "호기롭게 내기를 받는다",
+        "require": "",
+        "effects": {
+          "gold": -30,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": -5,
+          "grant_item": "hoesaeng_dan",
+          "apply_status": ""
+        },
+        "result_ko": "세 순배 만에 그대가 평상에 엎어진다. 취옹은 껄껄 웃으며 품에서 회생단 한 알을 떨궈준다. \"술은 졌어도 기개는 봐줄 만하구먼.\"",
+        "branch": ""
+      },
+      {
+        "label_ko": "내공으로 취기를 다스리며 승부한다",
+        "require": "karma>=2",
+        "effects": {
+          "gold": 40,
+          "shards": 0,
+          "essence": 1,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "단전의 진기로 술기운을 사르니 취옹이 먼저 무너진다. \"허, 이놈 봐라.\" 그가 슬쩍 흘린 한마디에 깨달음의 정수가 스민다.",
+        "branch": "hint:chwiong_secret"
+      },
+      {
+        "label_ko": "술은 사양하고 길을 묻는다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 5,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "취옹이 입맛을 다시며 지름길과 파편 묻힌 자리를 일러준다. \"재미없는 놈일세.\"",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "any_soha_herb_gathering",
+    "zone": "any",
+    "weight": 3,
+    "once_per_run": false,
+    "title_ko": "소하의 약초 부탁",
+    "text_ko": "길가에서 소하가 약초 바구니를 든 채 발을 동동 구른다. \"대협! 마을에 열병이 돌아요. 절벽 위 설삼이 필요한데… 저 혼자선 못 올라가요.\" 당찬 눈에 다급함이 어렸다.",
+    "choices": [
+      {
+        "label_ko": "위험을 무릅쓰고 절벽의 설삼을 캐온다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -15,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "미끄러운 절벽을 경공으로 올라 설삼을 캐 내려온다. 소하가 환히 웃으며 약을 달이러 달려간다. 민초의 온기가 가슴에 남는다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "독초까지 가려내 약효를 배로 끌어올린다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 0,
+          "shards": 15,
+          "essence": 0,
+          "karma": 2,
+          "hp_pct": -10,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "독에 밝은 눈으로 설삼에 엉킨 독초를 솎아내니, 소하가 감탄한다. \"이런 건 약왕곡 어른들도…!\" 답례로 귀한 약재 파편을 건넨다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "바쁘다며 은자만 쥐여주고 떠난다",
+        "require": "",
+        "effects": {
+          "gold": -30,
+          "shards": 0,
+          "essence": 0,
+          "karma": -1,
+          "hp_pct": 0,
+          "grant_item": "minor_recovery_pill",
+          "apply_status": ""
+        },
+        "result_ko": "소하는 은자를 받아들면서도 서운한 낯이다. 떠나는 그대 봇짐에 누군가 회복단 하나를 슬쩍 넣어둔 듯하다.",
+        "branch": ""
+      }
+    ]
+  },
+  {
+    "event_id": "any_mercenary_duel_pit",
+    "zone": "any",
+    "weight": 2,
+    "once_per_run": false,
+    "title_ko": "낭인 결투장",
+    "text_ko": "변방 객잔 뒷마당, 낭인들이 둘러싼 흙바닥 결투장. 한 늙은 낭인이 빚에 몰려 그대에게 비무를 청한다. \"이기는 자가 판돈을 갖는 게 강호의 법이오.\" 구경꾼들의 눈이 번들거린다.",
+    "choices": [
+      {
+        "label_ko": "승부를 받되, 이긴 뒤 판돈을 늙은 낭인에게 돌려준다",
+        "require": "karma>=3",
+        "effects": {
+          "gold": -20,
+          "shards": 0,
+          "essence": 0,
+          "karma": 3,
+          "hp_pct": -15,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "깔끔히 제압한 뒤 판돈을 도로 그의 손에 쥐여준다. 늙은 낭인이 눈물을 글썽이며 절한다. 협의의 이름이 변방에 돈다.",
+        "branch": "flag:reputation_righteous"
+      },
+      {
+        "label_ko": "전력으로 짓밟고 판돈을 모조리 챙긴다",
+        "require": "",
+        "effects": {
+          "gold": 80,
+          "shards": 0,
+          "essence": 0,
+          "karma": -2,
+          "hp_pct": -10,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "늙은 낭인이 피를 토하며 쓰러진다. 판돈은 두둑하나, 구경꾼들의 눈빛이 싸늘해진다. 빚쟁이만이 흡족하게 웃는다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "독수로 단숨에 무력화해 빚쟁이까지 쫓아낸다",
+        "require": "build:poison",
+        "effects": {
+          "gold": 40,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": "apply_weak"
+        },
+        "result_ko": "마비독 한 줌에 낭인이 굳고, 위협하던 빚쟁이마저 손이 풀려 줄행랑친다. 늙은 낭인은 목숨을 건졌으나 그대를 두려워한다.",
+        "branch": ""
+      },
+      {
+        "label_ko": "결투를 거절하고 자리를 뜬다",
+        "require": "",
+        "effects": {
+          "gold": 0,
+          "shards": 0,
+          "essence": 0,
+          "karma": 0,
+          "hp_pct": 0,
+          "grant_item": "",
+          "apply_status": ""
+        },
+        "result_ko": "등 뒤로 야유가 쏟아진다. 강호의 셈법에 끼지 않는 것도 한 가지 길이다.",
+        "branch": ""
+      }
+    ]
+  }
+]

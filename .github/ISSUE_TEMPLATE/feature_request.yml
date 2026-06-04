@@ -1,0 +1,39 @@
+name: 💡 기능 제안
+description: 새 기능이나 개선 아이디어
+title: "[Feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        아이디어 고맙습니다! 콘텐츠/밸런스 방향(신규 무공·지역·수치 등)은 비공개 기획과 대조가 필요하니 먼저 토론으로 남겨 주세요. UI/UX·엔진·호환성 개선은 환영합니다.
+  - type: textarea
+    id: problem
+    attributes:
+      label: 어떤 문제/불편을 해결하나요?
+      placeholder: "전투 로그가 너무 빨라 따라가기 어렵다..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 제안하는 해결책
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 영역
+      options:
+        - TUI / UX
+        - 엔진 / 게임플레이
+        - 배포 / 패키징
+        - 터미널 / 플랫폼 호환성
+        - 콘텐츠 / 밸런스 (먼저 토론 권장)
+        - 기타
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 고려한 대안

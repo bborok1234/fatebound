@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fatebound"
+version = "0.1.0"
+description = "천명회귀 · Fatebound — 무협 회귀 로그라이트 오토배틀러 (터미널 TUI)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Mirlim" }]
+keywords = ["game", "roguelike", "tui", "textual", "wuxia", "autobattler"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Games/Entertainment",
+]
+dependencies = ["textual>=8", "rich>=14", "wcwidth>=0.2"]
+
+[project.urls]
+Homepage = "https://github.com/bborok1234/fatebound"
+Repository = "https://github.com/bborok1234/fatebound"
+
+[project.scripts]
+fatebound = "fatebound.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "pyinstaller>=6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["fatebound"]
+
+# 패키지 내 데이터(content/data/*.json, tui/*.tcss)는 hatchling이 기본 포함
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
