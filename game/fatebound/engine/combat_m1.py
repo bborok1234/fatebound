@@ -22,7 +22,7 @@ N_SPOT = 1.6            # 천명괘 줄 강조 배수
 CENTER_MULT = 1.5      # 중앙 = 천명 자리
 LINE_PURE_BONUS = 0.25  # 순독(純毒) 줄 보너스
 VULN_BONUS = 0.15      # 취약(조건) 출력 보너스
-OUTPUT_C = 0.030       # 출력 스케일 = player.atk × OUTPUT_C (보스전 ~12합 · GOOD 클리어/BAD 실패)
+OUTPUT_C = 0.040       # 출력 스케일 = player.atk × OUTPUT_C (③-bis: 스타터 일반전 클리어 + GOOD@한천 ~10합)
 
 # ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
 #    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).

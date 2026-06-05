@@ -43,8 +43,16 @@ class GameSession:
     def new_game(cls, name: str, build: str) -> "GameSession":
         s = cls(name=name, build=build)
         s.level = balance.ZONE_LEVEL["bamboo_grove"]
-        # 시작은 하위 6종만 — 나머지는 여정(드랍·기연·객잔·사건)에서 획득(성장 여지)
-        starter = sorted(content.items_for_build(build), key=lambda it: it.get("power_budget", 0))[:6]
+        # 시작은 6종만 — 나머지는 여정(드랍·기연·객잔·사건)에서 획득(성장 여지).
+        pool = content.items_for_build(build)
+        bud = lambda it: it.get("power_budget", 0)
+        # M1 빌드(m1 역할 보유): 페이로드 없으면 "전체 발동"이 0이 되므로 페이로드 앵커(출력 3 + 서포트 3).
+        payloads = sorted([it for it in pool if (it.get("m1") or {}).get("role") == "payload"], key=bud)
+        if payloads:
+            others = sorted([it for it in pool if it not in payloads], key=bud)
+            starter = payloads[:3] + others[:3]
+        else:
+            starter = sorted(pool, key=bud)[:6]
         s.owned = [it["item_id"] for it in starter]
         s.bag = Bag.auto([it for it in content.items() if it["item_id"] in s.owned])
         s.ensure_map()
