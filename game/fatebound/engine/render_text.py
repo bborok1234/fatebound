@@ -1,47 +1,59 @@
-"""이벤트 스트림 → 무협체 텍스트 로그(02 §전투 로그 · 10 §8 보이스). TUI/CLI 공용 폴백."""
+"""이벤트 스트림 → 무협체 전투 로그(02 §전투 로그 · 10 §8 보이스). TUI/CLI 공용.
+
+읽기 우선: 내 공격과 적 공격을 또렷이 구분하고(by_player), 디버그식 화살표 대신
+무협 한 줄로. 면 구성·HP 게이지 같은 상시 정보는 상태 패널이 맡으므로 로그는 '사건'만.
+"""
 from __future__ import annotations
 from .events import Event
+
+_STATUS_KO = {"poison": "독", "burn": "화상", "weak": "약화", "vulnerable": "취약", "stun": "기절"}
+_TICK_KO = {"poison": "☠ 독", "burn": "🔥 화상"}
 
 
 def line(e: Event) -> str | None:
     k, d = e.kind, e.data
     if k == "battle_start":
-        return f"[{d['enemy']}이(가) 길을 막아섰다.]  천명괘: {' '.join(d['faces'])}"
+        return f"{d['enemy']}이(가) 앞을 막아선다."
     if k == "round_start":
         return f"[{d['n']}합]"
     if k == "dice":
-        return f"  천명괘 → {d['face']}" + ("  (재점)" if d.get("rerolled") else "")
+        return f"  천명괘: {d['face']}" + ("  (다시 굴림)" if d.get("rerolled") else "")
     if k == "focus":
-        return f"    허초 — 응기 {d['count']}"
+        return f"    빈 면. 기를 모은다 (응기 {d['count']})"
     if k == "damage":
-        lbl = (d.get("label") + " ") if d.get("label") else ""
-        crit = "⚡치명! " if d.get("crit") else ""
-        return f"    {crit}{lbl}{d['src']} → {d['tgt']} {d['amount']} 피해 (HP {d['tgt_hp']}/{d['tgt_max']})"
+        crit = " ⚡치명!" if d.get("crit") else ""
+        move = (d.get("label") or "").strip()
+        amt, hp = d["amount"], d["tgt_hp"]
+        if d.get("by_player"):
+            return f"    {move or '일격'}, {d['tgt']}에게 {amt} 피해{crit}  (적 HP {hp})"
+        opener = "" if move in ("", "평타") else f"의 {move}"
+        return f"    {d['src']}{opener}, 나에게 {amt} 피해{crit}  (내 HP {hp})"
     if k == "status":
-        names = {"poison": "독", "burn": "화상", "weak": "약화", "vulnerable": "취약", "stun": "기절"}
-        s = names.get(d["status"], d["status"])
+        s = _STATUS_KO.get(d["status"], d["status"])
         extra = f" {d['stacks']}중첩" if "stacks" in d else ""
         return f"    {d['tgt']}에 {s}{extra}"
     if k == "tick":
-        s = {"poison": "☠ 독", "burn": "🔥 화상"}.get(d["status"], d["status"])
-        return f"    {s} {d['amount']} (HP {d['tgt_hp']})"
+        s = _TICK_KO.get(d["status"], d["status"])
+        return f"    {s} {d['amount']}  (HP {d['tgt_hp']})"
     if k == "heal":
-        return f"    회복 +{d['amount']}"
+        return f"    숨을 고른다. 체력 +{d['amount']}"
     if k == "shield":
-        return f"    보호막 +{d['amount']}"
+        return f"    기를 둘러 막는다. 보호막 +{d['amount']}"
     if k == "counter":
-        return f"      ↳ 반격! {d['amount']} 반환 (HP {d['tgt_hp']})"
+        if d.get("by_player"):
+            return f"      되받아친다! {d['amount']} 반격  (적 HP {d['tgt_hp']})"
+        return f"      반격에 당한다. {d['amount']} 피해  (내 HP {d['tgt_hp']})"
     if k == "bijang":
-        return "  ✦ 비장(秘藏)의 수 발동!"
+        return "  ✦ 비장(秘藏)의 수가 터진다!"
     if k == "summon_attack":
-        return f"    {d['name']} 가세 — {d['amount']} 피해 (HP {d['tgt_hp']})"
+        return f"    {d['name']}이(가) 가세한다. {d['amount']} 피해  (적 HP {d['tgt_hp']})"
     if k == "enemy_action":
-        return f"  [적] {d['name']}!"
+        return f"  ! {d['name']}"
     if k == "info":
         return f"    {d['text']}"
     if k == "end":
         r = {"win": "승리", "loss": "패배", "timeout": "무승부"}[d["outcome"]]
-        return f"[{r}] {d['rounds']}합 · {e.data.get('player_hp')}/{e.data.get('player_max')} HP"
+        return f"[{r}] {d['rounds']}합 · 남은 체력 {d.get('player_hp')}/{d.get('player_max')}"
     return None
 
 
