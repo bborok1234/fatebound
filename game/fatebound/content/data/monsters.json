@@ -665,7 +665,7 @@
         "name_ko": "잠식의 빙뢰",
         "condition": "every_4_turns",
         "effect": "apply_poison",
-        "value": "12",
+        "value": "8",
         "cooldown": 4
       }
     ],

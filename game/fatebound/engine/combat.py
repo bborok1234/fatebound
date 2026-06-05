@@ -141,9 +141,10 @@ class Battle:
         self._e("bijang", build=self.lo_build_key(), btype=bj["type"])
         if bj["type"] == "burst":
             base = p.atk * bj["mult"] * (p.crit_dmg if bj.get("crit") else 1)
+            base *= 1 + p.luk * bj.get("luk_scale", 0) / 100.0   # 주사위: 운(運) 비례 결정타
             self._deal(p, en, base, ignore_def=True, can_crit=False, src_label="비장")
         elif bj["type"] == "detonate":
-            stacks = en.statuses.get("poison", 0)
+            stacks = en.statuses.get("poison", 0) + bj.get("floor", 0)   # 비장이 독을 왈칵 쏟아붓는다
             dmg = max(1, round(stacks * bj["k"] * (1 + p.poison_amp / 100.0)))
             en.hp -= dmg
             self._e("damage", src=p.name, tgt=en.name, amount=dmg, crit=False, label="만독발현",
