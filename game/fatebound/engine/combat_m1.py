@@ -1,0 +1,161 @@
+"""M1 전투 엔진 — 매 합 전체 발동 + 천명괘 줄(行/列) 강조 (doc 23).
+
+M0 combat.py와 *별도*(점진 이행: 검증 후 교체). 순수 로직·시드 결정론.
+- 공격 출력 = 놓인 무공의 m1.base × 레벨 스케일 × (1+인접 증폭) × 순독줄 × 중앙(천명 자리).
+- 천명괘 = 매 합 6줄(3행+3열) 중 하나 ×N_SPOT(증폭기). 전 무공은 매 합 발동.
+- 방어 = def/(def+K). 조건 무공(반격·약화·회복·취약)은 1차 최소 구현.
+출력은 events 스트림(렌더러가 소비). 수치는 balance_sim으로 확정(시드값).
+"""
+from __future__ import annotations
+from dataclasses import dataclass, field
+from .events import ev
+from . import balance
+
+GRID = 3
+LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8)]  # 3행 + 3열 = 천명괘 6면
+LINE_KO = ["1행", "2행", "3행", "1열", "2열", "3열"]
+ORTH = {0: [1, 3], 1: [0, 2, 4], 2: [1, 5], 3: [0, 4, 6], 4: [1, 3, 5, 7],
+        5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+
+# ── M1 레버(balance_sim 1차 확정 2026-06-05) ──
+N_SPOT = 1.6            # 천명괘 줄 강조 배수
+CENTER_MULT = 1.5      # 중앙 = 천명 자리
+LINE_PURE_BONUS = 0.25  # 순독(純毒) 줄 보너스
+VULN_BONUS = 0.15      # 취약(조건) 출력 보너스
+OUTPUT_C = 0.030       # 출력 스케일 = player.atk × OUTPUT_C (보스전 ~12합 · GOOD 클리어/BAD 실패)
+
+# ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
+#    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).
+DICE_MODS = {
+    "baekok":  {"spot_mult": 1.00, "dmg_mult": 1.00},                       # 백옥(C) 기준점
+    "heukyo":  {"spot_mult": 1.18, "dmg_mult": 0.96},                       # 흑요석(R) 스파이크(강조 특화)
+    "bichwi":  {"spot_mult": 1.00, "dmg_mult": 1.00, "reroll_weak": True},  # 비취(E) 일관성(약줄 재굴림)
+    "hyeolok": {"spot_mult": 1.00, "dmg_mult": 1.12},                       # 혈옥(L) 원초 출력
+    "baekgol": {"spot_mult": 1.05, "dmg_mult": 1.05},                       # 백골(R) 무난 올라운드
+}
+
+
+def _m1(it):
+    return it.get("m1") if it else None
+
+
+def cell_eff(cells, idx, scale, vuln=False):
+    """무공 i의 이번 합 출력(스폿라이트 전). 증폭/조건은 자체 출력 0."""
+    it = cells[idx]
+    m = _m1(it)
+    if not m or m.get("base", 0) <= 0:
+        return 0.0
+    adj = 0.0
+    for n in ORTH[idx]:
+        nb = _m1(cells[n])
+        if nb:
+            adj += nb.get("amp", 0.0)
+    r, c = divmod(idx, GRID)
+    row = [cells[r * GRID + j] for j in range(GRID)]
+    col = [cells[j * GRID + c] for j in range(GRID)]
+    line_bonus = 0.0
+    for line in (row, col):
+        if all(_m1(x) and _m1(x).get("role") == "payload" for x in line):
+            line_bonus = LINE_PURE_BONUS
+    center = CENTER_MULT if idx == 4 else 1.0
+    out = m["base"] * scale * (1 + adj) * (1 + line_bonus) * center
+    if vuln:
+        out *= 1 + VULN_BONUS
+    return out
+
+
+@dataclass
+class BattleM1Result:
+    outcome: str
+    rounds: int
+    player_hp_pct: float
+    events: list = field(default_factory=list)
+
+
+class BattleM1:
+    def __init__(self, cells, player, enemy_dict, zone_tier, rng, scale=None, die=None):
+        self.cells = list(cells)
+        self.player = player                 # Combatant — HP/def/spd(방어·생존)
+        self.rng = rng
+        self.K = balance.k_zone(zone_tier)
+        m = enemy_dict
+        ehp = round(m["hp"] * (balance.BOSS_HP_SCALE if m.get("is_boss") else balance.NORMAL_HP_SCALE))
+        self.e_name = m.get("name_ko") or m.get("name", "적")
+        self.e_hp = self.e_max = ehp
+        self.e_atk = m["atk"]
+        self.e_def = m.get("def", 0)
+        # 출력 스케일: 레벨 비례(공격 스탯 기반). balance_sim으로 확정.
+        self.scale = scale if scale is not None else max(1.0, player.atk * OUTPUT_C)
+        # 천명괘 주사위(재질) 모디파이어 — 코스메틱+스탯
+        d = DICE_MODS.get(die, {}) if isinstance(die, str) else (die or {})
+        self.spot = N_SPOT * d.get("spot_mult", 1.0)
+        self.scale *= d.get("dmg_mult", 1.0)
+        self.reroll_weak = d.get("reroll_weak", False)
+        self.events: list = []
+        # 조건 무공 보유 여부(1차 최소)
+        fxs = [(_m1(it) or {}).get("fx") for it in self.cells]
+        self.has_weaken = "weaken" in fxs
+        self.has_vuln = "vulnerable_if_poisoned" in fxs
+        self.has_counter = any(f in ("counter", "counter_poison") for f in fxs)
+        self.has_heal = "heal_low" in fxs
+
+    def _e(self, kind, **d):
+        self.events.append(ev(kind, **d))
+
+    def _mit(self, raw, dfn):
+        return max(1, round(raw * (1 - dfn / (dfn + self.K))))
+
+    def run(self, max_rounds=None):
+        max_rounds = max_rounds or balance.MAX_ROUNDS
+        self._e("battle_start", enemy=self.e_name, enemy_hp=self.e_max,
+                faces=[it["name_ko"] for it in self.cells if it])
+        rnd = 0
+        e_atk = self.e_atk
+        while self.player.hp > 0 and self.e_hp > 0 and rnd < max_rounds:
+            rnd += 1
+            self._e("round_start", n=rnd)
+            # 전 무공 발동(출력 합) — 빌드 고정이라 합당 동일
+            effs = {i: cell_eff(self.cells, i, self.scale, self.has_vuln) for i in range(9)}
+            # 천명괘: 한 줄 강조 (비취=하위 줄 1회 재굴림→더 센 줄 채택)
+            li = self.rng.roll(6)
+            if self.reroll_weak:
+                li2 = self.rng.roll(6)
+                if sum(effs[i] for i in LINES[li2]) > sum(effs[i] for i in LINES[li]):
+                    li = li2
+            line = LINES[li]
+            self._e("m1_line", line=li, name=LINE_KO[li])
+            base = sum(effs.values())
+            spot = (self.spot - 1) * sum(effs[i] for i in line)
+            total = self._mit(base + spot, self.e_def)
+            self.e_hp -= total
+            for i in range(9):
+                if effs[i] > 0:
+                    it = self.cells[i]
+                    self._e("m1_fire", name=it["name_ko"], amount=round(effs[i]),
+                            spotlit=(i in line), by_player=True)
+            self._e("damage", src=self.player.name, tgt=self.e_name, amount=total, crit=False,
+                    label=f"천명 {LINE_KO[li]}", by_player=True,
+                    tgt_hp=max(0, self.e_hp), tgt_max=self.e_max)
+            if self.e_hp <= 0:
+                break
+            # 적 공격(약화 조건 반영)
+            eff_atk = e_atk * (0.8 if self.has_weaken else 1.0)
+            dmg = self._mit(eff_atk * 0.9, self.player.defense)
+            self.player.hp -= dmg
+            self._e("damage", src=self.e_name, tgt=self.player.name, amount=dmg, crit=False,
+                    label="", by_player=False, tgt_hp=max(0, round(self.player.hp)),
+                    tgt_max=self.player.max_hp)
+            # 조건: 반격·회복(1차 최소)
+            if self.has_counter and dmg > 0:
+                ref = self._mit(dmg * 0.4, self.e_def)
+                self.e_hp -= ref
+                self._e("counter", src=self.player.name, tgt=self.e_name, amount=ref,
+                        by_player=True, tgt_hp=max(0, self.e_hp))
+            if self.has_heal and self.player.hp < self.player.max_hp * 0.5:
+                heal = round(self.player.max_hp * 0.06)
+                self.player.hp = min(self.player.max_hp, self.player.hp + heal)
+                self._e("heal", tgt=self.player.name, amount=heal, tgt_hp=round(self.player.hp))
+        outcome = "win" if self.e_hp <= 0 and self.player.hp > 0 else ("loss" if self.player.hp <= 0 else "timeout")
+        self._e("end", outcome=outcome, rounds=rnd, player_hp=max(0, round(self.player.hp)),
+                player_max=round(self.player.max_hp))
+        return BattleM1Result(outcome, rnd, max(0.0, self.player.hp) / self.player.max_hp, self.events)

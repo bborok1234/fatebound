@@ -50,7 +50,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 10,
-    "gist_ko": "공격 시 독 1중첩."
+    "gist_ko": "공격 시 독 1중첩.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0.0,
+      "fx": "poison"
+    }
   },
   {
     "item_id": "doga_jeoldokchim",
@@ -98,7 +104,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "내 독 효과 +15%. 공격 +3."
+    "gist_ko": "내 독 효과 +15%. 공격 +3.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0.2,
+      "fx": "amp_poison"
+    }
   },
   {
     "item_id": "heungrin_gap",
@@ -146,7 +158,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 +7. 체력 +40."
+    "gist_ko": "방어 +7. 체력 +40.",
+    "m1": {
+      "role": "engine",
+      "base": 1,
+      "amp": 0.0,
+      "fx": "on_hit_poison"
+    }
   },
   {
     "item_id": "dokmu_sangong",
@@ -199,7 +217,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 10,
-    "gist_ko": "특수 면에서 적 약화(공격 -20%)."
+    "gist_ko": "특수 면에서 적 약화(공격 -20%).",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "weaken"
+    }
   },
   {
     "item_id": "hoesaeng_dan",
@@ -252,7 +276,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "회복 면에서 체력 회복."
+    "gist_ko": "회복 면에서 체력 회복.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "dokjeong_ju",
@@ -307,7 +337,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "치명 +5. 공격 +3."
+    "gist_ko": "치명 +5. 공격 +3.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0.1,
+      "fx": "amp_crit"
+    }
   },
   {
     "item_id": "mandok_geom",
@@ -360,7 +396,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "공격 시 독 1중첩. 공격 +6."
+    "gist_ko": "공격 시 독 1중첩. 공격 +6.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0.0,
+      "fx": "poison_slash"
+    }
   },
   {
     "item_id": "chilbo_talhonsan",
@@ -420,7 +462,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 독 1중첩. 내 독 효과 +14%."
+    "gist_ko": "특수 면에서 독 1중첩. 내 독 효과 +14%.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0.0,
+      "fx": "poison_line_amp"
+    }
   },
   {
     "item_id": "busik_rin_gap",
@@ -480,7 +528,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%). 방어 +6."
+    "gist_ko": "방어 면에서 반격(피해 30%). 방어 +6.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "counter_poison"
+    }
   },
   {
     "item_id": "cheondok_ji",
@@ -535,7 +589,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "내 독 효과 +30%. 공격 +4."
+    "gist_ko": "내 독 효과 +30%. 공격 +4.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0.35,
+      "fx": "amp_poison"
+    }
   },
   {
     "item_id": "danjang_chohonryeong",
@@ -588,7 +648,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "집중 면에서 취약(받는 피해 +25%)."
+    "gist_ko": "집중 면에서 취약(받는 피해 +25%).",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "vulnerable_if_poisoned"
+    }
   },
   {
     "item_id": "odok_bantangyeong",
@@ -641,7 +707,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%)."
+    "gist_ko": "방어 면에서 반격(피해 30%).",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "azure_bamboo_venom_dagger",
@@ -708,7 +780,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 35,
-    "gist_ko": "공격 시 독 1중첩 + 피해. 곁에 독이 흐르면 내 독 +15%."
+    "gist_ko": "공격 시 독 1중첩 + 피해. 곁에 독이 흐르면 내 독 +15%.",
+    "m1": {
+      "role": "payload",
+      "base": 7,
+      "amp": 0.0,
+      "fx": "poison_slash"
+    }
   },
   {
     "item_id": "myriad_venom_gu",
@@ -770,7 +848,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 35,
-    "gist_ko": "내 독 효과 +25%. 3합마다 독 1중첩. 곁에 독이 흐르면 +10%."
+    "gist_ko": "내 독 효과 +25%. 3합마다 독 1중첩. 곁에 독이 흐르면 +10%.",
+    "m1": {
+      "role": "engine",
+      "base": 3,
+      "amp": 0.1,
+      "fx": "every3_poison"
+    }
   },
   {
     "item_id": "heavenly_venom_blood_demon_sword",
@@ -851,7 +935,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 55,
-    "gist_ko": "공격마다 독 1중첩 + 피해. 치명 시 내 독 +20%. 속도 -2."
+    "gist_ko": "공격마다 독 1중첩 + 피해. 치명 시 내 독 +20%. 속도 -2.",
+    "m1": {
+      "role": "payload",
+      "base": 10,
+      "amp": 0.0,
+      "fx": "poison_bigslash"
+    }
   },
   {
     "item_id": "throwing_blade_azure_phoenix",
