@@ -1,28 +1,61 @@
 /* 천명회귀 · Fatebound — 수묵(ink-wash) 무협 테마 (17 §2.1) */
 Screen { background: #1a1a1f; color: #e8e2d4; }
 
-/* ── 메인 게임 화면 레이아웃 (17 §3.3) ── */
+.hidden { display: none; }
+.label { color: #9a958a; height: 1; }
+
+/* ── 메인 게임 화면 (17 §3.3, §13) ── */
 #topbar { dock: top; height: 1; background: #26262e; color: #c8a24a; padding: 0 1; }
+#coach  { dock: top; height: auto; background: #2c2a20; color: #e8e2d4; padding: 0 1; border-bottom: solid #4a4636; }
 #actionbar { dock: bottom; height: 1; background: #26262e; color: #9a958a; padding: 0 1; }
 
 #main { height: 1fr; }
-#gugung-pane { width: 32; border: round #444; padding: 0 1; }
+#gugung-pane { width: 42; border: round #444; padding: 0 1; }
 #log-pane { width: 1fr; border: round #444; padding: 0 1; }
-#status-pane { width: 30; border: round #555; padding: 0 1; }
-
-/* ── 구궁 위젯 ── */
-GugungWidget { height: auto; }
-.cell { width: 9; height: 3; content-align: center middle; text-align: center; border: round #3a3a42; }
-.cell.syn { border: round #5aa67c; }
-.cell.cursor { border: heavy #c8a24a; background: #2a2a33; }
-.cell.empty { color: #444; }
-
-/* ── 상태 패널 ── */
-#hpbar { color: #c2453a; }
-#qibar { color: #4a90a4; }
-.label { color: #9a958a; }
+#status-pane { width: 34; border: round #555; padding: 0 1; }
+GugungWidget { height: auto; padding: 0 1; }
+#log { height: 1fr; }
 
 /* ── 타이틀 ── */
-#title-art { content-align: center middle; height: 1fr; color: #c8a24a; }
-#title-menu { align: center middle; height: auto; }
-#title-menu Button { width: 24; margin: 0 0 1 0; }
+#title-art { content-align: center middle; height: auto; color: #c8a24a; }
+#title-save { height: auto; margin: 1 0 0 0; }
+#title-menu { align: center middle; height: auto; margin: 1 0; }
+.tm-row { height: 1; width: auto; }
+#title-foot { height: auto; margin: 1 0 0 0; }
+
+/* ── 콜드오픈 ── */
+#cold-art  { height: auto; text-style: bold; }
+#cold-text { height: auto; content-align: center middle; text-align: center; margin: 1 0 2 0; }
+#cold-foot { height: auto; content-align: center middle; text-align: center; }
+
+/* ── 빌드 선택(설명 카드) ── */
+#bs-title { dock: top; height: 1; background: #26262e; padding: 0 1; }
+#bs-foot  { dock: bottom; height: 1; background: #26262e; padding: 0 1; }
+#bs-body  { height: 1fr; }
+#bs-list  { width: 24; border: round #444; padding: 1 1; }
+.bs-row   { height: 1; margin: 0 0 1 0; }
+#bs-detail-pane { width: 1fr; border: round #c8a24a; padding: 1 2; }
+
+/* ── 모달 박스(도움말·회귀·지도·사건·객잔·보관함) ── */
+HelpScreen, ReincarnateScreen, MapScreen, EventScreen, InnScreen, InventoryScreen {
+    align: center middle; background: #0d0d10 70%;
+}
+#help-box { border: round #c8a24a; background: #1f1f26; padding: 1 3; width: auto; height: auto; }
+#reincarnate-box { border: round #d4582f; background: #1f1a18; padding: 1 4; width: auto; height: auto; content-align: center middle; text-align: center; }
+
+/* 강호 지도 */
+#map-progress { height: auto; margin: 0 0 1 0; }
+#map-title { height: auto; margin: 0 0 1 0; }
+#map-list { width: 64; height: auto; border: round #c8a24a; background: #1f1f26; padding: 1 2; }
+.map-node { height: auto; margin: 0 0 1 0; }
+#map-foot { height: auto; margin: 1 0 0 0; }
+
+/* 사건 / 객잔 / 보관함 박스 */
+#event-box { width: 72; height: auto; border: round #7fa8d4; background: #1b1f26; padding: 1 3; }
+#inn-box   { width: 64; height: auto; border: round #5aa67c; background: #1a1f1c; padding: 1 3; }
+#inv-box   { width: 60; height: auto; border: round #c8a24a; background: #1f1f26; padding: 1 3; }
+#ev-title, #inn-title, #inv-title { height: auto; margin: 0 0 1 0; }
+#ev-text   { height: auto; margin: 0 0 1 0; }
+#ev-choices, #inn-opts, #inv-list { height: auto; }
+#ev-foot, #inn-foot, #inv-foot { height: auto; margin: 1 0 0 0; }
+#inn-body  { height: auto; margin: 0 0 1 0; }

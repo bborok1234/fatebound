@@ -1,20 +1,38 @@
-"""상태 패널 — 플레이어/적 HP 게이지·스탯·천명괘·커서 아이템 디테일. 전투 재생 중 라이브 갱신."""
+"""상태 패널(17 §13.4) — 플레이어/적 HP·천명괘·상생쌍·커서 무공 디테일. 전투 중 라이브 갱신."""
 from __future__ import annotations
 from textual.widget import Widget
 from rich.console import Group
 from rich.text import Text
 from rich.rule import Rule
+from ...engine.bag import synergy_cells
 
 RARITY = {"common": "grey70", "rare": "#4a90a4", "epic": "#c8a24a", "legendary": "#d4582f"}
+EFFECT_KO = {
+    "apply_poison": "독 부여", "deal_damage": "피해", "damage": "피해",
+    "increase_attack": "공격↑", "increase_defense": "방어↑", "increase_crit": "치명↑",
+    "increase_crit_dmg": "치명배수↑", "increase_speed": "속도↑", "counter": "반격",
+    "amplify_poison_pct": "독 증폭", "heal": "회복", "shield": "보호막",
+    "apply_burn": "화상", "apply_weak": "약화", "apply_vulnerable": "취약",
+    "summon_ally": "소환", "reroll": "리롤", "stun": "기절",
+}
+
+
+STATUS_GLYPH = {"poison": "☠독", "burn": "🔥화", "weak": "▽약", "vulnerable": "◇취", "stun": "✦둔"}
+STATUS_COLOR = {"poison": "#6fae5a", "burn": "#d4582f", "weak": "#b06a3a",
+                "vulnerable": "#b07fd4", "stun": "#b07fd4"}
 
 
 def bar(cur: float, mx: float, width: int = 16, color: str = "#c2453a") -> Text:
     mx = max(1, mx)
-    filled = max(0, min(width, round(width * cur / mx)))
+    ratio = cur / mx
+    if ratio <= 0.3 and cur > 0:        # 저HP 위험 강조(juice, 17 §2.4)
+        color = "#ff6b5e"
+    filled = max(0, min(width, round(width * ratio)))
     t = Text()
     t.append("▰" * filled, style=color)
     t.append("▱" * (width - filled), style="#3a3a42")
-    t.append(f" {max(0,int(cur))}/{int(mx)}", style="grey70")
+    warn = " ⚠" if (ratio <= 0.3 and cur > 0) else ""
+    t.append(f" {max(0,int(cur))}/{int(mx)}{warn}", style="grey70" if not warn else "#ff6b5e")
     return t
 
 
@@ -27,12 +45,30 @@ class StatusPanel(Widget):
         self.bijang = 0; self.bijang_max = 6
         self.detail_item = None
         self.faces: list = []
+        self.cur_face = ""
+        self.statuses: dict = {}
 
-    def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0):
+    def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0, cur_face="", statuses=None):
         self.p_hp, self.p_max = p_hp, p_max
         self.e_name, self.e_hp, self.e_max = e_name, e_hp, e_max
         self.bijang = bijang
+        self.cur_face = cur_face
+        self.statuses = statuses or {}
         self.refresh()
+
+    def _synergy_lines(self):
+        bag = self.session.bag
+        _, pairs = synergy_cells(bag)
+        seen, out = set(), []
+        for a, b in pairs:
+            key = tuple(sorted((a, b)))
+            if key in seen:
+                continue
+            seen.add(key)
+            na = bag.cells[a]["name_ko"] if bag.cells[a] else "?"
+            nb = bag.cells[b]["name_ko"] if bag.cells[b] else "?"
+            out.append(f"{na} ↔ {nb}")
+        return out
 
     def render(self):
         s = self.session
@@ -47,22 +83,55 @@ class StatusPanel(Widget):
         # 비장 게이지
         bj = "●" * self.bijang + "○" * max(0, self.bijang_max - self.bijang)
         g.append(Text(f"비장 {bj}", style="#e0b341"))
-        g.append(Rule(style="#3a3a42"))
-        # 적
+        # 적(전투 중) + 상태이상 배지
         if self.e_max:
+            g.append(Rule(style="#3a3a42"))
             g.append(Text(f"敵 {self.e_name}", style="#d4582f"))
             g.append(bar(self.e_hp, self.e_max, color="#d4582f"))
-            g.append(Rule(style="#3a3a42"))
-        # 천명괘
-        faces = self.faces or s.loadout().faces
-        g.append(Text("천명괘", style="grey62"))
-        g.append(Text(" ".join(f"〔{f if len(f)<=4 else f[:3]}〕" for f in faces), style="#4a90a4"))
+            if self.statuses:
+                bt = Text()
+                for st, n in self.statuses.items():
+                    if n and n > 0:
+                        bt.append(f"{STATUS_GLYPH.get(st, st)}{n} ", style=STATUS_COLOR.get(st, "grey70"))
+                if len(bt):
+                    g.append(bt)
         g.append(Rule(style="#3a3a42"))
-        # 커서 아이템 디테일
+        # 천명괘 — 전투 중 굴린 면 강조(juice)
+        faces = self.faces or s.loadout().faces
+        g.append(Text("천명괘(6면)", style="grey62"))
+        ft = Text()
+        for f in faces:
+            disp = f if len(f) <= 4 else f[:3]
+            on = bool(self.cur_face) and (self.cur_face == f or self.cur_face.startswith(disp))
+            ft.append(f"〔{disp}〕", style="#e0b341 bold" if on else "#4a90a4")
+            ft.append(" ")
+        g.append(ft)
+        if self.cur_face and self.e_max:
+            g.append(Text(f"굴림 → {self.cur_face}", style="#e0b341"))
+        # 상생쌍(사람이 읽게 — 접근성 §8)
+        syn = self._synergy_lines()
+        if syn:
+            g.append(Text("상생(相生)", style="#5aa67c"))
+            for line in syn[:4]:
+                g.append(Text(f" ◆ {line}", style="#5aa67c"))
+        # 커서 무공 디테일
         it = self.detail_item
+        g.append(Rule(style="#3a3a42"))
         if it:
-            g.append(Text(it["name_ko"], style=RARITY.get(it["rarity"], "white")))
-            g.append(Text(f"{it['rarity']} · 예산 {it.get('power_budget','?')} · {'/'.join(it.get('tags',[]))}", style="grey54"))
-            fx = "; ".join(f"{e['condition'].replace('on_face:','▸')}:{e['effect']}" for e in it.get("effects", [])[:3])
-            g.append(Text(fx, style="grey46"))
+            g.append(Text(it["name_ko"], style=f"{RARITY.get(it['rarity'],'white')} bold"))
+            # 쉬운 말 한 줄 — 가장 먼저·또렷이(라이트 무협 가독성)
+            gist = it.get("gist_ko", "")
+            if gist:
+                g.append(Text(gist, style="#e8e2d4"))
+            tags = "·".join(it.get("tags", []))
+            g.append(Text(f"{it['rarity']} · {tags}", style="grey54"))
+            for e in it.get("effects", [])[:3]:
+                cond = e.get("condition", "").replace("on_face:", "▸").replace("passive", "상시").replace("on_crit", "치명시")
+                ek = EFFECT_KO.get(e.get("effect", ""), e.get("effect", ""))
+                g.append(Text(f"  {cond} → {ek}", style="grey46"))
+            fl = it.get("flavor_ko", "")
+            if fl:
+                g.append(Text(fl, style="#6b665c italic"))   # 펀치라인 안 잘리게 전문 노출(자동 줄바꿈)
+        else:
+            g.append(Text("커서를 무공 위에 두면 상세가 보인다.", style="grey42"))
         return Group(*g)

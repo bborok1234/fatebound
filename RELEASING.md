@@ -12,7 +12,7 @@ Fatebound(`game/`)을 자동으로 빌드·배포하는 흐름. 패키지 관리
 git add -A && git commit -m "Fatebound: 기획 + P1 빌드 + uv/CI"
 gh repo create fatebound --public --source=. --push     # 또는 GitHub에서 레포 생성 후 git remote add + push
 ```
-푸시되면 `ci.yml`이 자동 실행된다(녹색 확인).
+푸시하면 `ci.yml`이 자동으로 돈다(녹색 확인).
 
 ## 1. 릴리스 (바이너리 + 휠 배포)
 ```bash
@@ -54,5 +54,5 @@ uv run pyinstaller --onefile --name fatebound \
 
 ## 메모
 - **버전 단일화 주의:** `pyproject.toml`과 `__init__.py.__version__` 두 곳을 항상 같이 올린다(향후 `hatch-vcs`로 태그 기반 단일화 가능 — 개선 후보).
-- 바이너리는 **빌드한 OS/arch에서만** 동작(matrix가 OS별 생성). macOS는 `macos-latest`=arm64. x86_64 맥/리눅스 arm이 필요하면 matrix에 러너 추가.
+- 바이너리는 **빌드한 OS/arch에서만** 동작한다(matrix가 OS별로 생성). macOS는 `macos-latest`=arm64. x86_64 맥/리눅스 arm이 필요하면 matrix에 러너를 추가한다.
 - `setup-uv` 액션 버전은 주기적으로 최신(현재 v7, v8 존재) 확인 후 bump.
