@@ -14,9 +14,10 @@
       "beast",
       "swarm"
     ],
-    "flavor_ko": "댓잎 사이를 떼지어 누비는 굶주린 들개. 피 냄새에 유독 사납게 군다.",
+    "flavor_ko": "굶주린 들개라. 짐승은 사람보다 솔직해서 차라리 상대하기 편하지.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "떼로 덤비는 들개. 빠르고 약하다."
   },
   {
     "monster_id": "feral_dog_pack",
@@ -41,9 +42,10 @@
       "beast",
       "swarm"
     ],
-    "flavor_ko": "근래 부쩍 흉포해진 들개 무리. 어디서 핏빛 결정을 핥고 다닌다는 소문이 돈다.",
+    "flavor_ko": "피 맛을 본 무리군. 한 마리씩이면 별것 아닌데 뭉치면 성가셔.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "광폭해진 들개 무리. 수가 많다."
   },
   {
     "monster_id": "bandit_lookout",
@@ -69,9 +71,10 @@
       "bandit",
       "agility"
     ],
-    "flavor_ko": "길목에 숨어 행인을 노리는 흑풍당 말단. 날래기만 할 뿐 한 합도 버티지 못한다.",
+    "flavor_ko": "망보던 졸개라. 이런 놈부터 입을 막아야 뒤가 깔끔하지.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "산적 망꾼. 약하지만 동료를 부른다."
   },
   {
     "monster_id": "bamboo_bandit",
@@ -88,9 +91,10 @@
       "human",
       "bandit"
     ],
-    "flavor_ko": "흑풍당에 상납하는 잡졸. 빼앗은 혈정을 두목에게 바치며 연명한다.",
+    "flavor_ko": "동네 산적이라. 전생엔 얼굴도 안 봤는데. …격세지감이군.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "흔한 산적. 막무가내로 벤다."
   },
   {
     "monster_id": "bandit_archer",
@@ -116,9 +120,10 @@
       "bandit",
       "agility"
     ],
-    "flavor_ko": "대숲 너머에서 화살을 날리는 견제수. 빠르지만 약체라 거리를 좁히면 무너진다.",
+    "flavor_ko": "활 좀 쏜다고 까부는 놈. 거리만 좁히면 그만이야.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "원거리 궁수. 거리를 두고 쏜다."
   },
   {
     "monster_id": "iron_shell_bandit",
@@ -144,9 +149,10 @@
       "bandit",
       "inner"
     ],
-    "flavor_ko": "어설픈 철포삼으로 몸을 두른 거구. 두텁게 막아서니 정공으론 좀체 뚫리지 않는다.",
+    "flavor_ko": "몸에 철판 두른 놈이군. 단단한 척해도 급소는 똑같이 무르다.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "철포삼으로 단단한 산적. 방어가 높다."
   },
   {
     "monster_id": "blackwind_runner",
@@ -172,9 +178,10 @@
       "bandit",
       "blackwind"
     ],
-    "flavor_ko": "혈정을 본단으로 실어 나르던 흑풍당 전령. 핏빛 결정이 변방을 막 돌기 시작한 증거다.",
+    "flavor_ko": "흑풍당 끄나풀이라. 전령이 변방까지 돈다는 건 위가 움직인다는 뜻이지.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "흑풍당 전령. 빠르게 치고 빠진다."
   },
   {
     "monster_id": "bandit_chief_bamboo",
@@ -207,9 +214,10 @@
       "bandit",
       "blackwind"
     ],
-    "flavor_ko": "혈정을 흑풍당에 상납하던 죽림의 두목. 쓰러뜨리자 품에서 핏빛 결정이 굴러나온다.",
+    "flavor_ko": "두목씩이나 되니 폼은 제법 잡는군. …품에 든 핏빛 돌, 그게 진짜 문제다.",
     "is_boss": true,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "죽림의 우두머리. 체력이 두껍고 한 방이 무겁다."
   },
   {
     "monster_id": "heukpung_jolgae",
@@ -226,9 +234,10 @@
       "blade",
       "hidden"
     ],
-    "flavor_ko": "흑풍당의 끄트머리. 검은 숲 길목에 떼로 깔려 행인의 봇짐을 턴다. 혈정 냄새를 맡으면 눈빛이 달라진다.",
+    "flavor_ko": "흑풍림 졸개라. 변방까지 손을 뻗쳤군. 갈 길이 멀겠어.",
     "is_boss": false,
-    "zone_id": "bamboo_grove"
+    "zone_id": "bamboo_grove",
+    "gist_ko": "흑풍림 잡졸. 무리로 나온다."
   },
   {
     "monster_id": "heukpung_cheokhu",
@@ -253,9 +262,10 @@
       "agility",
       "hidden"
     ],
-    "flavor_ko": "숲의 어둠을 미끄러지듯 달려 혈정 운송로를 정찰한다. 청운검문 추적대를 따돌린 발놀림이다.",
+    "flavor_ko": "숲에 숨어 엿보는 척후라. 먼저 본 쪽이 이기는 싸움이지.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "흑풍 척후병. 기습에 능하다."
   },
   {
     "monster_id": "heukpung_dobusu",
@@ -280,9 +290,10 @@
       "blade",
       "sword"
     ],
-    "flavor_ko": "한 자루 박도로 숲길을 막아선 흑풍당의 주력. 베인 자리에서 검은 바람 냄새가 난다.",
+    "flavor_ko": "큰 칼 휘두르는 도부수. 힘은 좋은데 느린 건 죄야.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "도부수. 묵직한 도로 내려친다."
   },
   {
     "monster_id": "hyeoljeong_unbankkun",
@@ -308,9 +319,10 @@
       "hidden",
       "inner"
     ],
-    "flavor_ko": "등에 진 봇짐 속에 핏빛 결정이 흔들린다. 혈천마교로 흘러드는 혈정의 중간책. 깨지면 안 되는 짐을 지고 도망친다.",
+    "flavor_ko": "혈정을 나르는 놈이군. 이 핏덩이가 어디로 흘러가는지 끝까지 따라가 봐야겠어.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "혈정을 나르는 짐꾼. 약하지만 단서를 쥐고 있다."
   },
   {
     "monster_id": "heukpung_bangpaebyeong",
@@ -336,9 +348,10 @@
       "counter",
       "inner"
     ],
-    "flavor_ko": "혈정 창고 앞을 막아선 거구. 청운검문의 합공도 그 방패 앞에 두 번 부서졌다.",
+    "flavor_ko": "방패 뒤에 숨은 놈. 정면이 단단하면 옆구리를 노리면 되지.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "방패병. 방어가 매우 높아 정면이 단단하다."
   },
   {
     "monster_id": "supseukgeurimja_salsu",
@@ -364,9 +377,10 @@
       "crit",
       "hidden"
     ],
-    "flavor_ko": "검은 숲의 나뭇가지 사이에 녹아든 흑풍당 살수. 혈정 거래를 엿본 자는 새벽 안개 속에서 사라진다.",
+    "flavor_ko": "그림자에 숨은 살수라. 이런 놈은 한 수에 끝내야 해. 끌면 내가 당한다.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "그림자 살수. 빠르고 치명타가 위협적이다."
   },
   {
     "monster_id": "heukpung_dumok",
@@ -392,9 +406,10 @@
       "counter",
       "inner"
     ],
-    "flavor_ko": "숲 깊은 채석장의 작은 두목. 품에 지닌 혈정 조각을 삼키면 핏줄이 검게 부푼다. 당주에게 바칠 공물을 지킨다.",
+    "flavor_ko": "두목 소리 듣는 놈이군. 당주까진 아니어도 몸풀기엔 적당해.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "흑풍림 중간 두목. 강력한 일격을 날린다."
   },
   {
     "monster_id": "heukpung_dangju",
@@ -428,9 +443,10 @@
       "crit",
       "hidden"
     ],
-    "flavor_ko": "검은 숲을 장악한 흑풍당의 주인. 혈정을 혈천마교에 넘기는 큰 손이자, 제 몸에도 혈정을 박아 힘을 키운 자. 청운검문이 베려다 도리어 베인 이름이다.",
+    "flavor_ko": "변방 흑도의 맹주라. 정작 자기가 뭘 돕는지도 모르더군. 가엾게도.",
     "is_boss": true,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "흑풍당의 주인. 강맹한 도법과 두꺼운 체력."
   },
   {
     "monster_id": "seol_yeo_dokju",
@@ -456,9 +472,10 @@
       "hidden",
       "agility"
     ],
-    "flavor_ko": "설원에 숨어 혈정 가루를 핥는 독거미. 한기에 굳지 않는 푸른 독은 교도의 부산물이라 한다.",
+    "flavor_ko": "독을 뿜는 놈이라. 독으로 독을 상대하는 것도 나름 운치 있지.",
     "is_boss": false,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "독을 쓰는 거미류. 중독을 건다."
   },
   {
     "monster_id": "binggu_swarm",
@@ -476,9 +493,10 @@
       "hidden",
       "agility"
     ],
-    "flavor_ko": "비곡 갱도를 갉는 흰 쥐 무리. 혈정 광맥의 부스러기를 먹고 눈이 붉게 물들었다.",
+    "flavor_ko": "설역 쥐떼라. 추운 데 사는 것들은 끈질겨서 귀찮아.",
     "is_boss": false,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "얼음굴 쥐떼. 수로 몰아친다."
   },
   {
     "monster_id": "hyeoljeong_gwang",
@@ -504,9 +522,10 @@
       "inner",
       "counter"
     ],
-    "flavor_ko": "혈정 조각을 삼키고 미쳐버린 광부. 제 살이 굳는 줄도 모르고 곡괭이를 휘두른다.",
+    "flavor_ko": "혈정에 잡아먹힌 놈이군. 눈에 제정신이 없어. …끊어주는 게 자비다.",
     "is_boss": false,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "혈정에 미친 광인. 무작정 달려든다."
   },
   {
     "monster_id": "seoljang_geomgwi",
@@ -532,9 +551,10 @@
       "inner",
       "counter"
     ],
-    "flavor_ko": "의식을 지키다 얼어 죽은 마교 검수의 시신. 혈정 기운이 그 몸을 갑주처럼 굳혀 아직도 곡을 지킨다.",
+    "flavor_ko": "검에 미련이 남은 귀신이라. 끝을 못 본 거겠지. …안다, 그 마음.",
     "is_boss": false,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "설역의 검귀. 빠른 검격을 퍼붓는다."
   },
   {
     "monster_id": "hanbing_dansa",
@@ -560,9 +580,10 @@
       "crit",
       "agility"
     ],
-    "flavor_ko": "혈천마교 잠행조의 자객. 칼날에 혈정 냉기를 둘러 베인 자리마저 얼려버린다.",
+    "flavor_ko": "얼음실로 옭아매는 자객. 잔재주 많은 놈일수록 한 번 뚫리면 허무하지.",
     "is_boss": false,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "한빙 비단실 자객. 묶고 베는 기교파."
   },
   {
     "monster_id": "hyeolmun_su",
@@ -588,9 +609,10 @@
       "fate",
       "hidden"
     ],
-    "flavor_ko": "부활 의식의 진을 그리는 술사. 혈정의 정수를 빨아들여 제 상처를 되돌린다.",
+    "flavor_ko": "피로 장난치는 술사라. 혈천마교 의식의 끄트머리가 보이는군.",
     "is_boss": false,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "혈문 술사. 술법으로 피를 다룬다."
   },
   {
     "monster_id": "seolryeong_gosu",
@@ -616,9 +638,10 @@
       "inner",
       "counter"
     ],
-    "flavor_ko": "혈정자의 마지막 수문장. 산 채로 혈정에 봉인되어 비경 가장 깊은 빙실을 지킨다.",
+    "flavor_ko": "비곡을 지키는 호법이라. 이놈을 넘으면 드디어 그자가 나오겠지.",
     "is_boss": false,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "설령의 호법. 강력한 수문장."
   },
   {
     "monster_id": "hyeoljeongja",
@@ -652,9 +675,10 @@
       "counter",
       "fate"
     ],
-    "flavor_ko": "세상을 등진 절세고수였으나 혈정을 봉인하려다 도리어 잠식당했다. 푸르게 굳은 그의 비명은 아직도 \"도망쳐라\" 외치지만, 손은 혈마의 부활을 향해 움직인다.",
+    "flavor_ko": "한때 협의로운 고수였다지. 혈정이 사람을 이렇게 만든다. …늦었지만, 멈춰주마.",
     "is_boss": true,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "혈정에 잠식된 은거고수. 강맹하나 비통하다."
   },
   {
     "monster_id": "blood_alchemist_poison_envoy",
@@ -687,9 +711,10 @@
       "poison",
       "blood"
     ],
-    "flavor_ko": "흑풍림에 잠입한 혈천마교의 독공 사자. 혈정을 녹여 빚은 핏빛 독무를 흩뿌리며, 사람의 정기를 거두어 교주의 부활 제물로 삼는다. 궁지에 몰릴수록 제 몸의 혈정을 터뜨려 독기를 짙게 한다 — 해독과 속공이 없다면 독무 속에서 천천히 스러질 뿐이다.",
+    "flavor_ko": "혈독사자라. 혈천마교 냄새가 짙군. 이놈을 따라가면 본진이 나오겠어.",
     "is_boss": true,
-    "zone_id": "black_wind_forest"
+    "zone_id": "black_wind_forest",
+    "gist_ko": "혈독을 다루는 사자. 강한 독과 술법을 쓴다."
   },
   {
     "monster_id": "frost_blood_revenant",
@@ -722,8 +747,9 @@
       "blood",
       "frost"
     ],
-    "flavor_ko": "한천비곡의 혈정 의식이 남긴 잔재 — 혈정에 잠식되어 죽지도 살지도 못한 채 비곡을 떠도는 옛 무인의 원혼. 혈음진으로 적의 정기를 빨아 스스로를 되살리고, 끊어진 경맥의 한을 절맥 일격에 실어 내리친다. 회복에 기대는 자는 그의 흡정 앞에 무너진다 — 보호막과 반격, 그리고 단숨에 끝낼 결의가 필요하다.",
+    "flavor_ko": "피와 얼음으로 빚은 귀물이라. 의식이 벌써 이만큼 왔나. …서둘러야겠어.",
     "is_boss": true,
-    "zone_id": "frost_spring_valley"
+    "zone_id": "frost_spring_valley",
+    "gist_ko": "혈음으로 깨어난 빙백귀. 얼음과 피의 술을 쓴다."
   }
 ]

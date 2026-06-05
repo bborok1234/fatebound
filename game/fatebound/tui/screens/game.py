@@ -1,6 +1,9 @@
-"""메인 게임 화면 — 구궁·전투로그·상태 3분할 + 이벤트 스트림 애니메이션 재생(D2 관전 + 비장)."""
+"""허브 게임 화면 — 구궁 정비 + 강호 지도 여정(17 §13.5) + 이벤트 스트림 전투(D2).
+Space로 갈림길(지도)을 열어 전투/사건/객잔/기연/보스를 고르고, 결과를 안고 허브로 돌아온다.
+"""
 from __future__ import annotations
 import asyncio
+import os
 from textual import work
 from textual.screen import Screen
 from textual.containers import Horizontal, Container
@@ -10,48 +13,80 @@ from ..widgets.statuspanel import StatusPanel
 from ...engine import render_text, balance
 from ... import persistence
 
-# 이벤트별 재생 딜레이(초) — t-beat 기반(17 §2.4). 배속은 self.speed로 나눔.
 DELAY = {"round_start": 0.18, "dice": 0.16, "damage": 0.14, "tick": 0.12, "bijang": 0.30,
          "enemy_action": 0.16, "counter": 0.10, "status": 0.08, "summon_attack": 0.10,
          "heal": 0.10, "shield": 0.10, "focus": 0.06, "info": 0.10, "end": 0.2}
+
+# 디제틱 가이드(첫 회귀에만, 17 §13.2)
+COACH = [
+    "여기가 [#c8a24a]구궁(九宮)[/]. [#c8a24a]방향키[/]로 놓인 무공을 하나씩 살펴보라.",
+    "[#5aa67c]녹색[/]으로 이어진 둘은 [#5aa67c]상생(相生)[/]한다. [#c8a24a]Enter[/]로 집어 옮겨 붙여보라.",
+    "준비됐으면 [#c8a24a]Space[/]로 [#c8a24a]강호 지도[/]를 열어 첫 길을 고르라.",
+    "[#e0b341]비장(秘藏)의 수[/]는 전투 중 차올라 [#e0b341]저절로[/] 터지는 필살 한 수. 익혔다. ([#9a958a]Esc로 닫기[/])",
+]
+ZONE_KO = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림",
+           "frost_spring_valley": "한천비곡", "central_plains_gate": "중원 진입로"}
 
 
 class GameScreen(Screen):
     BINDINGS = [
         ("up", "cur(-1,0)"), ("down", "cur(1,0)"), ("left", "cur(0,-1)"), ("right", "cur(0,1)"),
-        ("enter", "grab"), ("space", "fight(False)"), ("b", "fight(True)"),
-        ("f", "speed"), ("q", "app.quit"),
+        ("enter", "grab"), ("space", "journey"), ("m", "journey"), ("i", "inventory"),
+        ("f", "speed"), ("question_mark", "help"), ("escape", "dismiss_coach"), ("q", "app.quit"),
     ]
 
-    def __init__(self, session):
+    def __init__(self, session, first_run: bool = False):
         super().__init__()
         self.session = session
-        self.speed = 1.0
+        # 축소 모션(접근성, 17 §8): 환경변수 설정 시 전투 즉시 재생
+        self.reduced_motion = bool(os.environ.get("FATEBOUND_REDUCED_MOTION"))
+        self.speed = 64.0 if self.reduced_motion else 1.0
         self.busy = False
+        self.coach = 0 if (first_run and session.reincarnations == 0 and not session.tutorial_done) else None
 
     def compose(self):
         yield Static(id="topbar")
+        yield Static(id="coach", classes="hidden")
         with Horizontal(id="main"):
             with Container(id="gugung-pane"):
-                yield Static("구궁(九宮)", classes="label")
+                yield Static("[#9a958a]구궁(九宮) · 무공 배치[/]", classes="label")
                 yield GugungWidget(self.session, id="gugung")
             with Container(id="log-pane"):
+                yield Static("[#9a958a]강호 기록[/]", classes="label")
                 yield RichLog(id="log", wrap=True, markup=True, auto_scroll=True)
             yield StatusPanel(self.session, id="status-pane")
         yield Static(id="actionbar")
 
     def on_mount(self):
+        self.session.ensure_map()
         self._topbar()
-        self.query_one("#actionbar", Static).update(
-            "[#c8a24a]방향키[/] 이동 · [#c8a24a]Enter[/] 집기/놓기 · [#c8a24a]Space[/] 전투 · [#c8a24a]B[/] 보스 · [#c8a24a]F[/] 배속 · [#c8a24a]Q[/] 종료")
+        self._actionbar()
         self._sync_detail()
-        self.query_one("#log", RichLog).write("[#9a958a]강호에 들어선다. 구궁을 살피고, 전투를 시작하라.[/]")
+        self._coach_refresh()
+        log = self.query_one("#log", RichLog)
+        log.can_focus = False
+        self.set_focus(None)
+        z = ZONE_KO.get(self.session.zone, self.session.zone)
+        log.write(f"[#9a958a]── {z} ──[/]")
+        log.write("[#9a958a]구궁을 정비하고, [/][#c8a24a]Space[/][#9a958a]로 강호에 나서라.  ([/][#c8a24a]?[/][#9a958a] 도움말)[/]")
 
+    # ── HUD ──
     def _topbar(self):
         s = self.session
-        z = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림", "frost_spring_valley": "한천비곡"}.get(s.zone, s.zone)
+        z = ZONE_KO.get(s.zone, s.zone)
+        gate = f"관문 {min(s.map_step+1, len(s.map_steps))}/{len(s.map_steps)}" if s.map_steps else ""
+        sp = "즉시" if self.speed >= 64 else f"×{self.speed:g}"
         self.query_one("#topbar", Static).update(
-            f"강호유력 · [#e8e2d4]{z}[/] · 회귀 #{s.reincarnations} · {balance.BUILD_LABEL.get(s.build, s.build)} 계열 · 배속 ×{self.speed:g}")
+            f"강호유력 · [#e8e2d4]{z}[/] · {gate} · 회귀 #{s.reincarnations} · "
+            f"{balance.BUILD_LABEL.get(s.build, s.build)} 계열 · 배속 {sp}")
+
+    def _actionbar(self, combat: bool = False):
+        if combat:
+            txt = "[#c8a24a]F[/] 배속  ·  전투가 끝나면 다시 조작할 수 있다"
+        else:
+            txt = ("[#c8a24a]방향키[/] 이동 · [#c8a24a]Enter[/] 집기/놓기 · [#c8a24a]Space[/] 강호로(갈림길) · "
+                   "[#c8a24a]I[/] 보관함 · [#c8a24a]F[/] 배속 · [#c8a24a]?[/] 도움말 · [#c8a24a]Q[/] 종료")
+        self.query_one("#actionbar", Static).update(txt)
 
     def _sync_detail(self):
         g = self.query_one("#gugung", GugungWidget)
@@ -60,39 +95,139 @@ class GameScreen(Screen):
         p.faces = self.session.loadout().faces
         p.refresh()
 
+    def _refresh_hub(self):
+        self.query_one("#gugung", GugungWidget).refresh()
+        self._sync_detail()
+        self._topbar()
+
+    # ── 코치 ──
+    def _coach_refresh(self):
+        banner = self.query_one("#coach", Static)
+        if self.coach is None or self.coach >= len(COACH):
+            banner.add_class("hidden"); banner.update("")
+        else:
+            banner.remove_class("hidden")
+            banner.update(f"[#c8a24a]☞[/] {COACH[self.coach]}")
+
+    def _coach_advance(self, frm: int):
+        if self.coach == frm:
+            self.coach = frm + 1
+            if self.coach >= len(COACH):
+                self.coach = None
+            self._coach_refresh()
+
+    def action_dismiss_coach(self):
+        if self.coach is not None:
+            self.coach = None
+            self._finish_tutorial()
+            self._coach_refresh()
+
+    def _finish_tutorial(self):
+        if not self.session.tutorial_done:
+            self.session.tutorial_done = True
+            persistence.save(self.session)
+
+    def action_help(self):
+        from .help import HelpScreen
+        self.app.push_screen(HelpScreen())
+
+    # ── 구궁 조작 ──
     def action_cur(self, dr: int, dc: int):
         if self.busy:
             return
         self.query_one("#gugung", GugungWidget).move_cursor(dr, dc)
         self._sync_detail()
+        self._coach_advance(0)
 
     def action_grab(self):
         if self.busy:
             return
-        self.query_one("#gugung", GugungWidget).toggle_grab()
+        g = self.query_one("#gugung", GugungWidget)
+        was = g.grabbed is not None
+        g.toggle_grab()
         self._sync_detail()
-        persistence.save(self.session)          # 배치 변경 자동저장
+        persistence.save(self.session)
+        if was and g.grabbed is None:
+            self._coach_advance(1)
 
-    def action_speed(self):
-        self.speed = {1.0: 2.0, 2.0: 4.0, 4.0: 1.0}[self.speed]
-        self._topbar()
-
-    def action_fight(self, boss: bool):
+    def action_inventory(self):
         if self.busy:
             return
-        self._play(boss)
+        from .inventory import InventoryScreen
+        idx = self.query_one("#gugung", GugungWidget).cursor
+        self.app.push_screen(InventoryScreen(self.session, idx), self._after_inventory)
 
+    def _after_inventory(self, placed):
+        if placed:
+            persistence.save(self.session)
+        self._refresh_hub()
+
+    def action_speed(self):
+        self.speed = {1.0: 2.0, 2.0: 4.0, 4.0: 1.0}.get(self.speed, 1.0)  # 즉시(64)에서 누르면 ×1로
+        self._topbar()
+
+    # ── 여정(강호 지도) ──
+    def action_journey(self):
+        if self.busy:
+            return
+        from .map import MapScreen
+        self.app.push_screen(MapScreen(self.session), self._on_node)
+
+    def _on_node(self, node):
+        if not node:
+            return
+        t = node["type"]
+        log = self.query_one("#log", RichLog)
+        if t in ("battle", "elite", "boss"):
+            if self.coach == 2:
+                self.coach = 3
+            self._play(boss=(t == "boss"), elite=(t == "elite"))
+        elif t == "event":
+            ev = self.session.pick_event()
+            if ev:
+                from .event import EventScreen
+                self.app.push_screen(EventScreen(self.session, ev), self._after_noncombat)
+            else:
+                self._after_noncombat(True)
+        elif t == "inn":
+            from .inn import InnScreen
+            self.app.push_screen(InnScreen(self.session), self._after_noncombat)
+        elif t == "fortune":
+            it = self.session.fortune_grant()
+            if it:
+                log.write(f"[#e0b341]기연(緣). 무공 '{it['name_ko']}'을(를) 얻었다![/]")
+            else:
+                log.write("[#e0b341]기연(緣). 더 얻을 무공이 없어 정수(精) +5.[/]")
+            self._after_noncombat(True)
+
+    def _after_noncombat(self, _=None):
+        self.session.advance_node()
+        persistence.save(self.session)
+        self._refresh_hub()
+        self.query_one("#log", RichLog).write("[#9a958a]다음 갈림길로 가려면 Space[/]")
+
+    # ── 전투 ──
     @work(exclusive=True)
-    async def _play(self, boss: bool):
+    async def _play(self, boss: bool, elite: bool = False):
         self.busy = True
+        self._actionbar(combat=True)
         log = self.query_one("#log", RichLog)
         panel = self.query_one("#status-pane", StatusPanel)
-        res, enemy = self.session.fight(boss)
+        res, enemy = self.session.fight(boss, elite)
         log.clear()
+        if elite:
+            log.write("[#d4582f]── 정예와의 일전 ──[/]")
+        # 적 size-up — 천기노조의 한 줄(gist=정체, flavor=품평)
+        if enemy.get("gist_ko"):
+            log.write(f"[#d4582f]{enemy.get('name_ko','적')}[/] · [#9a958a]{enemy['gist_ko']}[/]")
+        if enemy.get("flavor_ko"):
+            log.write(f"[#6b665c italic]\"{enemy['flavor_ko']}\"[/]")
         p_hp = p_max = e_hp = e_max = 0
         e_name = enemy.get("name_ko", "적")
         pname = self.session.name
         bj = 0
+        cur_face = ""
+        estatus: dict = {}
         for e in res.events:
             d = e.data
             if e.kind == "battle_start":
@@ -100,7 +235,6 @@ class GameScreen(Screen):
                 pv = self.session.player_preview()
                 p_hp, p_max = pv.max_hp, pv.max_hp
                 panel.bijang_max = balance.BIJANG_CHARGE
-            # HP 라이브 추적
             if "tgt_hp" in d:
                 if d.get("tgt") == e_name:
                     e_hp = d["tgt_hp"]
@@ -112,18 +246,27 @@ class GameScreen(Screen):
                 bj = 0
             if e.kind == "dice":
                 bj = min(panel.bijang_max, bj + 1)
+                cur_face = d.get("face", cur_face)
+            if e.kind == "status" and d.get("tgt") == e_name:
+                estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
             line = render_text.line(e)
             if line:
-                styled = self._style(e, line)
-                log.write(styled)
-            panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj)
-            await asyncio.sleep(DELAY.get(e.kind, 0.1) / self.speed)
-        # 결과 처리
-        out = self.session.apply_result(res, enemy, boss)
+                log.write(self._style(e, line))
+            panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj, cur_face=cur_face, statuses=dict(estatus))
+            # hitstop — 치명·비장은 한 박자 더 머문다(임팩트, 17 §2.4)
+            hit = 0.12 if ((e.kind == "damage" and d.get("crit")) or e.kind == "bijang") else 0.0
+            await asyncio.sleep((DELAY.get(e.kind, 0.1) + hit) / self.speed)
+        out = self.session.apply_result(res, enemy, boss, elite)
         self._after(res, out, log)
-        persistence.save(self.session)          # 자동저장(전투 결과·회귀 반영)
+        persistence.save(self.session)
+        # 노드 진행: 회귀/보스돌파는 지도가 이미 리셋·재생성됨 → 일반/정예 승리만 한 칸 전진
+        if not out.get("reincarnated") and not out.get("boss_cleared"):
+            self.session.advance_node()
+            persistence.save(self.session)
         self.busy = False
-        self._topbar(); self._sync_detail()
+        self._refresh_hub(); self._actionbar()
+        if self.coach == 3:
+            self._coach_refresh(); self._finish_tutorial()
 
     def _style(self, e, line: str) -> str:
         if e.kind == "damage" and e.data.get("crit"):
@@ -150,7 +293,13 @@ class GameScreen(Screen):
                 log.write(f"[#c8a24a bold]경지 상승! Lv{lv}[/]")
             if out.get("drop"):
                 log.write(f"[#c8a24a]전리품 무공: {out['drop']['name_ko']} 획득![/]")
+            if out.get("boss_cleared"):
+                za = out.get("zone_advanced")
+                if za:
+                    log.write(f"[#c8a24a bold]━━ 관문 돌파! 새 강호 '{ZONE_KO.get(za, za)}'(이)가 열렸다 ━━[/]")
+                else:
+                    log.write("[#c8a24a bold]━━ 이 강호를 평정했다. 더 깊은 곳으로… ━━[/]")
         elif out.get("reincarnated"):
-            log.write(f"[#d4582f bold]━━ 전사 — 회귀(回歸) ━━[/]")
+            log.write("[#d4582f bold]━━ 전사, 그리고 회귀(回歸) ━━[/]")
             from .reincarnate import ReincarnateScreen
             self.app.push_screen(ReincarnateScreen(self.session, out.get("gain", 0), "전사"))

@@ -1,41 +1,99 @@
-"""타이틀 화면 — 천명반 모티프 ASCII + 빌드 선택 → 새 회귀 시작."""
+"""타이틀 — 천명반 모티프 + 메뉴(이어하기/새 회귀/도움말/종료). 키보드 우선(17 §13)."""
 from __future__ import annotations
 from textual.screen import Screen
-from textual.containers import Vertical, Horizontal
-from textual.widgets import Static, Button
-from ...engine.session import GameSession
+from textual.containers import Vertical, Center, Middle
+from textual.widgets import Static
+from textual.reactive import reactive
 from ... import persistence
+from ...engine.session import BUILD_LABEL
 
-ART = r"""
-        ╔═══════════════════════════╗
-        ║   템 빨 · 天 命 回 歸       ║
-        ║      ◍  구궁의 주사위       ║
-        ╚═══════════════════════════╝
-   회귀한 전대 고수, 천명반으로 강호를 다시 걷다.
-"""
+ART = r"""[#c8a24a]
+        ╔══════════════════════════════╗
+        ║      天 命 回 歸  ·  Fatebound ║
+        ║        ◍   구궁의 주사위        ║
+        ╚══════════════════════════════╝[/]
+   [#9a958a]회귀한 전대 고수, 천명반으로 강호를 다시 걷다.[/]"""
 
-BUILDS = [("poison", "독(毒)"), ("crit", "치명(致命)"), ("guard", "방어·반격"), ("dice", "주사위 조작")]
+ZONE_KO = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림",
+           "frost_spring_valley": "한천비곡", "central_plains_gate": "중원 진입로"}
 
 
 class TitleScreen(Screen):
-    def compose(self):
-        yield Static(ART, id="title-art")
-        with Vertical(id="title-menu"):
-            if persistence.has_save():
-                yield Button("이어하기 (회귀 계속)", id="continue", variant="success")
-            yield Static("무공 기틀을 고르라 — 새 회귀", classes="label")
-            with Horizontal():
-                for key, label in BUILDS:
-                    yield Button(label, id=f"build-{key}", variant="primary")
+    BINDINGS = [("up", "move(-1)"), ("down", "move(1)"), ("enter", "confirm"),
+                ("space", "confirm"), ("question_mark", "help"), ("q", "app.quit")]
+    sel: reactive[int] = reactive(0)
 
-    def on_button_pressed(self, event: Button.Pressed):
-        from .game import GameScreen
-        if event.button.id == "continue":
-            session = persistence.load()
-            if session:
-                self.app.push_screen(GameScreen(session))
-                return
-        key = event.button.id.replace("build-", "")
-        session = GameSession.new_game("천기노조", key)
-        persistence.save(session)
-        self.app.push_screen(GameScreen(session))
+    def compose(self):
+        self.has_save = persistence.has_save()
+        self.items = []
+        if self.has_save:
+            self.items.append(("continue", "이어하기 · 회귀를 계속한다"))
+        self.items.append(("new", "새 회귀 · 처음부터 시작"))
+        self.items.append(("help", "도움말"))
+        self.items.append(("quit", "종료"))
+        with Middle():
+            with Center():
+                yield Static(ART, id="title-art")
+            with Center():
+                yield Static(id="title-save")
+            with Center():
+                with Vertical(id="title-menu"):
+                    for i, (_id, _lbl) in enumerate(self.items):
+                        yield Static(id=f"tm-{i}", classes="tm-row")
+            with Center():
+                yield Static("[#9a958a]↑↓ 선택 · Enter 결정 · ? 도움말[/]", id="title-foot")
+
+    def on_mount(self):
+        self._save_line()
+        self._paint()
+
+    def _save_line(self):
+        line = ""
+        if self.has_save:
+            s = persistence.load()
+            if s:
+                z = ZONE_KO.get(s.zone, s.zone)
+                line = (f"[#9a958a]이어하기: 제{s.reincarnations+1}생 · {z} · "
+                        f"{BUILD_LABEL.get(s.build, s.build)} 계열 · Lv{s.level}[/]")
+        self.query_one("#title-save", Static).update(line)
+
+    def watch_sel(self):
+        try:
+            self._paint()
+        except Exception:
+            pass
+
+    def _paint(self):
+        for i, (_id, lbl) in enumerate(self.items):
+            row = self.query_one(f"#tm-{i}", Static)
+            if i == self.sel:
+                row.update(f"[#1a1a1f on #c8a24a]  ▸ {lbl}  [/]")
+            else:
+                row.update(f"[#e8e2d4]    {lbl}[/]")
+
+    def action_move(self, d: int):
+        self.sel = (self.sel + d) % len(self.items)
+
+    def action_help(self):
+        from .help import HelpScreen
+        self.app.push_screen(HelpScreen())
+
+    def action_confirm(self):
+        _id = self.items[self.sel][0]
+        if _id == "quit":
+            self.app.exit()
+        elif _id == "help":
+            self.action_help()
+        elif _id == "continue":
+            s = persistence.load()
+            if s:
+                from .game import GameScreen
+                self.app.switch_screen(GameScreen(s))
+        elif _id == "new":
+            # 처음(세이브 없음)이면 콜드오픈부터, 이미 본 적 있으면 바로 기틀 선택
+            if self.has_save:
+                from .buildselect import BuildSelectScreen
+                self.app.switch_screen(BuildSelectScreen())
+            else:
+                from .coldopen import ColdOpenScreen
+                self.app.switch_screen(ColdOpenScreen())

@@ -1,4 +1,6 @@
-"""구궁(九宮) 위젯 — 3×3 배치를 Rich Table 한 장으로 렌더(CJK 정렬). 커서 네비·집기/놓기·시너지 하이라이트."""
+"""구궁(九宮) 위젯 — 3×3 배치(17 §5, §13.4). 가독성 우선:
+이름 절단 금지(칸폭 12로 5자 수용), 커서/집기 확실히 가시화, 상생 녹색 표기.
+"""
 from __future__ import annotations
 from textual.widget import Widget
 from textual.reactive import reactive
@@ -8,7 +10,9 @@ from rich.box import HEAVY
 from ...engine.bag import synergy_cells
 
 RARITY = {"common": "grey70", "rare": "#4a90a4", "epic": "#c8a24a", "legendary": "#d4582f bold"}
+RARITY_DOT = {"common": "○", "rare": "◆", "epic": "◆", "legendary": "★"}
 GRID = 3
+CW = 12  # 칸 내부폭(셀) — 한글 5자(10셀) + 여유. 이름 절단 금지.
 
 
 class GugungWidget(Widget):
@@ -44,29 +48,44 @@ class GugungWidget(Widget):
     def render(self):
         bag = self.session.bag
         syn, _ = synergy_cells(bag)
-        t = Table(show_header=False, box=HEAVY, padding=0, border_style="#3a3a42",
+        t = Table(show_header=False, box=HEAVY, padding=0, border_style="#55504a",
                   expand=False, pad_edge=False)
         for _ in range(GRID):
-            t.add_column(justify="center", width=9, no_wrap=True)
+            t.add_column(justify="center", width=CW, no_wrap=True)
+
         for r in range(GRID):
             row = []
             for c in range(GRID):
                 idx = r * GRID + c
                 it = bag.cells[idx]
+                cur = (idx == self.cursor)
+                grab = (idx == self.grabbed)
+
                 if it is None:
-                    cell = Text("· · ·", style="#3a3a42", justify="center")
+                    name = Text("· · ·", style="#3a3a42", justify="center")
+                    sub = Text("빈 칸", style="#33333a", justify="center")
                 else:
-                    name = it["name_ko"]
-                    disp = name if len(name) <= 4 else name[:3] + "…"
+                    nm = it["name_ko"]
                     style = RARITY.get(it["rarity"], "white")
-                    cell = Text(disp, style=style, justify="center")
                     if idx in syn:
-                        cell.append("\n⇄", style="#5aa67c")
-                # 커서/집기 테두리 대용: 배경/마커
-                if idx == self.grabbed:
-                    cell.stylize("on #4a3a2a")
-                elif idx == self.cursor:
-                    cell.stylize("on #2a2a33")
+                        name = Text(nm, style="#5aa67c bold", justify="center")
+                        sub = Text("◆ 상생", style="#5aa67c", justify="center")
+                    else:
+                        name = Text(nm, style=style, justify="center")
+                        dot = RARITY_DOT.get(it["rarity"], "·")
+                        sub = Text(dot, style=style, justify="center")
+
+                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커)
+                if grab:
+                    name = Text("✋", style="#e0b341") + name
+                    name.stylize("on #6b4423"); sub.stylize("on #6b4423")
+                elif cur:
+                    name = Text("▸", style="#c8a24a bold") + name + Text("◂", style="#c8a24a bold")
+                    name.stylize("bold on #3b4660")
+                    sub.stylize("on #3b4660")
+
+                cell = Text("\n", justify="center")
+                cell.append_text(name); cell.append("\n"); cell.append_text(sub)
                 row.append(cell)
             t.add_row(*row)
         return t
