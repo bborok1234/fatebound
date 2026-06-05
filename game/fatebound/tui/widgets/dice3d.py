@@ -126,7 +126,7 @@ def rasterize(ax, ay, az, sk, W, Hp, scale, cy, focal=6.0):
         pc = _clamp3(tuple(c * (0.45 + 0.55 * d) for c in sk["pip"]))
         for (pu, pv) in PIP_LAYOUT[pips]:
             cen = tuple(n[j] * 1.02 + ud[j] * pu * 0.52 + vd[j] * pv * 0.52 for j in range(3))
-            _disc(col, zb, _proj(_rot(cen, ax, ay, az), W, Hp, scale, cy, focal), scale * 0.115, pc)
+            _disc(col, zb, _proj(_rot(cen, ax, ay, az), W, Hp, scale, cy, focal), max(1.5, scale * 0.16), pc)
     return col
 
 
@@ -226,7 +226,7 @@ class Dice3D(Widget):
         self.target = 0                  # 착지 목표 면
         self.result_line = 0
         self.flash = 0
-        self.scale_mul = 0.72            # 동적 포커스(0.72 배치 / 1.0 굴림)
+        self.scale_mul = 0.85            # 동적 포커스(0.85 휴식 / 1.0 굴림)
         self.want_big = False
         self.hist = []
         self.sparks = []
@@ -247,7 +247,7 @@ class Dice3D(Widget):
         self.target = face_for_line(self.result_line)
         self.want_big = True
         if instant:
-            self.ax, self.ay = FACE_HOME[self.target]; self.az = 0.0
+            self.ax, self.ay = self._landed_pose(); self.az = 0.0
             self.phase = "idle"; self._t = 1; self.flash = 4; self._burst()
             self.refresh()
             return
@@ -261,10 +261,10 @@ class Dice3D(Widget):
 
     # ── 프레임 ──
     def _tick(self):
-        tgt = 1.0 if (self.want_big or self.phase != "idle") else 0.72
+        tgt = 1.0 if (self.want_big or self.phase != "idle") else 0.85
         self.scale_mul += (tgt - self.scale_mul) * 0.25
         if self.phase == "idle":
-            self.ay += 0.012; self.ax += 0.005
+            self.ay += 0.014; self.ax += 0.005    # 잔잔한 부유 회전(살아있음·입체 노출). 결과는 캡션이 명시.
         elif self.phase == "tumble":
             self.ax += self.vx; self.ay += self.vy; self.az += self.vz
             self.vx *= 0.96; self.vy *= 0.96; self.vz *= 0.96
@@ -272,17 +272,24 @@ class Dice3D(Widget):
             if self._frames >= self.TUMBLE_FRAMES:
                 self.phase = "settle"; self._t = 0
         elif self.phase == "settle":
-            hx, hy = FACE_HOME[self.target]
-            self.ax += (hx - self.ax) * 0.32
-            self.ay = self._toward(self.ay, hy, 0.32)
+            pax, pay = self._landed_pose()        # 정면이 아니라 3/4 틸트로 착지(입체 유지·결과 가독)
+            self.ax += (pax - self.ax) * 0.32
+            self.ay = self._toward(self.ay, pay, 0.32)
             self.az += (0.0 - self.az) * 0.32
             self._t = getattr(self, "_t", 0) + 1
             if self._t == 1:
                 self.flash = 5; self._burst()
             if self._t >= self.SETTLE_FRAMES:
-                self.ax, self.ay = FACE_HOME[self.target]; self.az = 0.0
+                self.ax, self.ay = pax, pay; self.az = 0.0
                 self.phase = "idle"; self.want_big = False
                 self.post_message(self.Landed(self.result_line))
+
+    def _landed_pose(self):
+        """착지 자세 — 결과 면을 정면 대신 3/4 각으로(입체감 유지)."""
+        hx, hy = FACE_HOME[self.target]
+        if abs(hx) > 0.1:                  # 상/하 면(ax로 정렬) → ay로 틸트
+            return hx, hy + 0.44
+        return 0.42, hy                    # 전/후/좌/우 면(ax=0) → ax로 아래 틸트
         self.flash = max(0, self.flash - 1)
         if self.sparks:
             for s in self.sparks:
