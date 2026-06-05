@@ -83,7 +83,8 @@ class Battle:
                 del defender.statuses["shield"]
         defender.hp -= final
         self._e("damage", src=attacker.name, tgt=defender.name, amount=final, crit=crit,
-                label=src_label, tgt_hp=max(0, round(defender.hp)), tgt_max=defender.max_hp)
+                label=src_label, by_player=attacker.is_player,
+                tgt_hp=max(0, round(defender.hp)), tgt_max=defender.max_hp)
         # 반격
         if final > 0 and defender.counter_pct > 0 and defender.alive:
             ref = max(1, round(final * defender.counter_pct * balance.COUNTER_SCALE))
@@ -91,7 +92,7 @@ class Battle:
                 self.counter_accum += ref
             attacker.hp -= ref
             self._e("counter", src=defender.name, tgt=attacker.name, amount=ref,
-                    tgt_hp=max(0, round(attacker.hp)))
+                    by_player=defender.is_player, tgt_hp=max(0, round(attacker.hp)))
         return final, crit
 
     def _apply(self, eff: dict, src: Combatant, tgt: Combatant, allow_oncrit=True):
@@ -146,7 +147,7 @@ class Battle:
             dmg = max(1, round(stacks * bj["k"] * (1 + p.poison_amp / 100.0)))
             en.hp -= dmg
             self._e("damage", src=p.name, tgt=en.name, amount=dmg, crit=False, label="만독발현",
-                    tgt_hp=max(0, round(en.hp)), tgt_max=en.max_hp)
+                    by_player=True, tgt_hp=max(0, round(en.hp)), tgt_max=en.max_hp)
         elif bj["type"] == "counter_burst":
             base = p.atk * bj["atk"] + p.defense * bj["def"] + self.counter_accum * bj["accum"]
             self.counter_accum = 0
@@ -158,7 +159,7 @@ class Battle:
     # ── 턴 ──
     def player_turn(self, rnd: int):
         if self.player.statuses.pop("stun", 0):
-            self._e("info", text=f"{self.player.name} 기절 — 행동 불가"); return
+            self._e("info", text=f"{self.player.name}이(가) 굳었다. 이번 합은 움직일 수 없다"); return
         self.bijang += 1
         if self.bijang >= balance.BIJANG_CHARGE:
             self.bijang = 0
@@ -181,7 +182,7 @@ class Battle:
             self._e("focus", count=self.focus)
             if self.focus >= balance.FOCUS_THRESHOLD:
                 self.focus = 0
-                self._e("info", text="응기 폭발 — 특수 보장")
+                self._e("info", text="쌓인 응기가 터진다! 특수의 수가 보장된다")
                 for _, eff in self.lo.face_effects.get("특수", []):
                     self._apply(eff, self.player, self.enemy)
             return

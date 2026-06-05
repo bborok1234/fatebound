@@ -249,9 +249,11 @@ class GameScreen(Screen):
                 cur_face = d.get("face", cur_face)
             if e.kind == "status" and d.get("tgt") == e_name:
                 estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
-            line = render_text.line(e)
-            if line:
-                log.write(self._style(e, line))
+            ln = render_text.line(e)
+            if ln and e.kind != "battle_start":          # 적 소개는 위에서 이미 출력함
+                if e.kind == "round_start" and d.get("n", 1) > 1:
+                    log.write("")                          # 합 사이 한 줄 띄워 가독성
+                log.write(self._style(e, ln))
             panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj, cur_face=cur_face, statuses=dict(estatus))
             # hitstop — 치명·비장은 한 박자 더 머문다(임팩트, 17 §2.4)
             hit = 0.12 if ((e.kind == "damage" and d.get("crit")) or e.kind == "bijang") else 0.0
@@ -269,20 +271,30 @@ class GameScreen(Screen):
             self._coach_refresh(); self._finish_tutorial()
 
     def _style(self, e, line: str) -> str:
-        if e.kind == "damage" and e.data.get("crit"):
-            return f"[#e0b341 bold]{line}[/]"
-        if e.kind == "bijang":
-            return f"[#e0b341 bold]{line}[/]"
-        if e.kind == "tick":
-            return f"[#6fae5a]{line}[/]"
-        if e.kind == "counter":
+        k, d = e.kind, e.data
+        if k == "round_start":
+            return f"[#55504a]{line}[/]"                  # 합 구분선 — 흐리게
+        if k == "dice":
             return f"[#7fa8d4]{line}[/]"
-        if e.kind == "end":
-            oc = e.data["outcome"]
-            col = {"win": "#5aa67c", "loss": "#d4582f", "timeout": "#9a958a"}[oc]
-            return f"[{col} bold]{line}[/]"
-        if e.kind == "enemy_action":
+        if k == "damage":
+            if d.get("crit"):
+                return f"[#e0b341 bold]{line}[/]"         # 치명 — 사이다 금빛
+            return f"[#e8e2d4]{line}[/]" if d.get("by_player") else f"[#c08a7a]{line}[/]"  # 내 공격 밝게 / 적 공격 흐린 적
+        if k == "bijang":
+            return f"[#e0b341 bold]{line}[/]"
+        if k == "tick":
+            return f"[#6fae5a]{line}[/]"
+        if k == "counter":
+            return f"[#7fa8d4]{line}[/]"
+        if k == "status":
+            return f"[#9a958a]{line}[/]"
+        if k == "info":
+            return f"[#c8a24a]{line}[/]"
+        if k == "enemy_action":
             return f"[#d4582f]{line}[/]"
+        if k == "end":
+            col = {"win": "#5aa67c", "loss": "#d4582f", "timeout": "#9a958a"}[d["outcome"]]
+            return f"[{col} bold]{line}[/]"
         return line
 
     def _after(self, res, out, log: RichLog):
