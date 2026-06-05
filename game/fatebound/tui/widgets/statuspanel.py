@@ -96,19 +96,7 @@ class StatusPanel(Widget):
                 if len(bt):
                     g.append(bt)
         g.append(Rule(style="#3a3a42"))
-        # 천명괘 — 전투 중 굴린 면 강조(juice)
-        faces = self.faces or s.loadout().faces
-        g.append(Text("천명괘(6면)", style="grey62"))
-        ft = Text()
-        for f in faces:
-            disp = f if len(f) <= 4 else f[:3]
-            on = bool(self.cur_face) and (self.cur_face == f or self.cur_face.startswith(disp))
-            ft.append(f"〔{disp}〕", style="#e0b341 bold" if on else "#4a90a4")
-            ft.append(" ")
-        g.append(ft)
-        if self.cur_face and self.e_max:
-            g.append(Text(f"굴림 → {self.cur_face}", style="#e0b341"))
-        # 상생쌍(사람이 읽게 — 접근성 §8)
+        # 상생쌍(사람이 읽게 — 접근성 §8). 천명괘는 상단 DiceWidget이 전담.
         syn = self._synergy_lines()
         if syn:
             g.append(Text("상생(相生)", style="#5aa67c"))

@@ -10,6 +10,7 @@ from textual.containers import Horizontal, Container
 from textual.widgets import Static, RichLog
 from ..widgets.gugung import GugungWidget
 from ..widgets.statuspanel import StatusPanel
+from ..widgets.dice import DiceWidget
 from ...engine import render_text, balance
 from ... import persistence
 
@@ -46,6 +47,7 @@ class GameScreen(Screen):
 
     def compose(self):
         yield Static(id="topbar")
+        yield DiceWidget(id="dice")          # 천명괘 — 핵심·랜덤성의 축, 전투 시각 초점(상단 전폭)
         yield Static(id="coach", classes="hidden")
         with Horizontal(id="main"):
             with Container(id="gugung-pane"):
@@ -62,6 +64,7 @@ class GameScreen(Screen):
         self._topbar()
         self._actionbar()
         self._sync_detail()
+        self.query_one("#dice", DiceWidget).set_faces(self.session.loadout().faces)
         self._coach_refresh()
         log = self.query_one("#log", RichLog)
         log.can_focus = False
@@ -98,6 +101,7 @@ class GameScreen(Screen):
     def _refresh_hub(self):
         self.query_one("#gugung", GugungWidget).refresh()
         self._sync_detail()
+        self.query_one("#dice", DiceWidget).set_faces(self.session.loadout().faces)   # 배치 바뀌면 천명괘도 갱신
         self._topbar()
 
     # ── 코치 ──
@@ -213,6 +217,8 @@ class GameScreen(Screen):
         self._actionbar(combat=True)
         log = self.query_one("#log", RichLog)
         panel = self.query_one("#status-pane", StatusPanel)
+        dicew = self.query_one("#dice", DiceWidget)
+        dicew.set_faces(self.session.loadout().faces)
         res, enemy = self.session.fight(boss, elite)
         log.clear()
         if elite:
@@ -247,6 +253,7 @@ class GameScreen(Screen):
             if e.kind == "dice":
                 bj = min(panel.bijang_max, bj + 1)
                 cur_face = d.get("face", cur_face)
+                await self._roll_dice(dicew, cur_face)    # 천명괘 룰렛 굴림(여기서 페이싱)
             if e.kind == "status" and d.get("tgt") == e_name:
                 estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
             ln = render_text.line(e)
@@ -257,7 +264,8 @@ class GameScreen(Screen):
             panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj, cur_face=cur_face, statuses=dict(estatus))
             # hitstop — 치명·비장은 한 박자 더 머문다(임팩트, 17 §2.4)
             hit = 0.12 if ((e.kind == "damage" and d.get("crit")) or e.kind == "bijang") else 0.0
-            await asyncio.sleep((DELAY.get(e.kind, 0.1) + hit) / self.speed)
+            if e.kind != "dice":          # 주사위는 룰렛 굴림이 이미 페이싱함
+                await asyncio.sleep((DELAY.get(e.kind, 0.1) + hit) / self.speed)
         out = self.session.apply_result(res, enemy, boss, elite)
         self._after(res, out, log)
         persistence.save(self.session)
@@ -269,6 +277,25 @@ class GameScreen(Screen):
         self._refresh_hub(); self._actionbar()
         if self.coach == 3:
             self._coach_refresh(); self._finish_tutorial()
+
+    async def _roll_dice(self, w, result: str):
+        """천명괘 룰렛 — 6면을 훑다가 결과 면에 감속 정지 + flash(17 §6). 즉시/축소모션은 바로 착지."""
+        n = len(w.faces)
+        if n == 0 or self.speed >= 64:
+            w.land(result, flash=False)
+            return
+        try:
+            target = w.faces.index(result)
+        except ValueError:
+            target = 0
+        steps = n + 1 + target                 # 한 바퀴+ 훑고 결과에서 멈춤
+        base = 0.03 / self.speed
+        for s in range(steps):
+            w.roll_frame(s)
+            await asyncio.sleep(base * (1.0 + 2.2 * (s / max(1, steps))))   # 점점 느리게
+        w.land(result, flash=True)
+        await asyncio.sleep(0.13 / self.speed)
+        w.unflash()
 
     def _style(self, e, line: str) -> str:
         k, d = e.kind, e.data

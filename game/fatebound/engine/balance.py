@@ -42,10 +42,13 @@ FOCUS_THRESHOLD = 3        # 응기 카운터 → 특수 보장
 # ── 비장(秘藏)의 수(02, 14 4·5차) — 유틸 빌드 보스 딜 창구 + 에이전시 ──
 BIJANG_CHARGE = 6
 BIJANG = {
-    "poison": {"type": "detonate", "k": 12},
+    # poison: 비장이 독을 왈칵 쏟아부어(floor) 즉시 터뜨린다 — 충전 시점 잔여 stacks가 적어도 의미 있게(14 재튜닝)
+    "poison": {"type": "detonate", "k": 12, "floor": 6},
     "crit":   {"type": "burst", "mult": 1.15, "crit": True},
-    "guard":  {"type": "counter_burst", "atk": 0.8, "def": 1.2, "accum": 0.8},
-    "dice":   {"type": "burst", "mult": 2.6, "crit": True},
+    # guard: 쌓은 방어·반격을 한 방으로(유틸 빌드 보스 딜 창구) — 느린 빌드라 한 방이 묵직해야
+    "guard":  {"type": "counter_burst", "atk": 1.4, "def": 2.4, "accum": 1.7},
+    # dice: 운(運)에 비례하는 결정타 — 주사위 빌드 정체성(luk_scale). 보스 딜 창구
+    "dice":   {"type": "burst", "mult": 4.3, "crit": True, "luk_scale": 1.0},
 }
 
 # ── 시너지/예산(08 §6) ──
