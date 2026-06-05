@@ -22,6 +22,14 @@ class GugungWidget(Widget):
     def __init__(self, session, **kw):
         super().__init__(**kw)
         self.session = session
+        self.active: set = set()        # 천명괘로 강조된 줄(전투 중 점화)
+
+    # ── 전투 점화(화면이 호출) ──
+    def ignite(self, indices):
+        self.active = set(indices); self.refresh()
+
+    def douse(self):
+        self.active = set(); self.refresh()
 
     # ── 조작(화면이 호출) ──
     def move_cursor(self, dr: int, dc: int):
@@ -75,8 +83,10 @@ class GugungWidget(Widget):
                         dot = RARITY_DOT.get(it["rarity"], "·")
                         sub = Text(dot, style=style, justify="center")
 
-                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커)
-                if grab:
+                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커). 전투 점화는 최우선.
+                if idx in self.active:
+                    name.stylize("bold on #4a3a12"); sub.stylize("on #4a3a12")   # 천명 줄 점화(금빛)
+                elif grab:
                     name = Text("✋", style="#e0b341") + name
                     name.stylize("on #6b4423"); sub.stylize("on #6b4423")
                 elif cur:

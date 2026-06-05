@@ -208,6 +208,9 @@ class Dice3D(Widget):
 
     PX = 38                              # 고정 버퍼(패널 크기 불변 → reflow 없음)
     FOCAL = 6.0
+    TUMBLE_FRAMES = 26                   # 굴림(구르기) 프레임
+    SETTLE_FRAMES = 12                   # 착지(안착) 프레임
+    ROLL_SECONDS = (26 + 12) / 30        # 화면이 await할 굴림 총길이(≈1.27s)
 
     class Landed(Message):
         def __init__(self, line: int):
@@ -238,12 +241,17 @@ class Dice3D(Widget):
             self.skin = skin
             self.refresh()
 
-    def roll(self, target_line: int):
-        """엔진이 굴린 줄(0~5)에 맞춰 주사위를 굴려 그 면으로 착지시킨다."""
+    def roll(self, target_line: int, instant: bool = False):
+        """엔진이 굴린 줄(0~5)에 맞춰 그 면으로 착지. instant=즉시(축소모션/고배속)."""
         self.result_line = target_line % 6
         self.target = face_for_line(self.result_line)
-        self.phase = "tumble"
         self.want_big = True
+        if instant:
+            self.ax, self.ay = FACE_HOME[self.target]; self.az = 0.0
+            self.phase = "idle"; self._t = 1; self.flash = 4; self._burst()
+            self.refresh()
+            return
+        self.phase = "tumble"; self._frames = 0
         self.vx = random.uniform(0.30, 0.55) * random.choice((-1, 1))
         self.vy = random.uniform(0.42, 0.62) * random.choice((-1, 1))
         self.vz = random.uniform(0.10, 0.20) * random.choice((-1, 1))
@@ -259,18 +267,20 @@ class Dice3D(Widget):
             self.ay += 0.012; self.ax += 0.005
         elif self.phase == "tumble":
             self.ax += self.vx; self.ay += self.vy; self.az += self.vz
-            self.vx *= 0.95; self.vy *= 0.95; self.vz *= 0.95
-            if abs(self.vy) < 0.05 and abs(self.vx) < 0.05:
+            self.vx *= 0.96; self.vy *= 0.96; self.vz *= 0.96
+            self._frames = getattr(self, "_frames", 0) + 1
+            if self._frames >= self.TUMBLE_FRAMES:
                 self.phase = "settle"; self._t = 0
         elif self.phase == "settle":
             hx, hy = FACE_HOME[self.target]
-            self.ax += (hx - self.ax) * 0.30
-            self.ay = self._toward(self.ay, hy, 0.30)
-            self.az += (0.0 - self.az) * 0.30
+            self.ax += (hx - self.ax) * 0.32
+            self.ay = self._toward(self.ay, hy, 0.32)
+            self.az += (0.0 - self.az) * 0.32
             self._t = getattr(self, "_t", 0) + 1
             if self._t == 1:
                 self.flash = 5; self._burst()
-            if self._t >= 18:
+            if self._t >= self.SETTLE_FRAMES:
+                self.ax, self.ay = FACE_HOME[self.target]; self.az = 0.0
                 self.phase = "idle"; self.want_big = False
                 self.post_message(self.Landed(self.result_line))
         self.flash = max(0, self.flash - 1)
