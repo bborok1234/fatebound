@@ -22,5 +22,10 @@ build/
 .omc/
 .DS_Store
 
+# ── Claude Code: 로컬 상태/설정은 제외, 공유 커맨드(/release 등)는 버전 관리 ──
+.claude/*
+!.claude/commands/
+.claude/settings.local.json
+
 # ── 세이브(로컬) ─────────────────────────────────────────────
 *.save.json
