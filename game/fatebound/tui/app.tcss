@@ -6,16 +6,18 @@ Screen { background: #1a1a1f; color: #e8e2d4; }
 
 /* ── 메인 게임 화면 (17 §3.3, §13) ── */
 #topbar { dock: top; height: 1; background: #26262e; color: #c8a24a; padding: 0 1; }
-/* 천명괘(天命卦) — 핵심·랜덤성의 축. 상단 전폭 룰렛(17 §6) */
-#dice { dock: top; height: 4; border: round #c8a24a; background: #1f1f26; color: #e8e2d4; padding: 0 1; content-align: center middle; }
 #coach  { dock: top; height: auto; background: #2c2a20; color: #e8e2d4; padding: 0 1; border-bottom: solid #4a4636; }
 #actionbar { dock: bottom; height: 1; background: #26262e; color: #9a958a; padding: 0 1; }
 
+/* 북극성: 天命卦(좌) | 구궁(중앙) | 敵/보스(우) · 천명록(하단 전폭) */
 #main { height: 1fr; }
+#dice-pane   { width: 38; border: round #c8a24a; background: #16161b; padding: 0 1; }
 #gugung-pane { width: 42; border: round #444; padding: 0 1; }
-#log-pane { width: 1fr; border: round #444; padding: 0 1; }
-#status-pane { width: 34; border: round #555; padding: 0 1; }
+#status-pane { width: 1fr; border: round #555; padding: 0 1; }
 GugungWidget { height: auto; padding: 0 1; }
+/* 천명괘(天命卦) — 3D 주사위. 핵심·랜덤성의 축(17 §6) */
+#dice { height: auto; content-align: center middle; }
+#log-pane { height: 11; border: round #444; padding: 0 1; }
 #log { height: 1fr; }
 
 /* ── 타이틀 ── */

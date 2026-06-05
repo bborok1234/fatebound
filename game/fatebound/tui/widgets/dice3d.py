@@ -206,7 +206,7 @@ def _dim(c, f):
 class Dice3D(Widget):
     """천명괘 3D 주사위. roll(line)으로 엔진 결과에 맞춰 착지, 착지 시 Landed 메시지."""
 
-    PX = 38                              # 고정 버퍼(패널 크기 불변 → reflow 없음)
+    PX = 34                              # 고정 버퍼(패널 크기 불변 → reflow 없음). 짝수 필수.
     FOCAL = 6.0
     TUMBLE_FRAMES = 26                   # 굴림(구르기) 프레임
     SETTLE_FRAMES = 12                   # 착지(안착) 프레임

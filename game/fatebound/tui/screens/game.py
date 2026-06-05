@@ -10,13 +10,15 @@ from textual.containers import Horizontal, Container
 from textual.widgets import Static, RichLog
 from ..widgets.gugung import GugungWidget
 from ..widgets.statuspanel import StatusPanel
-from ..widgets.dice import DiceWidget
+from ..widgets.dice3d import Dice3D
+from ...engine.combat_m1 import LINES
 from ...engine import render_text, balance
 from ... import persistence
 
 DELAY = {"round_start": 0.18, "dice": 0.16, "damage": 0.14, "tick": 0.12, "bijang": 0.30,
          "enemy_action": 0.16, "counter": 0.10, "status": 0.08, "summon_attack": 0.10,
-         "heal": 0.10, "shield": 0.10, "focus": 0.06, "info": 0.10, "end": 0.2}
+         "heal": 0.10, "shield": 0.10, "focus": 0.06, "info": 0.10, "end": 0.2,
+         "m1_line": 0.0, "m1_fire": 0.05}      # m1_line은 주사위 굴림이 페이싱
 
 # 디제틱 가이드(첫 회귀에만, 17 §13.2)
 COACH = [
@@ -47,16 +49,18 @@ class GameScreen(Screen):
 
     def compose(self):
         yield Static(id="topbar")
-        yield DiceWidget(id="dice")          # 천명괘 — 핵심·랜덤성의 축, 전투 시각 초점(상단 전폭)
         yield Static(id="coach", classes="hidden")
         with Horizontal(id="main"):
-            with Container(id="gugung-pane"):
+            with Container(id="dice-pane"):       # 좌: 天命卦 3D 주사위(핵심·랜덤성의 축)
+                yield Static("[#c8a24a]天命卦 · 천명괘[/]", classes="label")
+                yield Dice3D(skin=getattr(self.session, "die_skin", "baekok"), id="dice")
+            with Container(id="gugung-pane"):      # 중앙: 구궁(배치=결정 공간)
                 yield Static("[#9a958a]구궁(九宮) · 무공 배치[/]", classes="label")
                 yield GugungWidget(self.session, id="gugung")
-            with Container(id="log-pane"):
-                yield Static("[#9a958a]강호 기록[/]", classes="label")
-                yield RichLog(id="log", wrap=True, markup=True, auto_scroll=True)
-            yield StatusPanel(self.session, id="status-pane")
+            yield StatusPanel(self.session, id="status-pane")   # 우: 敵/보스 + 내 상태
+        with Container(id="log-pane"):             # 하단 전폭: 천명록
+            yield Static("[#9a958a]천명록(天命錄)[/]", classes="label")
+            yield RichLog(id="log", wrap=True, markup=True, auto_scroll=True)
         yield Static(id="actionbar")
 
     def on_mount(self):
@@ -64,7 +68,6 @@ class GameScreen(Screen):
         self._topbar()
         self._actionbar()
         self._sync_detail()
-        self.query_one("#dice", DiceWidget).set_faces(self.session.loadout().faces)
         self._coach_refresh()
         log = self.query_one("#log", RichLog)
         log.can_focus = False
@@ -101,7 +104,6 @@ class GameScreen(Screen):
     def _refresh_hub(self):
         self.query_one("#gugung", GugungWidget).refresh()
         self._sync_detail()
-        self.query_one("#dice", DiceWidget).set_faces(self.session.loadout().faces)   # 배치 바뀌면 천명괘도 갱신
         self._topbar()
 
     # ── 코치 ──
@@ -217,9 +219,10 @@ class GameScreen(Screen):
         self._actionbar(combat=True)
         log = self.query_one("#log", RichLog)
         panel = self.query_one("#status-pane", StatusPanel)
-        dicew = self.query_one("#dice", DiceWidget)
-        dicew.set_faces(self.session.loadout().faces)
-        res, enemy = self.session.fight(boss, elite)
+        dice = self.query_one("#dice", Dice3D)
+        gug = self.query_one("#gugung", GugungWidget)
+        m1 = self.session.use_m1()
+        res, enemy = (self.session.fight_m1 if m1 else self.session.fight)(boss, elite)
         log.clear()
         if elite:
             log.write("[#d4582f]── 정예와의 일전 ──[/]")
@@ -234,6 +237,7 @@ class GameScreen(Screen):
         bj = 0
         cur_face = ""
         estatus: dict = {}
+        rollc = 0
         for e in res.events:
             d = e.data
             if e.kind == "battle_start":
@@ -250,10 +254,15 @@ class GameScreen(Screen):
                 p_hp = d.get("tgt_hp", p_hp)
             if e.kind == "bijang":
                 bj = 0
-            if e.kind == "dice":
+            if e.kind == "round_start":
+                gug.douse()                               # 지난 합 점화 해제
+            if e.kind == "dice":                          # M0: 천명괘(코스메틱 굴림)
                 bj = min(panel.bijang_max, bj + 1)
                 cur_face = d.get("face", cur_face)
-                await self._roll_dice(dicew, cur_face)    # 천명괘 룰렛 굴림(여기서 페이싱)
+                await self._do_roll(dice, rollc % 6); rollc += 1
+            if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
+                await self._do_roll(dice, d["line"])
+                gug.ignite(LINES[d["line"]])
             if e.kind == "status" and d.get("tgt") == e_name:
                 estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
             ln = render_text.line(e)
@@ -264,8 +273,9 @@ class GameScreen(Screen):
             panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj, cur_face=cur_face, statuses=dict(estatus))
             # hitstop — 치명·비장은 한 박자 더 머문다(임팩트, 17 §2.4)
             hit = 0.12 if ((e.kind == "damage" and d.get("crit")) or e.kind == "bijang") else 0.0
-            if e.kind != "dice":          # 주사위는 룰렛 굴림이 이미 페이싱함
+            if e.kind not in ("dice", "m1_line"):         # 주사위 굴림이 자체 페이싱
                 await asyncio.sleep((DELAY.get(e.kind, 0.1) + hit) / self.speed)
+        gug.douse()
         out = self.session.apply_result(res, enemy, boss, elite)
         self._after(res, out, log)
         persistence.save(self.session)
@@ -278,24 +288,12 @@ class GameScreen(Screen):
         if self.coach == 3:
             self._coach_refresh(); self._finish_tutorial()
 
-    async def _roll_dice(self, w, result: str):
-        """천명괘 룰렛 — 6면을 훑다가 결과 면에 감속 정지 + flash(17 §6). 즉시/축소모션은 바로 착지."""
-        n = len(w.faces)
-        if n == 0 or self.speed >= 64:
-            w.land(result, flash=False)
-            return
-        try:
-            target = w.faces.index(result)
-        except ValueError:
-            target = 0
-        steps = n + 1 + target                 # 한 바퀴+ 훑고 결과에서 멈춤
-        base = 0.03 / self.speed
-        for s in range(steps):
-            w.roll_frame(s)
-            await asyncio.sleep(base * (1.0 + 2.2 * (s / max(1, steps))))   # 점점 느리게
-        w.land(result, flash=True)
-        await asyncio.sleep(0.13 / self.speed)
-        w.unflash()
+    async def _do_roll(self, dice, line: int):
+        """천명괘 3D 주사위를 결과 줄(0~5)로 굴린다. 고배속/축소모션은 즉시 착지."""
+        instant = self.speed >= 2.0
+        dice.roll(line, instant=instant)
+        if not instant:
+            await asyncio.sleep(Dice3D.ROLL_SECONDS)       # 위젯이 자체 타이머로 굴러 착지
 
     def _style(self, e, line: str) -> str:
         k, d = e.kind, e.data
