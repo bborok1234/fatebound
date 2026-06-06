@@ -233,7 +233,8 @@ class Dice3D(Widget):
         self.border_title = "天命卦 · 천명괘"
 
     def on_mount(self):
-        self.set_interval(1 / 30, self._tick)
+        self.set_interval(1 / 30, self._tick)   # 상태 진행(회전·물리·스파크)
+        self.auto_refresh = 1 / 30              # 리페인트는 Textual auto_refresh로(타이머 내 refresh()는 안 먹힘)
 
     # ── 게임 화면 API ──
     def set_skin(self, skin: str):
@@ -295,7 +296,7 @@ class Dice3D(Widget):
             for s in self.sparks:
                 s["x"] += s["vx"]; s["y"] += s["vy"]; s["vy"] += 0.18; s["vx"] *= 0.99; s["age"] += 1
             self.sparks = [s for s in self.sparks if s["age"] < s["life"]]
-        self.refresh()
+        # 리페인트는 auto_refresh가 담당(on_mount)
 
     def _burst(self):
         acc = DICE_SKINS[self.skin]["edge"]
