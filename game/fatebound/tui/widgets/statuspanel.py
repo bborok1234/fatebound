@@ -47,6 +47,10 @@ class StatusPanel(Widget):
         self.faces: list = []
         self.cur_face = ""
         self.statuses: dict = {}
+        self.output = None          # M1 빌드 출력(텔레그래프)
+        self.preview_output = None  # 잡은 무공을 커서 칸에 놓을 때 예상 출력
+        self.syn_formed = None      # 스왑 시 새로 생기는 상생쌍
+        self.syn_broken = None      # 스왑 시 깨지는 상생쌍
 
     def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0, cur_face="", statuses=None):
         self.p_hp, self.p_max = p_hp, p_max
@@ -79,6 +83,25 @@ class StatusPanel(Widget):
         else:
             p = s.player_preview()
             g.append(bar(p.hp, p.max_hp, color="#c2453a"))
+        # 출력(出力) 텔레그래프 — 배치가 출력을 바꾼다(M1). 잡고 호버하면 commit 전 델타.
+        if self.output is not None:
+            if self.preview_output is not None:
+                d = self.preview_output - self.output
+                pct = (100 * d / self.output) if self.output else 0
+                up, dn = d > 0.05, d < -0.05
+                arrow = "▲" if up else ("▼" if dn else "·")
+                col = "#5aa67c" if up else ("#d4582f" if dn else "#9a958a")
+                t = Text("출력 ", style="#9a958a")
+                t.append(f"{arrow}{pct:+.0f}%", style=f"{col} bold")               # %를 앞·굵게(스케일 무관 가독)
+                t.append(f"  {self.output:.1f}→{self.preview_output:.1f}", style="#9a958a")
+                g.append(t)
+                for a, b in (self.syn_formed or [])[:2]:
+                    g.append(Text(f"  ＋상생 {a}↔{b}", style="#5aa67c"))
+                for a, b in (self.syn_broken or [])[:2]:
+                    g.append(Text(f"  －상생 {a}↔{b}", style="#d4582f"))
+                g.append(Text("  Enter로 확정", style="#55504a"))
+            else:
+                g.append(Text(f"출력(出力) {self.output:.1f} /합", style="#c8a24a bold"))
         g.append(Text(f"깨달음 {s.insight} · 골드 {s.gold} · 파편 {s.shards}", style="grey62"))
         # 비장 게이지
         bj = "●" * self.bijang + "○" * max(0, self.bijang_max - self.bijang)
@@ -111,15 +134,29 @@ class StatusPanel(Widget):
             gist = it.get("gist_ko", "")
             if gist:
                 g.append(Text(gist, style="#e8e2d4"))
-            tags = "·".join(it.get("tags", []))
-            g.append(Text(f"{it['rarity']} · {tags}", style="grey54"))
-            for e in it.get("effects", [])[:3]:
-                cond = e.get("condition", "").replace("on_face:", "▸").replace("passive", "상시").replace("on_crit", "치명시")
-                ek = EFFECT_KO.get(e.get("effect", ""), e.get("effect", ""))
-                g.append(Text(f"  {cond} → {ek}", style="grey46"))
-            fl = it.get("flavor_ko", "")
-            if fl:
-                g.append(Text(fl, style="#6b665c italic"))   # 펀치라인 안 잘리게 전문 노출(자동 줄바꿈)
+            # M1 역할 — 증폭/기관/조건이 '출력 0=죽은 칸'으로 오독되지 않게
+            m1 = it.get("m1")
+            if m1:
+                role = m1.get("role")
+                rk = {"payload": f"출력 {m1.get('base', 0)} (중앙·줄로 증폭)",
+                      "amplifier": f"증폭 — 인접 무공 +{int(m1.get('amp', 0) * 100)}%",
+                      "engine": "기관 — 매 합 효과를 낸다",
+                      "conditional": "조건 — 상황 충족 시 발동"}.get(role)
+                if rk:
+                    rc = {"payload": "#c8a24a", "amplifier": "#7fa8d4",
+                          "engine": "#b07fd4", "conditional": "#6fae5a"}.get(role, "grey62")
+                    g.append(Text(f"▸ {rk}", style=rc))
+            # peek(잡기 미리보기) 중엔 평시 상세를 접어 출력 델타·상생에 시선 집중(인지부하↓)
+            if self.preview_output is None:
+                tags = "·".join(it.get("tags", []))
+                g.append(Text(f"{it['rarity']} · {tags}", style="grey54"))
+                for e in it.get("effects", [])[:3]:
+                    cond = e.get("condition", "").replace("on_face:", "▸").replace("passive", "상시").replace("on_crit", "치명시")
+                    ek = EFFECT_KO.get(e.get("effect", ""), e.get("effect", ""))
+                    g.append(Text(f"  {cond} → {ek}", style="grey46"))
+                fl = it.get("flavor_ko", "")
+                if fl:
+                    g.append(Text(fl, style="#6b665c italic"))   # 펀치라인 전문 노출(자동 줄바꿈)
         else:
             g.append(Text("커서를 무공 위에 두면 상세가 보인다.", style="grey42"))
         return Group(*g)

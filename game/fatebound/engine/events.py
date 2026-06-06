@@ -20,7 +20,7 @@ class Event:
         try:
             return self.data[k]
         except KeyError:
-            raise AttributeError(k)
+            raise AttributeError(k) from None
 
 
 def ev(kind: str, **data) -> Event:

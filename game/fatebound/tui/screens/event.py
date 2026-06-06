@@ -96,7 +96,7 @@ class EventScreen(ModalScreen):
         self.phase = "result"
         eff = res["effects"]
         bits = []
-        for k, ko, sign in [("gold", "골드", ""), ("shards", "파편", ""), ("essence", "정수", ""), ("karma", "명성", "")]:
+        for k, ko, _sign in [("gold", "골드", ""), ("shards", "파편", ""), ("essence", "정수", ""), ("karma", "명성", "")]:
             v = int(eff.get(k, 0))
             if v:
                 col = "#5aa67c" if v > 0 else "#d4582f"

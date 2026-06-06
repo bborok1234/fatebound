@@ -13,6 +13,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    name: lint & audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어(zizmor)
+      - name: Set up uv
+        uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: "latest"
+          enable-cache: true
+          working-directory: game
+          python-version: "3.13"
+      - name: Install (locked)
+        run: uv sync --locked --dev
+      - name: Ruff lint (E9/F/B)
+        run: uv run ruff check fatebound
+      - name: Architecture (import-linter · core↛tui)
+        run: uv run lint-imports
+      - name: Actions security (zizmor · 워크플로 공급망)
+        working-directory: ${{ github.workspace }}
+        run: uvx zizmor --min-severity medium .github/workflows/
+      - name: Dependency audit (pip-audit)
+        run: uvx pip-audit
+        continue-on-error: true   # 초기 비차단(보고만) → 신뢰 쌓이면 차단으로 ratchet
+
   test:
     name: test ${{ matrix.os }} · py${{ matrix.python }}
     runs-on: ${{ matrix.os }}
@@ -25,10 +54,11 @@ jobs:
       run:
         working-directory: game
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어(zizmor)
 
       - name: Set up uv  # v8도 가능 — 최신 태그 확인 후 bump
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
         with:
           version: "latest"
           enable-cache: true

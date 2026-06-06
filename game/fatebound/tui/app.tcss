@@ -6,16 +6,24 @@ Screen { background: #1a1a1f; color: #e8e2d4; }
 
 /* ── 메인 게임 화면 (17 §3.3, §13) ── */
 #topbar { dock: top; height: 1; background: #26262e; color: #c8a24a; padding: 0 1; }
-/* 천명괘(天命卦) — 핵심·랜덤성의 축. 상단 전폭 룰렛(17 §6) */
-#dice { dock: top; height: 4; border: round #c8a24a; background: #1f1f26; color: #e8e2d4; padding: 0 1; content-align: center middle; }
 #coach  { dock: top; height: auto; background: #2c2a20; color: #e8e2d4; padding: 0 1; border-bottom: solid #4a4636; }
 #actionbar { dock: bottom; height: 1; background: #26262e; color: #9a958a; padding: 0 1; }
 
+/* 북극성: 보관함(좌) | 天命卦 | 구궁 | 살핌(우) · 천명록(하단 전폭) */
 #main { height: 1fr; }
+#reserve-pane { width: 20; border: round #444; padding: 0 1; }
+#dice-pane   { width: 38; border: round #c8a24a; background: #16161b; padding: 0 1; }
 #gugung-pane { width: 42; border: round #444; padding: 0 1; }
-#log-pane { width: 1fr; border: round #444; padding: 0 1; }
-#status-pane { width: 34; border: round #555; padding: 0 1; }
+#status-pane { width: 1fr; border: round #555; padding: 0 1; }
+ReserveWidget { height: 1fr; }
 GugungWidget { height: auto; padding: 0 1; }
+/* 활성 패널(포커스) 금테 강조 — 어디를 조작 중인지 명확히 */
+#reserve-pane:focus-within, #gugung-pane:focus-within { border: round #c8a24a; }
+/* 좁은 터미널(<118): 주사위 패널 접어 살핌 패널 확보 */
+.narrow #dice-pane { display: none; }
+/* 천명괘(天命卦) — 3D 주사위. 핵심·랜덤성의 축(17 §6) */
+#dice { height: auto; content-align: center middle; }
+#log-pane { height: 11; border: round #444; padding: 0 1; }
 #log { height: 1fr; }
 
 /* ── 타이틀 ── */
@@ -39,7 +47,7 @@ GugungWidget { height: auto; padding: 0 1; }
 #bs-detail-pane { width: 1fr; border: round #c8a24a; padding: 1 2; }
 
 /* ── 모달 박스(도움말·회귀·지도·사건·객잔·보관함) ── */
-HelpScreen, ReincarnateScreen, MapScreen, EventScreen, InnScreen, InventoryScreen {
+HelpScreen, ReincarnateScreen, MapScreen, EventScreen, InnScreen {
     align: center middle; background: #0d0d10 70%;
 }
 #help-box { border: round #c8a24a; background: #1f1f26; padding: 1 3; width: auto; height: auto; }

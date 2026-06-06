@@ -32,7 +32,7 @@ class MapScreen(ModalScreen):
                     for i in range(len(self.choices)):
                         yield Static(id=f"mn-{i}", classes="map-node")
             with Center():
-                yield Static("[#9a958a]↑↓/①②③ 선택 · Enter 결정 · Esc 돌아가 구궁 정비[/]", id="map-foot")
+                yield Static("[#9a958a]↑↓/①②③/클릭 선택 · Enter/재클릭 결정 · Esc 돌아가 구궁 정비[/]", id="map-foot")
 
     def on_mount(self):
         self._progress()
@@ -69,6 +69,18 @@ class MapScreen(ModalScreen):
                 row.update(f"[#1a1a1f on {col}] ▸ {head} [/]  [{col}]{NODE_DESC.get(t,'')}[/]")
             else:
                 row.update(f"[{col}]   {head}[/]  [#6b665c]{NODE_DESC.get(t,'')}[/]")
+
+    def on_click(self, event):
+        # 마우스: 노드 클릭=선택, 선택된 노드 재클릭=결정(키보드와 동등)
+        try:
+            w, _ = self.get_widget_at(event.screen_x, event.screen_y)
+        except Exception:
+            return
+        wid = getattr(w, "id", None)
+        if wid and str(wid).startswith("mn-"):
+            i = int(str(wid).split("-")[1])
+            if 0 <= i < len(self.choices):
+                self.action_confirm() if i == self.sel else setattr(self, "sel", i)
 
     def action_move(self, d: int):
         self.sel = (self.sel + d) % len(self.choices)

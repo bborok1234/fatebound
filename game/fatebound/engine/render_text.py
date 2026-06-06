@@ -18,6 +18,10 @@ def line(e: Event) -> str | None:
         return f"[{d['n']}합]"
     if k == "dice":
         return f"  천명괘: {d['face']}" + ("  (다시 굴림)" if d.get("rerolled") else "")
+    if k == "m1_line":
+        return f"  천명괘 — {d['name']} 강조"
+    if k == "m1_fire":
+        return None                    # 무공 발동은 구궁 점화·데미지 숫자로(로그 비움)
     if k == "focus":
         return f"    빈 면. 기를 모은다 (응기 {d['count']})"
     if k == "damage":

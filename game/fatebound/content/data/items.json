@@ -50,7 +50,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 10,
-    "gist_ko": "공격 시 독 1중첩."
+    "gist_ko": "공격 시 독 1중첩.",
+    "m1": {
+      "role": "payload",
+      "base": 1,
+      "amp": 0.0,
+      "fx": "poison"
+    }
   },
   {
     "item_id": "doga_jeoldokchim",
@@ -98,7 +104,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "내 독 효과 +15%. 공격 +3."
+    "gist_ko": "내 독 효과 +15%. 공격 +3.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0.2,
+      "fx": "amp_poison"
+    }
   },
   {
     "item_id": "heungrin_gap",
@@ -146,7 +158,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 +7. 체력 +40."
+    "gist_ko": "방어 +7. 체력 +40.",
+    "m1": {
+      "role": "engine",
+      "base": 1,
+      "amp": 0.0,
+      "fx": "on_hit_poison"
+    }
   },
   {
     "item_id": "dokmu_sangong",
@@ -199,7 +217,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 10,
-    "gist_ko": "특수 면에서 적 약화(공격 -20%)."
+    "gist_ko": "특수 면에서 적 약화(공격 -20%).",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "weaken"
+    }
   },
   {
     "item_id": "hoesaeng_dan",
@@ -252,7 +276,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "회복 면에서 체력 회복."
+    "gist_ko": "회복 면에서 체력 회복.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "dokjeong_ju",
@@ -307,7 +337,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "치명 +5. 공격 +3."
+    "gist_ko": "치명 +5. 공격 +3.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0.1,
+      "fx": "amp_crit"
+    }
   },
   {
     "item_id": "mandok_geom",
@@ -360,7 +396,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "공격 시 독 1중첩. 공격 +6."
+    "gist_ko": "공격 시 독 1중첩. 공격 +6.",
+    "m1": {
+      "role": "payload",
+      "base": 3,
+      "amp": 0.0,
+      "fx": "poison_slash"
+    }
   },
   {
     "item_id": "chilbo_talhonsan",
@@ -420,7 +462,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 독 1중첩. 내 독 효과 +14%."
+    "gist_ko": "특수 면에서 독 1중첩. 내 독 효과 +14%.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0.0,
+      "fx": "poison_line_amp"
+    }
   },
   {
     "item_id": "busik_rin_gap",
@@ -480,7 +528,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%). 방어 +6."
+    "gist_ko": "방어 면에서 반격(피해 30%). 방어 +6.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "counter_poison"
+    }
   },
   {
     "item_id": "cheondok_ji",
@@ -535,7 +589,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "내 독 효과 +30%. 공격 +4."
+    "gist_ko": "내 독 효과 +30%. 공격 +4.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0.35,
+      "fx": "amp_poison"
+    }
   },
   {
     "item_id": "danjang_chohonryeong",
@@ -588,7 +648,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "집중 면에서 취약(받는 피해 +25%)."
+    "gist_ko": "집중 면에서 취약(받는 피해 +25%).",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "vulnerable_if_poisoned"
+    }
   },
   {
     "item_id": "odok_bantangyeong",
@@ -641,7 +707,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%)."
+    "gist_ko": "방어 면에서 반격(피해 30%).",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "azure_bamboo_venom_dagger",
@@ -708,7 +780,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 35,
-    "gist_ko": "공격 시 독 1중첩 + 피해. 곁에 독이 흐르면 내 독 +15%."
+    "gist_ko": "공격 시 독 1중첩 + 피해. 곁에 독이 흐르면 내 독 +15%.",
+    "m1": {
+      "role": "payload",
+      "base": 5,
+      "amp": 0.0,
+      "fx": "poison_slash"
+    }
   },
   {
     "item_id": "myriad_venom_gu",
@@ -770,7 +848,13 @@
     "build": "poison",
     "balance_status": "ok",
     "target_nominal": 35,
-    "gist_ko": "내 독 효과 +25%. 3합마다 독 1중첩. 곁에 독이 흐르면 +10%."
+    "gist_ko": "내 독 효과 +25%. 3합마다 독 1중첩. 곁에 독이 흐르면 +10%.",
+    "m1": {
+      "role": "engine",
+      "base": 3,
+      "amp": 0.1,
+      "fx": "every3_poison"
+    }
   },
   {
     "item_id": "heavenly_venom_blood_demon_sword",
@@ -851,7 +935,13 @@
     "build": "poison",
     "balance_status": "over",
     "target_nominal": 55,
-    "gist_ko": "공격마다 독 1중첩 + 피해. 치명 시 내 독 +20%. 속도 -2."
+    "gist_ko": "공격마다 독 1중첩 + 피해. 치명 시 내 독 +20%. 속도 -2.",
+    "m1": {
+      "role": "payload",
+      "base": 7,
+      "amp": 0.0,
+      "fx": "poison_bigslash"
+    }
   },
   {
     "item_id": "throwing_blade_azure_phoenix",
@@ -867,30 +957,27 @@
       "crit"
     ],
     "dice_mod": [],
-    "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "6",
-        "duration": 0
-      }
-    ],
+    "effects": [],
     "power_budget": 10.2,
     "stats": {
       "hp": 0,
       "atk": 3,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 5,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "푸른 봉황을 새긴 비도라. 폼은 났는데, 결국 잘 박히면 그만이지.",
+    "flavor_ko": "푸른 봉황 새겨 넣은 비도. 멋은 칼집 안에 두고 급소만 노린다.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "치명 +6."
+    "gist_ko": "치명 확률 +5%. 가벼운 출력.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0
+    }
   },
   {
     "item_id": "hawkeye_headband",
@@ -905,37 +992,27 @@
       "crit"
     ],
     "dice_mod": [],
-    "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "3",
-        "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit_dmg",
-        "value": "0.3",
-        "duration": 0
-      }
-    ],
+    "effects": [],
     "power_budget": 9.6,
     "stats": {
       "hp": 0,
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
-      "crit_dmg": 1.5,
+      "crit": 4,
+      "crit_dmg": 1.75,
       "luk": 0
     },
-    "flavor_ko": "매의 눈이라. 급소가 또렷이 보이는 건 확실히 편하군.",
+    "flavor_ko": "매의 눈이 따로 있나. 두건 한 장 둘렀더니 상대 숨통이 환히 보이는걸.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "치명 +3. 치명 피해 +30%."
+    "gist_ko": "치명 피해 +25%. 치명 확률 +4%.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0
+    }
   },
   {
     "item_id": "swift_wind_boots",
@@ -958,13 +1035,6 @@
         "effect": "increase_speed",
         "value": "2",
         "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "6",
-        "duration": 0
       }
     ],
     "power_budget": 10.2,
@@ -973,15 +1043,21 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 3,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "바람 신은 듯 가벼운 신발. 빨라야 급소도 먼저 찌르지.",
+    "flavor_ko": "바람 밟고 다니는 신이라. 먼저 닿는 발이 먼저 끊는 법이지.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "속도 +2. 치명 +6."
+    "gist_ko": "예기: 매 합 치명 확률 누적. 치명 확률 +3%. 속도 +2.",
+    "m1": {
+      "role": "engine",
+      "base": 1,
+      "amp": 0,
+      "crit_ramp": 2.5
+    }
   },
   {
     "item_id": "drawsword_manual",
@@ -1009,13 +1085,6 @@
         "effect": "deal_damage",
         "value": "1.0 * atk",
         "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "3",
-        "duration": 0
       }
     ],
     "power_budget": 9.6,
@@ -1024,15 +1093,20 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 4,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "발검술 비급 한 권. 첫 수에 승부 보는 맛, 이게 검이지.",
+    "flavor_ko": "발검술 비급치고 첫 장이 곧 끝장이군. 칼은 뽑는 그 한 수에 다 들었다.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "공격 면에서 베기. 치명 +3."
+    "gist_ko": "치명 확률 +4%. 가벼운 출력.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0
+    }
   },
   {
     "item_id": "blood_claw_gauntlet",
@@ -1048,15 +1122,7 @@
       "blade"
     ],
     "dice_mod": [],
-    "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "3",
-        "duration": 0
-      }
-    ],
+    "effects": [],
     "power_budget": 6.6,
     "adjacency": [
       {
@@ -1071,15 +1137,20 @@
       "atk": 3,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 3,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "피 묻은 발톱 장갑. 곱게 죽일 생각은 없다는 거군.",
+    "flavor_ko": "피 마른 발톱이 박힌 장갑이라. 곱게 보내줄 마음은 처음부터 없었던 거고.",
     "build": "crit",
     "balance_status": "under",
     "target_nominal": 10,
-    "gist_ko": "치명 +3. 공격 +3."
+    "gist_ko": "치명 확률 +3%. 출력 + 곁 무공 소폭 증폭.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0.05
+    }
   },
   {
     "item_id": "keen_focus_band",
@@ -1096,13 +1167,6 @@
     ],
     "dice_mod": [],
     "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "5",
-        "duration": 0
-      },
       {
         "condition": "passive",
         "target": "self",
@@ -1124,15 +1188,21 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 3,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "날을 세우면 방패가 얇아지는 법. 한 방에 거는 자의 각오다.",
+    "flavor_ko": "날을 세우면 그만큼 등이 비는 법. 한 합에 거는 자가 짊어질 빚이다.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "치명 +5. 공격 +6. 방어 -3."
+    "gist_ko": "예기: 매 합 치명 확률 누적. 치명 확률 +3%. 공격 +6, 방어 -3.",
+    "m1": {
+      "role": "engine",
+      "base": 2,
+      "amp": 0,
+      "crit_ramp": 3
+    }
   },
   {
     "item_id": "swift_short_sword",
@@ -1160,13 +1230,6 @@
         "effect": "deal_damage",
         "value": "1.0 * atk",
         "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "8",
-        "duration": 0
       }
     ],
     "power_budget": 15.6,
@@ -1183,15 +1246,20 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 5,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "짧고 빠른 검. 길게 끌 것 없이 끝낸다.",
+    "flavor_ko": "짧고 빠른 검. 길게 끌 줄을 모르니 승부가 늘 한 호흡 안에서 난다.",
     "build": "crit",
     "balance_status": "under",
     "target_nominal": 20,
-    "gist_ko": "공격 면에서 베기. 치명 +8."
+    "gist_ko": "치명 확률 +5%. 중간 출력.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0
+    }
   },
   {
     "item_id": "oncrit_pierce_ring",
@@ -1214,20 +1282,6 @@
         "effect": "deal_damage",
         "value": "0.5 * atk",
         "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "8",
-        "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit_dmg",
-        "value": "0.2",
-        "duration": 0
       }
     ],
     "power_budget": 16.6,
@@ -1236,15 +1290,20 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
-      "crit_dmg": 1.5,
+      "crit": 5,
+      "crit_dmg": 1.75,
       "luk": 0
     },
-    "flavor_ko": "급소를 꿰뚫으면 한 번 더. 욕심 같지만 효율은 좋아.",
+    "flavor_ko": "급소를 꿰뚫었으면 손이 한 번 더 나가야 직성이 풀리지. 욕심이라 부르긴 좀 그렇고, 버릇이다.",
     "build": "crit",
     "balance_status": "under",
     "target_nominal": 20,
-    "gist_ko": "치명 시 추가 피해. 치명 +8."
+    "gist_ko": "치명 피해 +25%. 치명 확률 +5%.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0
+    }
   },
   {
     "item_id": "tiger_fang_ring",
@@ -1261,13 +1320,6 @@
     ],
     "dice_mod": [],
     "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit_dmg",
-        "value": "0.5",
-        "duration": 0
-      },
       {
         "condition": "passive",
         "target": "self",
@@ -1290,15 +1342,20 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
-      "crit_dmg": 1.5,
+      "crit": 2,
+      "crit_dmg": 2.1,
       "luk": 0
     },
-    "flavor_ko": "범의 송곳니라. 한 입에 끝낼 거면 이빨이 굵어야지.",
+    "flavor_ko": "범의 송곳니를 본떴다더군. 한 입에 끝낼 작정이면 이빨부터 굵어야 말이 되지.",
     "build": "crit",
     "balance_status": "under",
     "target_nominal": 20,
-    "gist_ko": "치명 피해 +50%. 공격 +5."
+    "gist_ko": "치명 피해 +60%. 치명 확률 +2%.",
+    "m1": {
+      "role": "amplifier",
+      "base": 0,
+      "amp": 0
+    }
   },
   {
     "item_id": "finisher_killing_intent",
@@ -1326,13 +1383,6 @@
         "effect": "apply_vulnerable",
         "value": "25",
         "duration": 2
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "2",
-        "duration": 0
       }
     ],
     "power_budget": 18.4,
@@ -1341,15 +1391,21 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 3,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "살기를 드러내 상대를 굳힌다. 겁먹은 표적이 제일 치기 쉽거든.",
+    "flavor_ko": "필살이란 게 별건가. 살기 한 줄 흘려 상대를 굳혀 두면, 다음 칼은 알아서 박힌다.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 취약(받는 피해 +25%)."
+    "gist_ko": "예기: 매 합 치명 확률 크게 누적. 치명 확률 +3%. 출력.",
+    "m1": {
+      "role": "engine",
+      "base": 3,
+      "amp": 0,
+      "crit_ramp": 4.5
+    }
   },
   {
     "item_id": "chain_link_sword",
@@ -1382,13 +1438,6 @@
       {
         "condition": "passive",
         "target": "self",
-        "effect": "increase_crit",
-        "value": "8",
-        "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
         "effect": "increase_speed",
         "value": "2",
         "duration": 0
@@ -1400,15 +1449,20 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
+      "crit": 4,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "이어 치는 쾌검. 한 번 물면 끊지 않는다.",
+    "flavor_ko": "한 번 물면 고리처럼 이어지는 쾌검. 끊을 줄 모르는 게 흠이자 자랑이고.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "공격 면에서 베기. 치명 +8. 속도 +2."
+    "gist_ko": "치명 확률 +4%. 출력 + 곁 무공 증폭.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0.1
+    }
   },
   {
     "item_id": "demon_heart_blade",
@@ -1426,20 +1480,6 @@
     ],
     "dice_mod": [],
     "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "8",
-        "duration": 0
-      },
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit_dmg",
-        "value": "0.5",
-        "duration": 0
-      },
       {
         "condition": "passive",
         "target": "self",
@@ -1461,15 +1501,21 @@
       "atk": 0,
       "def": 0,
       "spd": 0,
-      "crit": 0,
-      "crit_dmg": 1.5,
+      "crit": 4,
+      "crit_dmg": 1.7,
       "luk": 0
     },
-    "flavor_ko": "마검 소리 듣는 물건. 무를 줄 모르고 베기만 한다. …나랑 좀 닮았군.",
+    "flavor_ko": "마검 소리 듣는 물건이라. 물러설 줄 모르고 베기만 하는 꼴이… 솔직히 나랑 닮았다.",
     "build": "crit",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "치명 +8. 치명 피해 +50%. 공격 +3. 방어 -5."
+    "gist_ko": "치명 확률 +4%. 치명 피해 +20%. 예기 소량 누적. 강한 출력.",
+    "m1": {
+      "role": "payload",
+      "base": 5,
+      "amp": 0,
+      "crit_ramp": 1.5
+    }
   },
   {
     "item_id": "danhon_seomgeom",
@@ -1505,16 +1551,22 @@
       "atk": 9,
       "def": 0,
       "spd": 2,
-      "crit": 8,
-      "crit_dmg": 1.8,
+      "crit": 6,
+      "crit_dmg": 1.9,
       "luk": 2
     },
-    "flavor_ko": "혼을 끊는 섬광이라. 거창하지만, 한 번 번뜩이면 끝인 건 맞다.",
+    "flavor_ko": "혼을 끊는 섬광이라니 이름 한번 거하다. 다만 한 번 번뜩이고 나면 따질 상대가 안 남는다는 게 문제지.",
     "build": "crit",
     "adjacency": [],
     "balance_status": "ok",
     "target_nominal": 35,
-    "gist_ko": "치명 시 추가 피해(공격력만큼)."
+    "gist_ko": "치명 확률 +6%. 치명 피해 +40%. 예기 누적. 높은 출력.",
+    "m1": {
+      "role": "payload",
+      "base": 7,
+      "amp": 0,
+      "crit_ramp": 1.5
+    }
   },
   {
     "item_id": "hoegwang_geomgap",
@@ -1531,26 +1583,18 @@
       "counter"
     ],
     "dice_mod": [],
-    "effects": [
-      {
-        "condition": "passive",
-        "target": "self",
-        "effect": "increase_crit",
-        "value": "6",
-        "duration": 0
-      }
-    ],
+    "effects": [],
     "power_budget": 39.4,
     "stats": {
       "hp": 70,
       "atk": 2,
       "def": 12,
       "spd": 0,
-      "crit": 6,
-      "crit_dmg": 1.7,
+      "crit": 5,
+      "crit_dmg": 2.1,
       "luk": 4
     },
-    "flavor_ko": "검수가 갑옷을 챙기다니. 오래 버텨야 한 방도 꽂는 법이야.",
+    "flavor_ko": "검수가 갑옷을 챙기다니 모양 빠진다 싶지? 한 방 꽂으려면 그 한 방이 올 때까지는 살아 있어야 한다.",
     "build": "crit",
     "adjacency": [
       {
@@ -1562,7 +1606,12 @@
     ],
     "balance_status": "over",
     "target_nominal": 35,
-    "gist_ko": "치명 +6. 방어 +12. 체력 +70."
+    "gist_ko": "치명 피해 +60%. 곁 무공 증폭. 방어 +12·체력 +70(글래스캐논 생존).",
+    "m1": {
+      "role": "amplifier",
+      "base": 2,
+      "amp": 0.25
+    }
   },
   {
     "item_id": "cheongeom_hyeollak",
@@ -1598,11 +1647,11 @@
       "atk": 14,
       "def": 0,
       "spd": 4,
-      "crit": 10,
-      "crit_dmg": 2,
+      "crit": 8,
+      "crit_dmg": 2.4,
       "luk": 4
     },
-    "flavor_ko": "하늘 검이 핏빛을 떨군다… 이름값은 하는군. 이런 손맛, 오랜만이야.",
+    "flavor_ko": "하늘 검이 핏빛을 떨군다 했던가. 손에 쥐어 보니 이름값은 하는군. 이 정도 손맛은 정말 오랜만이다.",
     "build": "crit",
     "adjacency": [
       {
@@ -1614,7 +1663,13 @@
     ],
     "balance_status": "ok",
     "target_nominal": 55,
-    "gist_ko": "치명 시 큰 추가 피해. 치명 +10."
+    "gist_ko": "치명 확률 +8%. 치명 피해 +90%. 강한 예기 누적. 최고 출력(전설).",
+    "m1": {
+      "role": "payload",
+      "base": 9,
+      "amp": 0,
+      "crit_ramp": 3
+    }
   },
   {
     "item_id": "iron_palm_gauntlet",
@@ -1642,7 +1697,7 @@
     ],
     "power_budget": 10.4,
     "stats": {
-      "hp": 10,
+      "hp": 25,
       "atk": 0,
       "def": 3,
       "spd": 0,
@@ -1650,11 +1705,17 @@
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "궁지에 몰려야 이빨을 드러내는 장갑이라. 비겁하다고? 살아남으면 이긴 거다.",
+    "flavor_ko": "맨손으로 받아내는 투갑이라. 화려할 것 없다만, 천 년 굴러 보니 이런 기본기가 끝까지 사람을 살리더라.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "체력 30% 이하일 때 반격(피해 30%)."
+    "gist_ko": "받는 피해를 줄이고, 막은 피해를 기(氣)로 쌓는다.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 4.0
+    }
   },
   {
     "item_id": "protective_qi_shell",
@@ -1686,19 +1747,25 @@
     ],
     "power_budget": 9.8,
     "stats": {
-      "hp": 0,
+      "hp": 20,
       "atk": 0,
-      "def": 1,
+      "def": 4,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "몸을 감싸는 기막이군. 맞기 전에 한 겹 두르는 건 기본이지.",
+    "flavor_ko": "맞기 전에 한 겹 둘러두는 기막. 별것 아닌 듯해도 그 한 겹에 목숨이 오간다.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 면에서 보호막."
+    "gist_ko": "기막으로 받는 피해를 줄이고, 막은 피해를 기로 쌓는다.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 5.0
+    }
   },
   {
     "item_id": "blue_steel_pauldron",
@@ -1727,13 +1794,13 @@
     "stats": {
       "hp": 30,
       "atk": 0,
-      "def": 8,
+      "def": 3,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "푸른 강철 어깨갑. 묵직한 게 든든하긴 해.",
+    "flavor_ko": "푸른 강철 어깨갑. 묵직하게 얹히는 게, 든든하다는 말이 절로 나온다.",
     "build": "guard",
     "adjacency": [
       {
@@ -1745,7 +1812,13 @@
     ],
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 +8. 체력 +30."
+    "gist_ko": "견갑으로 받는 피해를 줄이고, 막은 피해를 기로 쌓는다.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 4.5
+    }
   },
   {
     "item_id": "minor_recovery_pill",
@@ -1785,7 +1858,7 @@
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "소소한 환약. 버티는 싸움엔 이런 게 의외로 목숨줄이야.",
+    "flavor_ko": "손톱만 한 환약이라 다들 무시하지. 길게 끄는 싸움에서 이게 목숨줄 되는 걸 보면 표정들이 볼만하다.",
     "build": "guard",
     "adjacency": [
       {
@@ -1797,7 +1870,14 @@
     ],
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "회복 면에서 체력 회복."
+    "gist_ko": "체력이 절반 아래면 매 합 회복.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "block": 0.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "dulling_strike_axe",
@@ -1830,7 +1910,7 @@
     ],
     "power_budget": 9.3,
     "stats": {
-      "hp": 0,
+      "hp": 15,
       "atk": 0,
       "def": 1,
       "spd": -1,
@@ -1838,11 +1918,18 @@
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "둔한 도끼로 상대 기세를 꺾는다. 화려할 거 없어. 안 맞으면 되거든.",
+    "flavor_ko": "날 무딘 도끼로 기세부터 꺾는다. 못 벤들 어떤가, 저쪽 주먹이 솜방망이가 되면 그만이지.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "특수 면에서 적 약화(공격 -20%)."
+    "gist_ko": "적 공격력 약화. 약간의 피해 경감.",
+    "m1": {
+      "role": "conditional",
+      "base": 2,
+      "amp": 0.0,
+      "block": 2.0,
+      "fx": "weaken"
+    }
   },
   {
     "item_id": "bedrock_heart_method",
@@ -1869,19 +1956,27 @@
     ],
     "power_budget": 9.6,
     "stats": {
-      "hp": 40,
+      "hp": 20,
       "atk": 0,
-      "def": 7,
+      "def": 2,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "바위처럼 단단해지는 심법. 안 흔들리는 게 절반은 이긴 거다.",
+    "flavor_ko": "바위가 되는 심법. 버티다 보면 맞은 힘이 슬그머니 내 것이 되어 있더군, 아직 한 줌이지만.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 +7. 체력 +40."
+    "gist_ko": "피해 경감 + 쌓인 기를 반격 출력으로 약하게 전환(입문 전환기).",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.0,
+      "block": 3.0,
+      "conv": 0.32,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "rebound_heart_mirror",
@@ -1909,15 +2004,15 @@
     ],
     "power_budget": 19.8,
     "stats": {
-      "hp": 10,
+      "hp": 25,
       "atk": 0,
-      "def": 6,
+      "def": 3,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "가슴을 지키는 거울. 때린 놈한테 그대로 돌려준다.",
+    "flavor_ko": "가슴에 거울을 댄 셈이라. 때린 손이 제 얼굴을 보게 되니 두 번 때릴 맘이 가신다더라.",
     "build": "guard",
     "adjacency": [
       {
@@ -1929,7 +2024,14 @@
     ],
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "상시 반격(피해 30%). 방어 +6."
+    "gist_ko": "받은 피해의 일부를 반사. 피해 경감.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "block": 2.5,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "four_ounce_thousand_catty",
@@ -1962,15 +2064,15 @@
     ],
     "power_budget": 15,
     "stats": {
-      "hp": 10,
+      "hp": 15,
       "atk": 0,
-      "def": 0,
+      "def": 1,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "넉 냥으로 천 근을 받아넘긴다. 힘으로 안 되면 흘리면 되지. 늙은이의 지혜다.",
+    "flavor_ko": "넉 냥으로 천 근을 받아 흘린다. 힘이 모자라면 흘리면 그만이라고 이 늙은 정신이 늘 떠든다. 한데 몸뚱이는 아직 그 요령을 못 익혔다.",
     "build": "guard",
     "adjacency": [
       {
@@ -1982,7 +2084,15 @@
     ],
     "balance_status": "under",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%)."
+    "gist_ko": "쌓인 기를 반격 출력으로 전환. 전환기가 중앙·증폭 곁일수록 크게.",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.0,
+      "block": 2.0,
+      "conv": 0.6,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "armor_breaking_hand",
@@ -2015,19 +2125,25 @@
     ],
     "power_budget": 20,
     "stats": {
-      "hp": 0,
-      "atk": 0,
+      "hp": 15,
+      "atk": 2,
       "def": 5,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "갑옷을 깨는 손속. 단단한 적일수록 이게 답이야.",
+    "flavor_ko": "갑옷을 깨는 손속. 단단한 척 버티는 놈일수록 첫 금 가는 순간 와르르 무너지거든.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 취약(받는 피해 +25%)."
+    "gist_ko": "곁 무공·전환 출력 증폭(강). 약간의 자체 출력.",
+    "m1": {
+      "role": "amplifier",
+      "base": 5,
+      "amp": 0.4,
+      "block": 0.0
+    }
   },
   {
     "item_id": "immovable_king_body",
@@ -2061,19 +2177,25 @@
     ],
     "power_budget": 19.7,
     "stats": {
-      "hp": 50,
+      "hp": 45,
       "atk": 0,
-      "def": 14,
+      "def": 6,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "부동명왕이라. 안 무너지고 알아서 추스르니, 버티기엔 이만한 게 없지.",
+    "flavor_ko": "부동명왕이라기에 거창한 줄 알았더니, 그저 안 무너지는 게 전부더라. 한데 버티는 싸움엔 그 전부가 곧 전부다.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "방어 +14. 3합마다 체력 회복."
+    "gist_ko": "받는 피해를 크게 줄이고, 막은 피해를 기로 쌓는다.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 7.0
+    }
   },
   {
     "item_id": "soul_shattering_strike",
@@ -2107,18 +2229,24 @@
     "power_budget": 20.2,
     "stats": {
       "hp": 20,
-      "atk": 0,
+      "atk": 3,
       "def": 4,
       "spd": -2,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "혼을 부수는 일격. 한 합만 멈춰 세우면 그 틈에 다 끝낼 수 있어.",
+    "flavor_ko": "혼을 부수는 일격. 곁에 두면 제 매운맛에 동무들 주먹까지 묵직해진다.",
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 기절(확률 30%)."
+    "gist_ko": "자체 출력 + 곁 무공·전환 증폭.",
+    "m1": {
+      "role": "amplifier",
+      "base": 7,
+      "amp": 0.25,
+      "block": 0.0
+    }
   },
   {
     "item_id": "heaven_returning_counter",
@@ -2153,15 +2281,15 @@
     ],
     "power_budget": 19.9,
     "stats": {
-      "hp": 0,
+      "hp": 20,
       "atk": 0,
-      "def": 3,
+      "def": 2,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "몰릴수록 살아나는 반격술. 끝을 봤다 싶을 때가 진짜 시작이지.",
+    "flavor_ko": "하늘을 되돌리듯 받은 것을 그대로 되돌려준다. 쌓을수록 무거워지는 한 방이지.",
     "build": "guard",
     "adjacency": [
       {
@@ -2173,11 +2301,19 @@
     ],
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "상시 반격(피해 30%). 체력 30% 이하일 때 회복."
+    "gist_ko": "쌓인 기를 반격 출력으로 전환. 피해 경감.",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.0,
+      "block": 2.5,
+      "conv": 0.5,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "mirror_reverse_heart_guard",
-    "name_ko": "반탄호심경",
+    "name_ko": "반조심경",
     "rarity": "epic",
     "size": [
       1,
@@ -2222,19 +2358,27 @@
       }
     ],
     "stats": {
-      "hp": 40,
+      "hp": 30,
       "atk": 0,
-      "def": 16,
+      "def": 3,
       "spd": -2,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "되받아치고 알아서 아무는 거울갑. 이쯤이면 무너지는 게 더 어렵겠어.",
+    "flavor_ko": "받은 빛을 고스란히 비춰 되돌리는 거울. 막고 흘리고 되갚는 세 수가 한 자리에 들었다. 이만하면 한 문파의 비전이라 불러도 좋겠지.",
     "build": "guard",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "상시 반격(피해 30%). 체력 50% 이하일 때 회복. 방어 +16."
+    "gist_ko": "쌓인 기를 강하게 반격 전환 + 곁 증폭 + 피해 경감(삼중).",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.25,
+      "block": 4.0,
+      "conv": 0.7,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "armor_guardian_qi_plate",
@@ -2288,19 +2432,26 @@
       }
     ],
     "stats": {
-      "hp": 20,
+      "hp": 55,
       "atk": 0,
-      "def": 6,
+      "def": 8,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "기막을 두르고 되치는 갑옷. 막고 갚고, 두 마리 토끼군.",
+    "flavor_ko": "기막을 통째 갑옷으로 두른 셈. 두들길수록 단단해지고, 위태로우면 알아서 추스른다. 늙은 몸엔 과분한 호사다.",
     "build": "guard",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "방어 면에서 보호막 + 반격(피해 30%)."
+    "gist_ko": "받는 피해를 크게 줄이고, 체력 낮으면 회복. 막은 피해를 기로 쌓는다.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 9.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "fist_avalanche_counter",
@@ -2347,19 +2498,26 @@
       }
     ],
     "stats": {
-      "hp": 0,
-      "atk": 6,
+      "hp": 25,
+      "atk": 4,
       "def": 6,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
       "luk": 0
     },
-    "flavor_ko": "산을 무너뜨린다는 주먹. 받아내며 후려치니, 수성이 곧 공격이다.",
+    "flavor_ko": "산을 무너뜨리는 반탄권. 받은 힘을 곁의 동무들과 함께 되갚으니, 아니, 되갚는다는 건 점잖은 말이고 그냥 산사태다.",
     "build": "guard",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "공격 면에서 베기 + 반격(피해 30%)."
+    "gist_ko": "강한 자체 출력 + 곁 증폭 + 받은 피해 반사.",
+    "m1": {
+      "role": "amplifier",
+      "base": 9,
+      "amp": 0.5,
+      "block": 0.0,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "cheongi_soban",
