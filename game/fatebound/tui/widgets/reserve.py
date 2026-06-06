@@ -48,12 +48,24 @@ class ReserveWidget(Widget):
     def watch_sel(self):
         self.refresh()
 
+    def _window(self):
+        """긴 목록도 sel이 보이게 — 표시 시작 index와 가시 용량(헤더/인디케이터 보정)."""
+        n = len(self.items())
+        cap = max(3, (self.size.height or 24) - 2)
+        if n <= cap:
+            return 0, cap
+        return max(0, min(self.sel - cap // 2, n - cap)), cap
+
     # ── 마우스 ──
     def on_click(self, event):
-        # 헤더 1줄 다음부터 목록 — 클릭 y로 행 선택(화면이 포커스·sync 처리)
+        # 클릭 y → 실제 무공 index(헤더 1줄 + 윈도 시작 + ▲ 인디케이터 보정)
+        start, cap = self._window()
         row = event.offset.y - 1
-        if 0 <= row < len(self.items()):
-            self.post_message(self.Clicked(row))
+        if start > 0:
+            row -= 1                       # ▲ 더보기 줄
+        idx = start + row
+        if 0 <= idx < len(self.items()):
+            self.post_message(self.Clicked(idx))
 
     # ── 렌더 ──
     def render(self):
@@ -65,7 +77,12 @@ class ReserveWidget(Widget):
             g.append(Text("전투·기연으로", style="#55504a"))
             g.append(Text("무공을 모은다.", style="#55504a"))
             return Group(*g)
-        for i, it in enumerate(its):
+        start, cap = self._window()
+        end = min(len(its), start + cap)
+        if start > 0:
+            g.append(Text(f" ▲ {start}개 더", style="#6b665c"))
+        for i in range(start, end):
+            it = its[i]
             r = RARITY.get(it["rarity"], "white")
             dot = RARITY_DOT.get(it["rarity"], "·")
             if i == self.sel:
@@ -73,6 +90,8 @@ class ReserveWidget(Widget):
                 g.append(Text(f" ▸{it['name_ko']} ", style=style))
             else:
                 g.append(Text(f" {dot}{it['name_ko']}", style=r))
+        if end < len(its):
+            g.append(Text(f" ▼ {len(its) - end}개 더", style="#6b665c"))
         if focused:
             g.append(Text("Enter→구궁 배치", style="#55504a"))
         return Group(*g)
