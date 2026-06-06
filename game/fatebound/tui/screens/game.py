@@ -419,6 +419,11 @@ class GameScreen(Screen):
                 await self._do_roll(dice, d["line"])
                 if not self.reduced_motion:
                     gug.ignite(LINES[d["line"]])
+                if "m1_line_taught" not in self.session.seen_events:   # 천명괘 just-in-time 교육(평생 1회)
+                    self.session.seen_events.append("m1_line_taught")
+                    self.app.notify("매 합 6줄 중 한 줄(금빛)이 강조돼 그 줄 무공이 더 세게 친다. "
+                                    "강한 무공을 한 줄로 모아 두면 천명이 깃들 때 크게 터진다.",
+                                    title="天命卦 천명괘", severity="information", timeout=7)
             if e.kind == "m1_fire" and not self.reduced_motion:   # 발동 캐스케이드: 무공이 차례로 번쩍(기여 수치 표시)
                 ci = self._cell_index(d.get("name"))
                 if ci is not None:
