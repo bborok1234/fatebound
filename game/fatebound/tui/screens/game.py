@@ -203,8 +203,7 @@ class GameScreen(Screen):
 
     def action_dismiss_coach(self):
         if self.coach is not None:
-            self.coach = None
-            self._finish_tutorial()
+            self.coach = None                    # 이번 세션만 숨김 — 영구 완료 아님(#16). 첫 전투 완주 시 done 처리.
             self._coach_refresh()
 
     def _finish_tutorial(self):
@@ -265,6 +264,7 @@ class GameScreen(Screen):
             return
         self._focus_pane("gugung")
         self.query_one("#gugung", GugungWidget).cursor = msg.idx
+        self._coach_advance(0)                   # 클릭 경로도 코치 0단계(살펴봄) 진행 — 클릭-only 유저 정체 방지(#16)
         self.action_grab()                       # 클릭=집기/놓기(빈손이면 집고, 들었으면 놓는다)
 
     @on(ReserveWidget.Clicked)
@@ -450,8 +450,9 @@ class GameScreen(Screen):
             persistence.save(self.session)
         self.busy = False
         self._refresh_hub(); self._actionbar()
-        if self.coach == 3:
-            self._coach_refresh(); self._finish_tutorial()
+        # 첫 전투 완주 = 튜토리얼 소임 완료(코치 단계·Esc 숨김 무관). 이후 재등장 안 함(#16).
+        self.coach = None
+        self._coach_refresh(); self._finish_tutorial()
 
     async def _do_roll(self, dice, line: int):
         """천명괘 3D 주사위를 결과 줄(0~5)로 굴린다. 고배속/축소모션은 즉시 착지."""
