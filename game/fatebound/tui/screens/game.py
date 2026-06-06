@@ -11,7 +11,9 @@ from textual.widgets import Static, RichLog
 from ..widgets.gugung import GugungWidget
 from ..widgets.statuspanel import StatusPanel
 from ..widgets.dice3d import Dice3D
-from ...engine.combat_m1 import LINES, cell_eff, OUTPUT_C
+from ..widgets.reserve import ReserveWidget
+from ...engine.combat_m1 import LINES, cell_eff, OUTPUT_C, N_SPOT, DICE_MODS
+from ...engine.bag import Bag, synergy_cells
 from ...engine import render_text, balance
 from ... import persistence
 
@@ -34,13 +36,15 @@ ZONE_KO = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림",
 class GameScreen(Screen):
     BINDINGS = [
         ("up", "cur(-1,0)"), ("down", "cur(1,0)"), ("left", "cur(0,-1)"), ("right", "cur(0,1)"),
-        ("enter", "grab"), ("space", "journey"), ("m", "journey"), ("i", "inventory"),
+        ("enter", "grab"), ("tab", "toggle_pane"), ("i", "focus_reserve"),
+        ("space", "journey"), ("m", "journey"),
         ("f", "speed"), ("question_mark", "help"), ("escape", "dismiss_coach"), ("q", "app.quit"),
     ]
 
     def __init__(self, session, first_run: bool = False):
         super().__init__()
         self.session = session
+        self.pane = "gugung"            # 활성 패널: gugung | reserve(보관함)
         # 축소 모션(접근성, 17 §8): 환경변수 설정 시 전투 즉시 재생
         self.reduced_motion = bool(os.environ.get("FATEBOUND_REDUCED_MOTION"))
         self.speed = 64.0 if self.reduced_motion else 1.0
@@ -51,7 +55,9 @@ class GameScreen(Screen):
         yield Static(id="topbar")
         yield Static(id="coach", classes="hidden")
         with Horizontal(id="main"):
-            with Container(id="dice-pane"):       # 좌: 天命卦 3D 주사위(핵심·랜덤성의 축)
+            with Container(id="reserve-pane"):    # 좌: 보관함(인라인, 모달 대체)
+                yield ReserveWidget(self.session, id="reserve")
+            with Container(id="dice-pane"):       # 天命卦 3D 주사위(핵심·랜덤성의 축)
                 yield Static("[#c8a24a]天命卦 · 천명괘[/]", classes="label")
                 yield Dice3D(skin=getattr(self.session, "die_skin", "baekok"), id="dice")
             with Container(id="gugung-pane"):      # 중앙: 구궁(배치=결정 공간)
@@ -71,7 +77,7 @@ class GameScreen(Screen):
         self._coach_refresh()
         log = self.query_one("#log", RichLog)
         log.can_focus = False
-        self.set_focus(None)
+        self.set_focus(self.query_one("#gugung", GugungWidget))   # 구궁이 활성(:focus-within 금테)
         z = ZONE_KO.get(self.session.zone, self.session.zone)
         log.write(f"[#9a958a]── {z} ──[/]")
         log.write("[#9a958a]구궁을 정비하고, [/][#c8a24a]Space[/][#9a958a]로 강호에 나서라.  ([/][#c8a24a]?[/][#9a958a] 도움말)[/]")
@@ -90,29 +96,70 @@ class GameScreen(Screen):
         if combat:
             txt = "[#c8a24a]F[/] 배속  ·  전투가 끝나면 다시 조작할 수 있다"
         else:
-            txt = ("[#c8a24a]방향키[/] 이동 · [#c8a24a]Enter[/] 집기/놓기 · [#c8a24a]Space[/] 강호로(갈림길) · "
-                   "[#c8a24a]I[/] 보관함 · [#c8a24a]F[/] 배속 · [#c8a24a]?[/] 도움말 · [#c8a24a]Q[/] 종료")
+            txt = ("[#c8a24a]방향키[/] 이동 · [#c8a24a]Enter[/] 집기/놓기 · [#c8a24a]Tab[/]/[#c8a24a]I[/] 보관함 · "
+                   "[#c8a24a]Space[/] 강호로 · [#c8a24a]F[/] 배속 · [#c8a24a]?[/] 도움말 · [#c8a24a]Q[/] 종료")
         self.query_one("#actionbar", Static).update(txt)
+
+    def _build_output(self, cells):
+        """M1 빌드의 합당(合當) 기대 출력 — 실제 BattleM1 첫 합과 일치하도록
+        주사위 재질(dmg_mult·spot_mult)·취약 보너스·천명괘 스폿라이트 평균 반영(적 방어 제외)."""
+        mods = DICE_MODS.get(getattr(self.session, "die_skin", "baekok"), {})
+        scale = max(1.0, self.session.player_preview().atk * OUTPUT_C) * mods.get("dmg_mult", 1.0)
+        spot = N_SPOT * mods.get("spot_mult", 1.0)
+        has_vuln = any((c.get("m1") or {}).get("fx") == "vulnerable_if_poisoned" for c in cells if c)
+        base = sum(cell_eff(cells, i, scale, has_vuln) for i in range(9))
+        return base * (1 + (spot - 1) / 3)        # 매 합 6줄 중 1줄 강조 → 기대 +1/3·(spot-1)
 
     def _sync_detail(self):
         g = self.query_one("#gugung", GugungWidget)
         p = self.query_one("#status-pane", StatusPanel)
-        p.detail_item = g.current_item()
+        rw = self.query_one("#reserve", ReserveWidget)
+        p.detail_item = rw.current() if self.pane == "reserve" else g.current_item()
         p.faces = self.session.loadout().faces
-        # M1 출력 텔레그래프 — 배치가 출력을 바꾼다. 잡고 다른 칸에 커서 두면 commit 전 예상치.
+        cells = self.session.bag.cells
+        # 미리보기 대상: 잡기 스왑(구궁) 또는 보관함 무공→커서 칸
+        clone = ghost = None
+        if self.pane == "gugung" and g.grabbed is not None and g.grabbed != g.cursor:
+            clone = list(cells)
+            clone[g.grabbed], clone[g.cursor] = clone[g.cursor], clone[g.grabbed]
+            ghost = cells[g.grabbed]
+        elif self.pane == "reserve":
+            it = rw.current()
+            if it is not None:
+                clone = list(cells); clone[g.cursor] = it
+                ghost = it
+        g.ghost_item = ghost
+        # 출력 텔레그래프(배치가 출력을 바꾼다). 위치쌍(idx) 기준 상생 비교 → 동명 무공도 안전.
         if self.session.use_m1():
-            cells = self.session.bag.cells
-            scale = self.session.player_preview().atk * OUTPUT_C
-            p.output = sum(cell_eff(cells, i, scale) for i in range(9))
-            if g.grabbed is not None and g.grabbed != g.cursor:
-                clone = list(cells)
-                clone[g.grabbed], clone[g.cursor] = clone[g.cursor], clone[g.grabbed]
-                p.preview_output = sum(cell_eff(clone, i, scale) for i in range(9))
+            p.output = self._build_output(cells)
+            if clone is not None:
+                p.preview_output = self._build_output(clone)
+                cur, nxt = self._syn_pairs(cells), self._syn_pairs(clone)
+                p.syn_formed = self._name_pairs(nxt - cur, clone)
+                p.syn_broken = self._name_pairs(cur - nxt, cells)
             else:
-                p.preview_output = None
+                p.preview_output = p.syn_formed = p.syn_broken = None
         else:
-            p.output = p.preview_output = None
+            p.output = p.preview_output = p.syn_formed = p.syn_broken = None
+        g.refresh()
         p.refresh()
+
+    @staticmethod
+    def _syn_pairs(cells):
+        """배치의 상생쌍을 {frozenset(위치,위치)}로 — 동명 무공 충돌 없이 스왑 전후 비교."""
+        _, pairs = synergy_cells(Bag(cells=list(cells)))
+        return {frozenset((a, b)) for a, b in pairs}
+
+    @staticmethod
+    def _name_pairs(pos_pairs, src):
+        """위치쌍 집합 → 표시용 (이름, 이름) 리스트(해당 배치 src에서 룩업)."""
+        out = []
+        for pr in pos_pairs:
+            a, b = tuple(pr)
+            na = src[a]["name_ko"] if src[a] else "?"
+            nb = src[b]["name_ko"] if src[b] else "?"
+            out.append((na, nb))
+        return out
 
     def _refresh_hub(self):
         self.query_one("#gugung", GugungWidget).refresh()
@@ -150,16 +197,49 @@ class GameScreen(Screen):
         from .help import HelpScreen
         self.app.push_screen(HelpScreen())
 
-    # ── 구궁 조작 ──
+    # ── 구궁/보관함 조작 (활성 패널로 라우팅) ──
+    def _focus_pane(self, name: str):
+        self.pane = name
+        try:
+            w = self.query_one("#reserve" if name == "reserve" else "#gugung")
+            if name == "reserve":
+                w.clamp()
+            self.set_focus(w)
+        except Exception:
+            pass
+        self._sync_detail()
+
+    def action_toggle_pane(self):
+        if not self.busy:
+            self._focus_pane("gugung" if self.pane == "reserve" else "reserve")
+
+    def action_focus_reserve(self):
+        if not self.busy:
+            self._focus_pane("reserve")
+
     def action_cur(self, dr: int, dc: int):
         if self.busy:
             return
-        self.query_one("#gugung", GugungWidget).move_cursor(dr, dc)
+        if self.pane == "reserve":
+            if dc > 0:                                       # → 구궁으로 건너가기
+                self._focus_pane("gugung")
+            else:
+                self.query_one("#reserve", ReserveWidget).move(dr)
+                self._sync_detail()
+            return
+        g = self.query_one("#gugung", GugungWidget)
+        if dc < 0 and g.cursor % 3 == 0 and self.session.reserve():   # 좌 끝에서 ← → 보관함
+            self._focus_pane("reserve")
+            return
+        g.move_cursor(dr, dc)
         self._sync_detail()
         self._coach_advance(0)
 
     def action_grab(self):
         if self.busy:
+            return
+        if self.pane == "reserve":
+            self._place_from_reserve()
             return
         g = self.query_one("#gugung", GugungWidget)
         was = g.grabbed is not None
@@ -169,17 +249,19 @@ class GameScreen(Screen):
         if was and g.grabbed is None:
             self._coach_advance(1)
 
-    def action_inventory(self):
-        if self.busy:
+    def _place_from_reserve(self):
+        rw = self.query_one("#reserve", ReserveWidget)
+        it = rw.current()
+        if not it:
             return
-        from .inventory import InventoryScreen
-        idx = self.query_one("#gugung", GugungWidget).cursor
-        self.app.push_screen(InventoryScreen(self.session, idx), self._after_inventory)
-
-    def _after_inventory(self, placed):
-        if placed:
-            persistence.save(self.session)
+        g = self.query_one("#gugung", GugungWidget)
+        self.session.place_from_reserve(it["item_id"], g.cursor)
+        rw.clamp()
+        if not self.session.reserve():                       # 보관함이 비면 구궁으로
+            self._focus_pane("gugung")
         self._refresh_hub()
+        persistence.save(self.session)
+        self.app.notify(f"⇲ {it['name_ko']} 배치", timeout=2)
 
     def action_speed(self):
         self.speed = {1.0: 2.0, 2.0: 4.0, 4.0: 1.0}.get(self.speed, 1.0)  # 즉시(64)에서 누르면 ×1로

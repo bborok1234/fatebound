@@ -49,6 +49,8 @@ class StatusPanel(Widget):
         self.statuses: dict = {}
         self.output = None          # M1 빌드 출력(텔레그래프)
         self.preview_output = None  # 잡은 무공을 커서 칸에 놓을 때 예상 출력
+        self.syn_formed = None      # 스왑 시 새로 생기는 상생쌍
+        self.syn_broken = None      # 스왑 시 깨지는 상생쌍
 
     def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0, cur_face="", statuses=None):
         self.p_hp, self.p_max = p_hp, p_max
@@ -86,16 +88,20 @@ class StatusPanel(Widget):
             if self.preview_output is not None:
                 d = self.preview_output - self.output
                 pct = (100 * d / self.output) if self.output else 0
-                arrow = "▲" if d > 0.3 else ("▼" if d < -0.3 else "·")
-                col = "#5aa67c" if d > 0.3 else ("#d4582f" if d < -0.3 else "#9a958a")
+                up, dn = d > 0.05, d < -0.05
+                arrow = "▲" if up else ("▼" if dn else "·")
+                col = "#5aa67c" if up else ("#d4582f" if dn else "#9a958a")
                 t = Text("출력 ", style="#9a958a")
-                t.append(f"{self.output:.0f}", style="#c8a24a")
-                t.append(" → ", style="#6b665c")
-                t.append(f"{self.preview_output:.0f} {arrow}{abs(d):.0f} ({pct:+.0f}%)", style=f"{col} bold")
+                t.append(f"{arrow}{pct:+.0f}%", style=f"{col} bold")               # %를 앞·굵게(스케일 무관 가독)
+                t.append(f"  {self.output:.1f}→{self.preview_output:.1f}", style="#9a958a")
                 g.append(t)
-                g.append(Text("  놓으면 이렇게 바뀐다 (Enter)", style="#55504a"))
+                for a, b in (self.syn_formed or [])[:2]:
+                    g.append(Text(f"  ＋상생 {a}↔{b}", style="#5aa67c"))
+                for a, b in (self.syn_broken or [])[:2]:
+                    g.append(Text(f"  －상생 {a}↔{b}", style="#d4582f"))
+                g.append(Text("  Enter로 확정", style="#55504a"))
             else:
-                g.append(Text(f"출력(出力) {self.output:.0f}", style="#c8a24a bold"))
+                g.append(Text(f"출력(出力) {self.output:.1f} /합", style="#c8a24a bold"))
         g.append(Text(f"깨달음 {s.insight} · 골드 {s.gold} · 파편 {s.shards}", style="grey62"))
         # 비장 게이지
         bj = "●" * self.bijang + "○" * max(0, self.bijang_max - self.bijang)

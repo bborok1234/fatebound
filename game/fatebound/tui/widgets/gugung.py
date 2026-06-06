@@ -16,6 +16,7 @@ CW = 12  # 칸 내부폭(셀) — 한글 5자(10셀) + 여유. 이름 절단 금
 
 
 class GugungWidget(Widget):
+    can_focus = True
     cursor: reactive[int] = reactive(0)
     grabbed: reactive[int | None] = reactive(None)
 
@@ -23,6 +24,7 @@ class GugungWidget(Widget):
         super().__init__(**kw)
         self.session = session
         self.active: set = set()        # 천명괘로 강조된 줄(전투 중 점화)
+        self.ghost_item = None          # 커서 칸에 미리볼 무공(잡기/보관함 선택, 화면이 설정)
 
     # ── 전투 점화(화면이 호출) ──
     def ignite(self, indices):
@@ -68,6 +70,8 @@ class GugungWidget(Widget):
                 it = bag.cells[idx]
                 cur = (idx == self.cursor)
                 grab = (idx == self.grabbed)
+                # 호버 고스트: 잡기/보관함 선택 시 커서 칸에 놓일 무공을 미리보기(화면이 ghost_item 설정)
+                ghost = (self.ghost_item is not None and cur)
 
                 if it is None:
                     name = Text("· · ·", style="#3a3a42", justify="center")
@@ -83,9 +87,14 @@ class GugungWidget(Widget):
                         dot = RARITY_DOT.get(it["rarity"], "·")
                         sub = Text(dot, style=style, justify="center")
 
-                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커). 전투 점화는 최우선.
-                if idx in self.active:
-                    name.stylize("bold on #4a3a12"); sub.stylize("on #4a3a12")   # 천명 줄 점화(금빛)
+                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커). 전투 점화·고스트가 최우선.
+                if ghost:
+                    gnm = self.ghost_item["name_ko"]
+                    name = Text("⇲" + gnm, style="#c8a24a bold italic", justify="center")
+                    sub = Text("여기 놓기", style="#9a958a italic", justify="center")
+                    name.stylize("on #2d3a22"); sub.stylize("on #2d3a22")          # 미리보기 배경(연녹)
+                elif idx in self.active:
+                    name.stylize("bold on #4a3a12"); sub.stylize("on #4a3a12")     # 천명 줄 점화(금빛)
                 elif grab:
                     name = Text("✋", style="#e0b341") + name
                     name.stylize("on #6b4423"); sub.stylize("on #6b4423")
