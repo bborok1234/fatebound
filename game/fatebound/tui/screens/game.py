@@ -418,7 +418,10 @@ class GameScreen(Screen):
             if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
                 await self._do_roll(dice, d["line"])
                 if not self.reduced_motion:
-                    gug.ignite(LINES[d["line"]])
+                    lit = list(LINES[d["line"]])
+                    for x in d.get("extra", []):           # dice 천명 조작: 추가 강조줄도 점화(넓은 스폿라이트)
+                        lit += LINES[x]
+                    gug.ignite(lit)
                 if "m1_line_taught" not in self.session.seen_events:   # 천명괘 just-in-time 교육(평생 1회)
                     self.session.seen_events.append("m1_line_taught")
                     self.app.notify("매 합 6줄 중 한 줄(금빛)이 강조돼 그 줄 무공이 더 세게 친다. "

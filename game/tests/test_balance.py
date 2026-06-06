@@ -113,12 +113,12 @@ def test_battle_perf_budget():
 
 
 def test_build_diversity_multiple_m1_families():
-    """이중잔존(D1~D4)은 다수 viable 빌드 패밀리를 요구. poison+guard+crit 충족(2026-06).
-    dice 추가 시 ≥4로 상향. 한 계열이라도 M1 스텁으로 회귀하면 잡는다."""
+    """이중잔존(D1~D4)은 다수 viable 빌드 패밀리를 요구. poison+guard+crit+dice 4계열 전부 충족(2026-06).
+    한 계열이라도 M1 스텁으로 회귀하면 잡는다."""
     from fatebound.engine.combat_m1 import _m1
     families = [b for b in ("poison", "crit", "guard", "dice")
                 if sum(1 for it in content.items_for_build(b) if _m1(it)) >= 9]
-    assert len(families) >= 3, f"M1 보유 빌드 패밀리 {families} — 다양 빌드 미충족(가설 미검증)"
+    assert len(families) >= 4, f"M1 보유 빌드 패밀리 {families} — 다양 빌드 미충족(가설 미검증)"
 
 
 def test_light_clears_boss1():
