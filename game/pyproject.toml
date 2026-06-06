@@ -28,7 +28,7 @@ Repository = "https://github.com/bborok1234/fatebound"
 fatebound = "fatebound.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8", "pyinstaller>=6", "hypothesis>=6", "ruff>=0.9", "import-linter>=2", "pytest-textual-snapshot>=1"]
+dev = ["pytest>=8", "pyinstaller>=6", "hypothesis>=6", "ruff>=0.9", "import-linter>=2", "pytest-textual-snapshot>=1.1.0"]
 
 [tool.ruff]
 target-version = "py311"
