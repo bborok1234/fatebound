@@ -13,6 +13,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    name: lint & audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+          enable-cache: true
+          working-directory: game
+          python-version: "3.13"
+      - name: Install (locked)
+        run: uv sync --locked --dev
+      - name: Ruff lint (E9/F/B)
+        run: uv run ruff check fatebound
+      - name: Dependency audit (pip-audit)
+        run: uvx pip-audit
+        continue-on-error: true   # 초기 비차단(보고만) → 신뢰 쌓이면 차단으로 ratchet
+
   test:
     name: test ${{ matrix.os }} · py${{ matrix.python }}
     runs-on: ${{ matrix.os }}

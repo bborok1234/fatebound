@@ -7,7 +7,7 @@ import pytest
 from fatebound import content
 from fatebound.engine.formula import evaluate
 from fatebound.engine.bag import Bag, Loadout
-from fatebound.engine.combat_m1 import BattleM1, cell_eff, OUTPUT_C
+from fatebound.engine.combat_m1 import BattleM1, cell_eff
 from fatebound.engine.rng import Rng
 from fatebound.engine import balance
 

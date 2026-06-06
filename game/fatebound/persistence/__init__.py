@@ -25,12 +25,22 @@ def save(session: GameSession, slot: str = "default"):
         json.dump(session.to_dict(), f, ensure_ascii=False, indent=2)
     os.replace(tmp, p)          # 원자적
 
+SAVE_SCHEMA = 1
+
+
 def load(slot: str = "default") -> GameSession | None:
     p = _path(slot)
     if not p.exists():
         return None
     try:
         with open(p, encoding="utf-8") as f:
-            return GameSession.from_dict(json.load(f))
+            data = json.load(f)
     except Exception:
         return None
+    # 스키마 가드: dict 아님/미래·미상 버전은 안전하게 거부(크래프티드 세이브 방어)
+    if not isinstance(data, dict) or data.get("v", SAVE_SCHEMA) not in (SAVE_SCHEMA, None):
+        return None
+    try:
+        return GameSession.from_dict(data)
+    except Exception:
+        return None        # 손상·필드 타입 이상 — 크래시 대신 새 게임으로
