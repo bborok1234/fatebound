@@ -46,12 +46,14 @@ CRIT_INTRO_GUARD = 10.0      # 입문 생존 쿠션(방어 가산). tier1 전액
 
 # ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
 #    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).
+# 키스톤 = 변수↔일관 메타축(#6). 런 시작에 계열×재질을 고르면 빌드 성격이 결정된다.
+#   var=합당 출력 분산(±%, 결정론 rng). reroll_weak=약줄 1회 재굴림(분산↓). spot_mult=강조줄 비중.
 DICE_MODS = {
-    "baekok":  {"spot_mult": 1.00, "dmg_mult": 1.00},                       # 백옥(C) 기준점
-    "heukyo":  {"spot_mult": 1.18, "dmg_mult": 0.96},                       # 흑요석(R) 스파이크(강조 특화)
-    "bichwi":  {"spot_mult": 1.00, "dmg_mult": 1.00, "reroll_weak": True},  # 비취(E) 일관성(약줄 재굴림)
-    "hyeolok": {"spot_mult": 1.00, "dmg_mult": 1.12},                       # 혈옥(L) 원초 출력
-    "baekgol": {"spot_mult": 1.05, "dmg_mult": 1.05},                       # 백골(R) 무난 올라운드
+    "baekok":  {"spot_mult": 1.00, "dmg_mult": 1.00},                              # 백옥(C) 기준점 — 무난
+    "bichwi":  {"spot_mult": 0.92, "dmg_mult": 1.02, "reroll_weak": True},          # 비취(E) 일관(약줄 재굴림·저분산) — poison/guard 페어
+    "heukyo":  {"spot_mult": 1.28, "dmg_mult": 0.94},                              # 흑요석(R) 조준(강조줄 몰빵 보상) — 줄빌드 페어
+    "hyeolok": {"spot_mult": 1.06, "dmg_mult": 1.14, "var": 0.35},                 # 혈옥(L) 고분산 고점(±35% 스윙) — crit 페어 'd20'
+    "baekgol": {"spot_mult": 1.06, "dmg_mult": 1.06, "var": 0.10},                 # 백골(R) 올라운드(소폭 출력·소분산)
 }
 
 
@@ -111,6 +113,7 @@ class BattleM1:
         self.spot = N_SPOT * d.get("spot_mult", 1.0)
         self.scale *= d.get("dmg_mult", 1.0)
         self.reroll_weak = d.get("reroll_weak", False)
+        self.die_var = d.get("var", 0.0)          # 합당 출력 분산(±%) — 혈옥 고분산, 비취 0(일관)
         self.events: list = []
         # 조건 무공 보유 여부(1차 최소)
         fxs = [(_m1(it) or {}).get("fx") for it in self.cells]
@@ -176,7 +179,10 @@ class BattleM1:
                 if self.rng.chance(self.crit_now):
                     spot += sum(effs[i] for i in line) * (self.crit_dmg - 1.0)
                     crit = True
-            total = self._mit(base + spot, self.e_def)
+            out = base + spot
+            if self.die_var:                       # 주사위 재질 분산(혈옥 ±35% 스윙=고분산, 백골 ±10%)
+                out *= 1 + self.rng.uniform(-self.die_var, self.die_var)
+            total = self._mit(out, self.e_def)
             self.e_hp -= total
             for i in range(9):
                 if effs[i] > 0:

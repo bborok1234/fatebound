@@ -33,6 +33,7 @@ STARTER_SETS = {
 class GameSession:
     name: str = "천기노조"
     build: str = "poison"
+    die_skin: str = "baekok"                          # 천명괘 재질(키스톤 — 런 시작 정의적 선택, #6)
     zone: str = "bamboo_grove"
     level: int = 6
     xp: int = 0
@@ -53,8 +54,8 @@ class GameSession:
 
     # ── 생성/배치 ──
     @classmethod
-    def new_game(cls, name: str, build: str) -> "GameSession":
-        s = cls(name=name, build=build)
+    def new_game(cls, name: str, build: str, die_skin: str = "baekok") -> "GameSession":
+        s = cls(name=name, build=build, die_skin=die_skin)
         s.level = balance.ZONE_LEVEL["bamboo_grove"]
         # 시작은 6종만 — 나머지는 여정(드랍·기연·객잔·사건)에서 획득(성장 여지).
         pool = content.items_for_build(build)
@@ -274,7 +275,7 @@ class GameSession:
     # ── 직렬화(persistence, 20 §2·§3) ──
     def to_dict(self) -> dict:
         return {
-            "v": 1, "name": self.name, "build": self.build, "zone": self.zone,
+            "v": 1, "name": self.name, "build": self.build, "die_skin": self.die_skin, "zone": self.zone,
             "level": self.level, "xp": self.xp, "gold": self.gold, "shards": self.shards,
             "cleared": list(self.cleared), "owned": list(self.owned),
             "reincarnations": self.reincarnations, "insight": self.insight,
@@ -286,7 +287,8 @@ class GameSession:
 
     @classmethod
     def from_dict(cls, d: dict) -> "GameSession":
-        s = cls(name=d["name"], build=d["build"], zone=d.get("zone", "bamboo_grove"),
+        s = cls(name=d["name"], build=d["build"], die_skin=d.get("die_skin", "baekok"),
+                zone=d.get("zone", "bamboo_grove"),
                 level=d.get("level", 6), xp=d.get("xp", 0), gold=d.get("gold", 50),
                 shards=d.get("shards", 0), cleared=list(d.get("cleared", [])),
                 owned=list(d.get("owned", [])), reincarnations=d.get("reincarnations", 0),

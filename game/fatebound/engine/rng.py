@@ -25,3 +25,6 @@ class Rng:
 
     def randint(self, a: int, b: int) -> int:
         return self._r.randint(a, b)
+
+    def uniform(self, a: float, b: float) -> float:
+        return self._r.uniform(a, b)
