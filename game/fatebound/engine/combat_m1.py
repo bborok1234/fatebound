@@ -24,6 +24,12 @@ LINE_PURE_BONUS = 0.25  # 순독(純毒) 줄 보너스
 VULN_BONUS = 0.15      # 취약(조건) 출력 보너스
 OUTPUT_C = 0.040       # 출력 스케일 = player.atk × OUTPUT_C (③-bis: 스타터 일반전 클리어 + GOOD@한천 ~10합)
 
+# ── guard 받아넘김(유능제강, doc27 P5) ── 막은 피해를 기(氣)로 적립 → 전환기가 기→반격 출력.
+#    비-guard 빌드엔 무영향(block=0이면 전 로직 no-op). 수치는 balance_sim으로 확정.
+KI_GAIN = 0.60         # 막은 피해 → 기 적립률
+KI_CAP_MULT = 0.50     # 기 상한 = player.max_hp × 이값(폭주 방지)
+CONV_BASE = 0.30       # 전환기 기본 전환율(칸 배수×인접 증폭이 곱해짐 = 배치 깊이)
+
 # ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
 #    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).
 DICE_MODS = {
@@ -98,6 +104,11 @@ class BattleM1:
         self.has_vuln = "vulnerable_if_poisoned" in fxs
         self.has_counter = any(f in ("counter", "counter_poison") for f in fxs)
         self.has_heal = "heal_low" in fxs
+        # guard 받아넘김: 총 방어 가산(경감↑), 기 적립, 전환기 칸. block=0이면 전부 no-op.
+        self.block = sum((_m1(it) or {}).get("block", 0.0) for it in self.cells)
+        self.ki = 0.0
+        self.ki_cap = self.player.max_hp * KI_CAP_MULT
+        self.converters = [i for i in range(9) if (_m1(self.cells[i]) or {}).get("fx") == "convert_ki"]
 
     def _e(self, kind, **d):
         self.events.append(ev(kind, **d))
@@ -136,15 +147,34 @@ class BattleM1:
             self._e("damage", src=self.player.name, tgt=self.e_name, amount=total, crit=False,
                     label=f"천명 {LINE_KO[li]}", by_player=True,
                     tgt_hp=max(0, self.e_hp), tgt_max=self.e_max)
+            # 전환기: 적립된 기(氣)를 반격 출력으로. 유능제강 — 칸 위치(중앙×1.5)×인접 증폭이
+            # 기→피해를 *증폭*(소비속도 아닌 지렛대) → 전환기 배치가 guard 총출력을 바꾼다(배치 깊이).
+            if self.converters and self.ki > 0:
+                dealt_sum = 0.0
+                for ci in self.converters:
+                    m = _m1(self.cells[ci])
+                    consume = min(self.ki, self.ki * m.get("conv", CONV_BASE))
+                    center = CENTER_MULT if ci == 4 else 1.0
+                    adj = sum((_m1(self.cells[n]) or {}).get("amp", 0.0) for n in ORTH[ci])
+                    self.ki -= consume
+                    dealt_sum += consume * center * (1 + adj)        # 위치 지렛대로 증폭
+                dealt = self._mit(dealt_sum, self.e_def)
+                self.e_hp -= dealt
+                self._e("ki_reversal", src=self.player.name, tgt=self.e_name, amount=round(dealt),
+                        by_player=True, tgt_hp=max(0, self.e_hp), tgt_max=self.e_max)
             if self.e_hp <= 0:
                 break
-            # 적 공격(약화 조건 반영)
+            # 적 공격(약화 조건 반영). guard block은 경감을 높이고, 막은 피해는 기(氣)로 적립.
             eff_atk = e_atk * (0.8 if self.has_weaken else 1.0)
-            dmg = self._mit(eff_atk * 0.9, self.player.defense)
+            raw = eff_atk * 0.9
+            dmg = self._mit(raw, self.player.defense + self.block)
             self.player.hp -= dmg
             self._e("damage", src=self.e_name, tgt=self.player.name, amount=dmg, crit=False,
                     label="", by_player=False, tgt_hp=max(0, round(self.player.hp)),
                     tgt_max=self.player.max_hp)
+            if self.block > 0:
+                blocked = max(0.0, raw - dmg)
+                self.ki = min(self.ki_cap, self.ki + blocked * KI_GAIN)
             # 조건: 반격·회복(1차 최소)
             if self.has_counter and dmg > 0:
                 ref = self._mit(dmg * 0.4, self.e_def)
