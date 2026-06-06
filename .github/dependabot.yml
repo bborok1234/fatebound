@@ -12,10 +12,13 @@ updates:
       python-deps:
         patterns: ["*"]
 
-  # GitHub Actions(워크플로) — 보안 업데이트 빠른 반영
+  # GitHub Actions(워크플로) — 마이너/패치는 자동, 메이저는 수동 검토(release.yml은 tag-trigger라 동작 검증 필요).
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     commit-message:
       prefix: "ci"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
