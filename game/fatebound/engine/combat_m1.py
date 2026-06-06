@@ -21,8 +21,14 @@ ORTH = {0: [1, 3], 1: [0, 2, 4], 2: [1, 5], 3: [0, 4, 6], 4: [1, 3, 5, 7],
 N_SPOT = 1.6            # 천명괘 줄 강조 배수
 CENTER_MULT = 1.5      # 중앙 = 천명 자리
 LINE_PURE_BONUS = 0.25  # 순독(純毒) 줄 보너스
-VULN_BONUS = 0.15      # 취약(조건) 출력 보너스
+VULN_BONUS = 0.15      # 취약(조건) 출력 보너스 — 적 독 스택>0일 때만(조건부, RSI #14)
 OUTPUT_C = 0.040       # 출력 스케일 = player.atk × OUTPUT_C (③-bis: 스타터 일반전 클리어 + GOOD@한천 ~10합)
+
+# ── 독 스택 DoT(RSI 평가 #14) ── M0(combat.py)의 독 시스템을 M1에 포팅. 독 정체성='깔고 쌓아 틱으로 죽임'.
+#    독 무공(아래 fx)이 매 합 적에게 스택을 적립 → 스택 비례 DoT(방어 무시) → 후반일수록 틱이 커지는 페이싱.
+#    비-poison 빌드엔 무영향(독 무공 0이면 e_poison 영원히 0, 전 로직 no-op — guard/crit 무회귀).
+POISON_APPLY_FX = frozenset({"poison", "apply_poison", "on_hit_poison", "poison_slash", "poison_bigslash"})
+POISON_AMP_FX = frozenset({"amp_poison", "poison_line_amp"})  # amp 합 = poison_amp(틱 증폭)
 
 # ── guard 받아넘김(유능제강, doc27 P5) ── 막은 피해를 기(氣)로 적립 → 전환기가 기→반격 출력.
 #    비-guard 빌드엔 무영향(block=0이면 전 로직 no-op). 수치는 balance_sim으로 확정.
@@ -126,6 +132,14 @@ class BattleM1:
             zone_factor = max(0.0, (100 - self.K) / 50.0)   # K=50(t1)→1.0, 75(t2)→0.5, 100(t3)→0.0
             self.crit_now = min(CRIT_CAP, self.crit_now + CRIT_RAMP_BOOTSTRAP * zone_factor)
             self.block += CRIT_INTRO_GUARD * zone_factor      # 입문 생존 쿠션(엔드선 0 → viability 불변)
+        # 독 스택 DoT: 독 적용 무공 수 = 합당 적립 스택, 독 증폭 amp 합 = 틱 증폭, every3=3합마다 추가 1.
+        #   독 무공 0이면 poison_apply=0 → e_poison 영원히 0 → 전 독 로직 no-op(비-poison 무회귀 보장).
+        self.poison_apply = sum(1 for f in fxs if f in POISON_APPLY_FX)
+        self.poison_amp = sum((_m1(it) or {}).get("amp", 0.0)
+                              for it in self.cells if (_m1(it) or {}).get("fx") in POISON_AMP_FX)
+        self.has_every3 = "every3_poison" in fxs
+        self.e_poison = 0      # 적 독 스택
+        self._e_pdt = 0        # 감쇠 카운터(POISON_DECAY_TURNS마다 1스택 감쇠)
 
     def _e(self, kind, **d):
         self.events.append(ev(kind, **d))
@@ -142,8 +156,9 @@ class BattleM1:
         while self.player.hp > 0 and self.e_hp > 0 and rnd < max_rounds:
             rnd += 1
             self._e("round_start", n=rnd)
-            # 전 무공 발동(출력 합) — 빌드 고정이라 합당 동일
-            effs = {i: cell_eff(self.cells, i, self.scale, self.has_vuln) for i in range(9)}
+            # 전 무공 발동(출력 합) — 빌드 고정. 취약(vulnerable_if_poisoned)은 *적 독 스택>0일 때만* 발동(조건부, RSI #14).
+            vuln = self.has_vuln and self.e_poison > 0
+            effs = {i: cell_eff(self.cells, i, self.scale, vuln) for i in range(9)}
             # 천명괘: 한 줄 강조 (비취=하위 줄 1회 재굴림→더 센 줄 채택)
             li = self.rng.roll(6)
             if self.reroll_weak:
@@ -186,6 +201,24 @@ class BattleM1:
                 self.e_hp -= dealt
                 self._e("ki_reversal", src=self.player.name, tgt=self.e_name, amount=round(dealt),
                         by_player=True, tgt_hp=max(0, self.e_hp), tgt_max=self.e_max)
+            # 독 스택 DoT(RSI #14). 독 무공이 매 합 스택 적립 → 스택 비례 틱(방어 무시) → 후반일수록 큰 페이싱.
+            #   poison_apply=0이면 이 블록 전체 no-op(비-poison 빌드 바이트 동일). M0 combat._tick 포팅.
+            if self.poison_apply > 0:
+                self.e_poison += self.poison_apply                    # 무공당 1스택/합
+                if self.has_every3 and rnd % 3 == 0:
+                    self.e_poison += 1                                # every3_poison: 3합마다 추가 1스택
+                if self.e_poison > 0:
+                    amt = max(1, round((balance.POISON_PER_STACK * self.e_poison
+                                        + balance.POISON_HP_PCT * self.e_max) * (1 + self.poison_amp)))
+                    self.e_hp -= amt                                  # DoT는 방어 무시(독은 침투)
+                    # 감쇠: POISON_DECAY_TURNS마다 1스택(쌓여야 제맛 — M0와 동일 곡선)
+                    self._e_pdt += 1
+                    if self._e_pdt >= balance.POISON_DECAY_TURNS:
+                        self.e_poison -= 1
+                        self._e_pdt = 0
+                    self._e("tick", status="poison", src="독", tgt=self.e_name, amount=amt,
+                            stacks=self.e_poison, by_player=True,
+                            tgt_hp=max(0, self.e_hp), tgt_max=self.e_max)
             if self.e_hp <= 0:
                 break
             # 적 공격(약화 조건 반영). guard block은 경감을 높이고, 막은 피해는 기(氣)로 적립.

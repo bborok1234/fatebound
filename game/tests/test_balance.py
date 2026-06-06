@@ -143,3 +143,78 @@ def test_combat_terminates(zone):
     p = lo.make_player("x", balance.ZONE_LEVEL[zone])
     r = BattleM1(cells, p, _enemy(zone, boss=True), balance.ZONE_TIER[zone], Rng(1)).run()
     assert r.rounds <= balance.MAX_ROUNDS
+
+
+# ── 독 스택 DoT 정체성 게이트(RSI 평가 #14) ──
+import copy
+
+_POISON_FX = frozenset({"poison", "apply_poison", "on_hit_poison", "poison_slash", "poison_bigslash",
+                        "amp_poison", "poison_line_amp", "every3_poison", "vulnerable_if_poisoned",
+                        "counter_poison"})
+
+
+def _strip_poison_fx(cells):
+    """GOOD 독 빌드에서 독 fx를 전부 None으로(독 시스템 비활성). base/amp 수치는 보존."""
+    out = []
+    for it in cells:
+        it = copy.deepcopy(it)
+        m = it.get("m1")
+        if m and m.get("fx") in _POISON_FX:
+            m["fx"] = None
+        out.append(it)
+    return out
+
+
+def _fingerprint(cells, lvl, enemy, zone, n=N):
+    """결정론 전투 지문 — 시드별 (outcome, rounds) 튜플 시퀀스."""
+    lo = Loadout.compile(Bag(cells=cells))
+    fp = []
+    for sd in range(n):
+        p = lo.make_player("x", lvl)
+        r = BattleM1(cells, p, enemy, balance.ZONE_TIER[zone], Rng(sd)).run()
+        fp.append((r.outcome, r.rounds))
+    return tuple(fp)
+
+
+def test_poison_fx_strip_changes_combat():
+    """독 정체성 실재 증거(죽은 코드 회귀 차단, RSI #14): GOOD 독 빌드의 독 fx를 전부 None으로
+    치환하면 전투 결과(outcome/rounds 분포)가 baseline과 *달라져야* 한다. 동일하면 독 fx=죽은 코드."""
+    fz = "frost_spring_valley"
+    lvl = balance.ZONE_LEVEL[fz]
+    enemy = _enemy(fz, boss=True)
+    base_fp = _fingerprint(_good_cells(), lvl, enemy, fz)
+    strip_fp = _fingerprint(_strip_poison_fx(_good_cells()), lvl, enemy, fz)
+    assert base_fp != strip_fp, "독 fx-strip이 전투를 안 바꿈 — 독 시스템이 죽은 코드(RSI #14 회귀)"
+
+
+def test_poison_stacks_ramp_pacing():
+    """독 정체성='스택 누적 페이싱': 합이 지날수록 독 스택이 쌓여 후반 틱이 초반 틱보다 커야 한다.
+    (초반 약하고 스택 쌓일수록 강해지는 곡선 = '깔고 쌓아 틱으로 죽임')."""
+    fz = "frost_spring_valley"
+    cells = _good_cells()
+    lo = Loadout.compile(Bag(cells=cells))
+    p = lo.make_player("x", balance.ZONE_LEVEL[fz])
+    r = BattleM1(cells, p, _enemy(fz, boss=True), balance.ZONE_TIER[fz], Rng(0)).run()
+    ticks = [(e.amount, e.stacks) for e in r.events
+             if e.kind == "tick" and getattr(e, "status", None) == "poison"]
+    assert len(ticks) >= 4, f"독 틱이 너무 적어 페이싱 측정 불가 ({len(ticks)}합) — 독 무공이 스택을 안 쌓음"
+    first, last = ticks[0][0], ticks[-1][0]
+    assert last > first * 1.5, f"후반 틱({last})이 초반 틱({first}) 대비 안 커짐 — 스택 누적 페이싱 소멸"
+    fs, ls = ticks[0][1], ticks[-1][1]
+    assert ls > fs, f"독 스택이 합 경과로 누적 안 됨 (초{fs}→후{ls}) — DoT 누적 정체성 붕괴"
+
+
+def test_vulnerable_gated_on_poison():
+    """vulnerable_if_poisoned는 '적 독 스택>0'일 때만 +15% 발동(무조건 아님, RSI #14).
+    독 적용 무공이 0인 빌드(독 스택 영원히 0)에선 취약 보너스가 절대 안 붙어야 한다(조건부 증명)."""
+    # vulnerable_if_poisoned 한 칸 + 독 적용 무공 0 → e_poison 영원히 0 → vuln 미발동.
+    vuln_it = next(it for it in content.items_for_build("poison")
+                   if (it.get("m1") or {}).get("fx") == "vulnerable_if_poisoned")
+    payload = next(it for it in content.items_for_build("crit") if (it.get("m1") or {}).get("base", 0) > 0)
+    cells = [copy.deepcopy(payload) for _ in range(8)] + [copy.deepcopy(vuln_it)]
+    p = Loadout.compile(Bag(cells=cells)).make_player("x", 20)
+    b = BattleM1(cells, p, _enemy("frost_spring_valley", boss=True),
+                 balance.ZONE_TIER["frost_spring_valley"], Rng(1))
+    assert b.poison_apply == 0 and b.has_vuln, "전제 위반: 독 적용 0 + 취약 보유 빌드여야"
+    b.run()
+    assert b.e_poison == 0, "독 적용 무공 0인데 적 독 스택이 생김 — DoT no-op 위반"
