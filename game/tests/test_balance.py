@@ -121,6 +121,23 @@ def test_build_diversity_multiple_m1_families():
     assert len(families) >= 3, f"M1 보유 빌드 패밀리 {families} — 다양 빌드 미충족(가설 미검증)"
 
 
+@pytest.mark.xfail(strict=True, reason="입문 보스1을 라이트(guard/crit STARTER)가 돌파 불가(guard~2%·crit~3% vs poison~83%). "
+                   "사용자 확정 D-D 곡선(보스1 관대 ~60%+) 위반 — RSI 평가 발견(#13). 계열별 레버 튜닝(guard DPS/MAX_ROUNDS, "
+                   "crit 초반 floor) 후 통과→xpass 시 마커 제거. poison 페이싱 글로벌 상수가 guard/crit에 불리.")
+def test_light_clears_boss1():
+    """라이트(STARTER 빌드, 입문 레벨)가 입문존 보스를 합리적 승률로 돌파해야 — D-D 난도곡선 출발점.
+    3계열 모두 ≥40%(라이트 이중잔존). 현재 guard/crit이 절벽 → xfail로 정직하게 추적."""
+    enemy = _enemy("bamboo_grove", boss=True)
+    tier = balance.ZONE_TIER["bamboo_grove"]
+    lvl = balance.ZONE_LEVEL["bamboo_grove"] + 1     # 입문 잡졸 처치 후 1렙업 반영(실여정 근사)
+    for build in ("poison", "guard", "crit"):
+        cells = GameSession.new_game("x", build).bag.cells
+        lo = Loadout.compile(Bag(cells=cells))
+        wins = sum(BattleM1(cells, lo.make_player("x", lvl), enemy, tier, Rng(sd)).run().outcome == "win"
+                   for sd in range(60))
+        assert wins / 60 >= 0.40, f"{build} 입문 보스1 라이트 승률 {wins / 60:.0%} < 40% — D-D 곡선 위반"
+
+
 @pytest.mark.parametrize("zone", ["bamboo_grove", "black_wind_forest", "frost_spring_valley"])
 def test_combat_terminates(zone):
     """모든 존에서 전투가 MAX_ROUNDS 안에 종료(무한전투 금지)."""
