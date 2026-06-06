@@ -385,6 +385,10 @@ class GameScreen(Screen):
             if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
                 await self._do_roll(dice, d["line"])
                 gug.ignite(LINES[d["line"]])
+            if e.kind == "m1_fire" and not self.reduced_motion:   # 발동 캐스케이드: 무공이 차례로 번쩍
+                ci = self._cell_index(d.get("name"))
+                if ci is not None:
+                    gug.pulse(ci)
             if e.kind == "status" and d.get("tgt") == e_name:
                 estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
             ln = render_text.line(e)
@@ -417,6 +421,13 @@ class GameScreen(Screen):
         if not instant:
             await asyncio.sleep(Dice3D.ROLL_SECONDS)       # 위젯이 자체 타이머로 굴러 착지
 
+    def _cell_index(self, name):
+        """무공 이름 → 구궁 칸 index(발동 캐스케이드용). 동명은 첫 칸."""
+        for i, c in enumerate(self.session.bag.cells):
+            if c and c["name_ko"] == name:
+                return i
+        return None
+
     def _style(self, e, line: str) -> str:
         k, d = e.kind, e.data
         if k == "round_start":
@@ -444,21 +455,31 @@ class GameScreen(Screen):
             return f"[{col} bold]{line}[/]"
         return line
 
+    def _toast(self, msg, severity="information"):
+        # 보상/사건을 토스트로도(라이트 유저가 로그를 놓쳐도 보이게). 축소모션은 생략.
+        if not self.reduced_motion:
+            self.app.notify(msg, severity=severity, timeout=4)
+
     def _after(self, res, out, log: RichLog):
         if res.outcome == "win":
             g = out.get("gains", {})
             log.write(f"[#5aa67c]전리품: 경험치 +{g.get('xp',0)} · 골드 +{g.get('gold',0)} · 파편 +{g.get('shards',0)}[/]")
             for lv in out.get("leveled", []):
                 log.write(f"[#c8a24a bold]경지 상승! Lv{lv}[/]")
+                self._toast(f"경지 상승! Lv{lv}", "warning")
             if out.get("drop"):
                 log.write(f"[#c8a24a]전리품 무공: {out['drop']['name_ko']} 획득![/]")
+                self._toast(f"무공 획득 · {out['drop']['name_ko']}", "warning")
             if out.get("boss_cleared"):
                 za = out.get("zone_advanced")
                 if za:
                     log.write(f"[#c8a24a bold]━━ 관문 돌파! 새 강호 '{ZONE_KO.get(za, za)}'(이)가 열렸다 ━━[/]")
+                    self._toast(f"관문 돌파! 새 강호 · {ZONE_KO.get(za, za)}", "warning")
                 else:
                     log.write("[#c8a24a bold]━━ 이 강호를 평정했다. 더 깊은 곳으로… ━━[/]")
+                    self._toast("강호를 평정했다", "warning")
         elif out.get("reincarnated"):
             log.write("[#d4582f bold]━━ 전사, 그리고 회귀(回歸) ━━[/]")
+            self._toast("전사 — 회귀(回歸)", "error")
             from .reincarnate import ReincarnateScreen
             self.app.push_screen(ReincarnateScreen(self.session, out.get("gain", 0), "전사"))

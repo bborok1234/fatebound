@@ -31,6 +31,7 @@ class GugungWidget(Widget):
         self.session = session
         self.active: set = set()        # 천명괘로 강조된 줄(전투 중 점화)
         self.ghost_item = None          # 커서 칸에 미리볼 무공(잡기/보관함 선택, 화면이 설정)
+        self.pulse_idx = None           # 발동 캐스케이드: 지금 터지는 칸(전투 중)
 
     def on_click(self, event) -> None:
         # 클릭 좌표 → 3×3 칸(비례 히트테스트). 화면이 집기/놓기 처리.
@@ -39,12 +40,15 @@ class GugungWidget(Widget):
         row = min(2, max(0, int(event.offset.y * 3 / h)))
         self.post_message(self.CellClicked(row * 3 + col))
 
-    # ── 전투 점화(화면이 호출) ──
+    # ── 전투 점화·발동(화면이 호출) ──
     def ignite(self, indices):
         self.active = set(indices); self.refresh()
 
     def douse(self):
-        self.active = set(); self.refresh()
+        self.active = set(); self.pulse_idx = None; self.refresh()
+
+    def pulse(self, idx):
+        self.pulse_idx = idx; self.refresh()
 
     # ── 조작(화면이 호출) ──
     def move_cursor(self, dr: int, dc: int):
@@ -100,8 +104,10 @@ class GugungWidget(Widget):
                         dot = RARITY_DOT.get(it["rarity"], "·")
                         sub = Text(dot, style=style, justify="center")
 
-                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커). 전투 점화·고스트가 최우선.
-                if ghost:
+                # 커서/집기 — 확실히 보이게(밝은 배경 + 마커). 발동 펄스·점화·고스트가 최우선.
+                if idx == self.pulse_idx:
+                    name.stylize("bold on #e0b341"); sub.stylize("on #e0b341")     # 발동! 캐스케이드 플래시
+                elif ghost:
                     gnm = self.ghost_item["name_ko"]
                     name = Text("⇲" + gnm, style="#c8a24a bold italic", justify="center")
                     sub = Text("여기 놓기", style="#9a958a italic", justify="center")
