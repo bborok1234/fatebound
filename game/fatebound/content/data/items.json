@@ -2572,7 +2572,13 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "속도 +1. 방어 +2. 운 +5."
+    "gist_ko": "출력 + 천명 강조줄 +1(넓은 강조).",
+    "m1": {
+      "role": "engine",
+      "base": 3,
+      "amp": 0.0,
+      "spots": 1
+    }
   },
   {
     "item_id": "bobeop_chohye",
@@ -2627,7 +2633,12 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "속도 +3. 운 +2."
+    "gist_ko": "가벼운 출력. 속도 +.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0.0
+    }
   },
   {
     "item_id": "so_cheonmyeong_pae",
@@ -2679,7 +2690,13 @@
     "build": "dice",
     "balance_status": "over",
     "target_nominal": 10,
-    "gist_ko": "특수 면에서 재점(리롤) +1."
+    "gist_ko": "천명 강조줄 +1. 소량 출력.",
+    "m1": {
+      "role": "engine",
+      "base": 1,
+      "amp": 0.0,
+      "spots": 1
+    }
   },
   {
     "item_id": "unryong_gyeonggong",
@@ -2741,7 +2758,12 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "속도 +2. 방어 +3. 운 +2."
+    "gist_ko": "가벼운 출력. 속도 +.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0.0
+    }
   },
   {
     "item_id": "hosim_sogyeong",
@@ -2793,7 +2815,12 @@
     "build": "dice",
     "balance_status": "over",
     "target_nominal": 10,
-    "gist_ko": "방어 면에서 보호막."
+    "gist_ko": "출력 + 곁 무공 소폭 증폭.",
+    "m1": {
+      "role": "payload",
+      "base": 2,
+      "amp": 0.1
+    }
   },
   {
     "item_id": "cheongnang_haengun_bu",
@@ -2848,7 +2875,13 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "운 +6. 치명 +3."
+    "gist_ko": "체력이 낮으면 회복.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "geongon_jaejo_ban",
@@ -2915,7 +2948,13 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 재점(리롤) +1. 운 +5."
+    "gist_ko": "천명 강조줄 +2(강한 천명 확장).",
+    "m1": {
+      "role": "engine",
+      "base": 1,
+      "amp": 0.0,
+      "spots": 2
+    }
   },
   {
     "item_id": "cheongi_dungap",
@@ -2982,7 +3021,13 @@
     "build": "dice",
     "balance_status": "over",
     "target_nominal": 20,
-    "gist_ko": "집중 면에서 천명괘 면 고정. 속도 +2."
+    "gist_ko": "출력 + 천명 강조줄 +1.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0.0,
+      "spots": 1
+    }
   },
   {
     "item_id": "pungnoe_bobeop",
@@ -3044,7 +3089,12 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "속도 +6. 운 +5."
+    "gist_ko": "출력. 속도 +.",
+    "m1": {
+      "role": "payload",
+      "base": 4,
+      "amp": 0.0
+    }
   },
   {
     "item_id": "bantan_cheonmyeong_gyeong",
@@ -3111,7 +3161,13 @@
     "build": "dice",
     "balance_status": "over",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%)."
+    "gist_ko": "받은 피해의 일부를 반사.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "cheonun_boju",
@@ -3173,7 +3229,12 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "운 +9. 치명 +7. 치명 피해 +20%."
+    "gist_ko": "강한 출력.",
+    "m1": {
+      "role": "payload",
+      "base": 5,
+      "amp": 0.0
+    }
   },
   {
     "item_id": "cheongeop_seom",
@@ -3240,7 +3301,12 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "공격 면에서 강한 베기(피해 140%). 치명 +5."
+    "gist_ko": "강한 출력 + 곁 무공 소폭 증폭.",
+    "m1": {
+      "role": "payload",
+      "base": 5,
+      "amp": 0.1
+    }
   },
   {
     "item_id": "artifact_heaven_compass_seal",
@@ -3314,7 +3380,14 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 35,
-    "gist_ko": "집중 면에서 면 고정 + 재점(리롤) +1. 운 +10."
+    "gist_ko": "천명 통제 — 가장 센 줄들을 강조 + 강조줄 +2(빌드 규정).",
+    "m1": {
+      "role": "engine",
+      "base": 2,
+      "amp": 0.0,
+      "spots": 2,
+      "fx": "fate_pick"
+    }
   },
   {
     "item_id": "armor_returning_heaven_robe",
@@ -3394,7 +3467,12 @@
     "build": "dice",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "방어 면에서 보호막 + 재점(리롤) +1. 방어 +10."
+    "gist_ko": "곁 무공 강하게 증폭 + 자체 출력.",
+    "m1": {
+      "role": "amplifier",
+      "base": 3,
+      "amp": 0.35
+    }
   },
   {
     "item_id": "artifact_defying_heaven_blade_charm",
@@ -3475,6 +3553,12 @@
     "build": "dice",
     "balance_status": "ok",
     "target_nominal": 35,
-    "gist_ko": "특수 면에서 베기 + 재점(리롤) +1. 속도 +4."
+    "gist_ko": "최강 출력 + 천명 강조줄 +1.",
+    "m1": {
+      "role": "payload",
+      "base": 8,
+      "amp": 0.0,
+      "spots": 1
+    }
   }
 ]

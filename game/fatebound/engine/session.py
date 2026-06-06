@@ -243,7 +243,7 @@ class GameSession:
 
     def use_m1(self) -> bool:
         """M1 적용 여부 — m1 데이터 완비 계열. poison(독)·guard(받아넘김)·crit(예기). dice는 아직 스텁."""
-        return self.build in ("poison", "guard", "crit")
+        return self.build in ("poison", "guard", "crit", "dice")
 
     def apply_result(self, res: BattleResult, enemy: dict, boss: bool, elite: bool = False) -> dict:
         """보상/진행/죽음 처리. 반환: {leveled, drop, reincarnated, gains, zone_advanced, boss_cleared}."""

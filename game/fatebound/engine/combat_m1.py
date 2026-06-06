@@ -44,6 +44,10 @@ CRIT_CAP = 75.0        # 예기 치명확률 상한(%) — 100%면 분산이 사
 CRIT_RAMP_BOOTSTRAP = 15.0   # 시작 치명확률 +(램프 전 첫 폭발 앞당김). 고분산 유지(여전히 확률).
 CRIT_INTRO_GUARD = 10.0      # 입문 생존 쿠션(방어 가산). tier1 전액→tier3 0(엔드 viability·고분산 정체성 무영향).
 
+# ── dice 천명 조작(#25) ── 천명괘 강조줄을 조작(추가 강조줄·최강 줄 통제). '넓은 스폿라이트'=단일줄 집중과 직교.
+#    비-dice 빌드엔 무영향(spots=0·fate_pick False면 단일 무작위 줄, 기존과 동일).
+FATE_SPOTS_CAP = 3           # 추가 강조줄 상한(1+3=최대 4줄 — 전 줄 강조로 무의미해지지 않게)
+
 # ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
 #    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).
 # 키스톤 = 변수↔일관 메타축(#6). 런 시작에 계열×재질을 고르면 빌드 성격이 결정된다.
@@ -143,6 +147,9 @@ class BattleM1:
         self.has_every3 = "every3_poison" in fxs
         self.e_poison = 0      # 적 독 스택
         self._e_pdt = 0        # 감쇠 카운터(POISON_DECAY_TURNS마다 1스택 감쇠)
+        # dice 천명 조작(#25): 추가 강조줄(spots) + 천명 통제(fate_pick=최강 줄 선택). 비-dice엔 no-op(spots=0).
+        self.fate_spots = min(FATE_SPOTS_CAP, sum((_m1(it) or {}).get("spots", 0) for it in self.cells))
+        self.fate_pick = any((_m1(it) or {}).get("fx") == "fate_pick" for it in self.cells)
 
     def _e(self, kind, **d):
         self.events.append(ev(kind, **d))
@@ -162,16 +169,29 @@ class BattleM1:
             # 전 무공 발동(출력 합) — 빌드 고정. 취약(vulnerable_if_poisoned)은 *적 독 스택>0일 때만* 발동(조건부, RSI #14).
             vuln = self.has_vuln and self.e_poison > 0
             effs = {i: cell_eff(self.cells, i, self.scale, vuln) for i in range(9)}
-            # 천명괘: 한 줄 강조 (비취=하위 줄 1회 재굴림→더 센 줄 채택)
-            li = self.rng.roll(6)
-            if self.reroll_weak:
-                li2 = self.rng.roll(6)
-                if sum(effs[i] for i in LINES[li2]) > sum(effs[i] for i in LINES[li]):
-                    li = li2
+            # 천명괘: 강조줄 선택. dice 조작 — 추가 강조줄(fate_spots) + 천명 통제(fate_pick=최강 줄).
+            if self.fate_pick:                          # 천명 통제: 출력 최강 줄들을 직접 고른다(조작)
+                order = sorted(range(6), key=lambda x: sum(effs[i] for i in LINES[x]), reverse=True)
+                spot_li = order[:1 + self.fate_spots]
+                li = spot_li[0]
+            else:
+                li = self.rng.roll(6)
+                if self.reroll_weak:                    # 비취 키스톤: 약줄 1회 재굴림
+                    li2 = self.rng.roll(6)
+                    if sum(effs[i] for i in LINES[li2]) > sum(effs[i] for i in LINES[li]):
+                        li = li2
+                spot_li = [li]
+                if self.fate_spots:                     # dice(통제 없이): 무작위 추가 강조줄
+                    extra = [x for x in range(6) if x != li]
+                    self.rng.shuffle(extra)
+                    spot_li += extra[:self.fate_spots]
             line = LINES[li]
-            self._e("m1_line", line=li, name=LINE_KO[li])
+            self._e("m1_line", line=li, name=LINE_KO[li], extra=[x for x in spot_li if x != li])
             base = sum(effs.values())
-            spot = (self.spot - 1) * sum(effs[i] for i in line)
+            spot_cells = set()
+            for x in spot_li:
+                spot_cells.update(LINES[x])             # 겹치는 칸 중복 가산 방지
+            spot = (self.spot - 1) * sum(effs[i] for i in spot_cells)
             # crit 예기: 합마다 치명확률 누적 → 적중 시 천명 강조 줄이 치명타로 폭발(고분산 고점)
             crit = False
             if self.crit_now > 0 or self.crit_ramp > 0:
