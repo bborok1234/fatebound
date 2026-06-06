@@ -146,15 +146,17 @@ class StatusPanel(Widget):
                     rc = {"payload": "#c8a24a", "amplifier": "#7fa8d4",
                           "engine": "#b07fd4", "conditional": "#6fae5a"}.get(role, "grey62")
                     g.append(Text(f"▸ {rk}", style=rc))
-            tags = "·".join(it.get("tags", []))
-            g.append(Text(f"{it['rarity']} · {tags}", style="grey54"))
-            for e in it.get("effects", [])[:3]:
-                cond = e.get("condition", "").replace("on_face:", "▸").replace("passive", "상시").replace("on_crit", "치명시")
-                ek = EFFECT_KO.get(e.get("effect", ""), e.get("effect", ""))
-                g.append(Text(f"  {cond} → {ek}", style="grey46"))
-            fl = it.get("flavor_ko", "")
-            if fl:
-                g.append(Text(fl, style="#6b665c italic"))   # 펀치라인 안 잘리게 전문 노출(자동 줄바꿈)
+            # peek(잡기 미리보기) 중엔 평시 상세를 접어 출력 델타·상생에 시선 집중(인지부하↓)
+            if self.preview_output is None:
+                tags = "·".join(it.get("tags", []))
+                g.append(Text(f"{it['rarity']} · {tags}", style="grey54"))
+                for e in it.get("effects", [])[:3]:
+                    cond = e.get("condition", "").replace("on_face:", "▸").replace("passive", "상시").replace("on_crit", "치명시")
+                    ek = EFFECT_KO.get(e.get("effect", ""), e.get("effect", ""))
+                    g.append(Text(f"  {cond} → {ek}", style="grey46"))
+                fl = it.get("flavor_ko", "")
+                if fl:
+                    g.append(Text(fl, style="#6b665c italic"))   # 펀치라인 전문 노출(자동 줄바꿈)
         else:
             g.append(Text("커서를 무공 위에 두면 상세가 보인다.", style="grey42"))
         return Group(*g)

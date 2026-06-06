@@ -27,7 +27,7 @@ class FateboundCommands(Provider):
                             (lambda idx=i: scr.goto_cell(idx)), c.get("gist_ko", "")))
         for it in s.reserve():
             out.append((f"무공 · {it['name_ko']}  (보관함)",
-                        scr.action_focus_reserve, "보관함에서 배치"))
+                        (lambda iid=it["item_id"]: scr.select_reserve(iid)), "보관함에서 선택→Enter 배치"))
         return out
 
     async def search(self, query):

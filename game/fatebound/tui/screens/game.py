@@ -83,8 +83,11 @@ class GameScreen(Screen):
         z = ZONE_KO.get(self.session.zone, self.session.zone)
         log.write(f"[#9a958a]── {z} ──[/]")
         log.write("[#9a958a]구궁을 정비하고, [/][#c8a24a]Space[/][#9a958a]로 강호에 나서라.  ([/][#c8a24a]?[/][#9a958a] 도움말)[/]")
-        # 복귀 유저(온보딩 지난)에게 새 조작 1회 안내
-        if self.coach is None and not self.reduced_motion:
+        # 복귀 유저(온보딩 지난)에게 새 조작 1회만 안내(persisted seen_events 재사용)
+        if (self.coach is None and not self.reduced_motion
+                and "p3_controls" not in self.session.seen_events):
+            self.session.seen_events.append("p3_controls")
+            persistence.save(self.session)
             self.call_after_refresh(lambda: self.app.notify(
                 "새 조작 · Ctrl+P 검색 · 마우스로 칸 클릭 · Tab 보관함 · 잡으면 출력 변화 미리보기", timeout=6))
 
@@ -106,12 +109,15 @@ class GameScreen(Screen):
                    "[#c8a24a]Ctrl+P[/] 명령·검색 · [#c8a24a]Space[/] 강호로 · [#c8a24a]F[/] 배속 · [#c8a24a]?[/] 도움말")
         self.query_one("#actionbar", Static).update(txt)
 
-    def _build_output(self, cells):
-        """M1 빌드의 합당(合當) 기대 출력 — 실제 BattleM1 첫 합과 일치하도록
-        주사위 재질(dmg_mult·spot_mult)·취약 보너스·천명괘 스폿라이트 평균 반영(적 방어 제외)."""
+    def _scale_spot(self):
+        """출력 스케일·스폿 배수 — 주사위 재질 반영. player_preview는 sync당 1회만(핫패스)."""
         mods = DICE_MODS.get(getattr(self.session, "die_skin", "baekok"), {})
         scale = max(1.0, self.session.player_preview().atk * OUTPUT_C) * mods.get("dmg_mult", 1.0)
-        spot = N_SPOT * mods.get("spot_mult", 1.0)
+        return scale, N_SPOT * mods.get("spot_mult", 1.0)
+
+    @staticmethod
+    def _build_output(cells, scale, spot):
+        """M1 빌드의 합당(合當) 기대 출력 — BattleM1 첫 합과 일치(취약 보너스·천명괘 스폿라이트 평균, 적 방어 제외)."""
         has_vuln = any((c.get("m1") or {}).get("fx") == "vulnerable_if_poisoned" for c in cells if c)
         base = sum(cell_eff(cells, i, scale, has_vuln) for i in range(9))
         return base * (1 + (spot - 1) / 3)        # 매 합 6줄 중 1줄 강조 → 기대 +1/3·(spot-1)
@@ -137,9 +143,10 @@ class GameScreen(Screen):
         g.ghost_item = ghost
         # 출력 텔레그래프(배치가 출력을 바꾼다). 위치쌍(idx) 기준 상생 비교 → 동명 무공도 안전.
         if self.session.use_m1():
-            p.output = self._build_output(cells)
+            scale, spot = self._scale_spot()
+            p.output = self._build_output(cells, scale, spot)
             if clone is not None:
-                p.preview_output = self._build_output(clone)
+                p.preview_output = self._build_output(clone, scale, spot)
                 cur, nxt = self._syn_pairs(cells), self._syn_pairs(clone)
                 p.syn_formed = self._name_pairs(nxt - cur, clone)
                 p.syn_broken = self._name_pairs(cur - nxt, cells)
@@ -237,6 +244,18 @@ class GameScreen(Screen):
             return
         self._focus_pane("gugung")
         self.query_one("#gugung", GugungWidget).cursor = max(0, min(8, idx))
+        self._sync_detail()
+
+    def select_reserve(self, item_id: str):
+        """팔레트에서 특정 보관함 무공을 골라 선택 상태로."""
+        if self.busy:
+            return
+        self._focus_pane("reserve")
+        rw = self.query_one("#reserve", ReserveWidget)
+        for i, it in enumerate(rw.items()):
+            if it["item_id"] == item_id:
+                rw.sel = i
+                break
         self._sync_detail()
 
     # ── 마우스(키보드와 동등) ──
@@ -398,7 +417,8 @@ class GameScreen(Screen):
                 await self._do_roll(dice, rollc % 6); rollc += 1
             if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
                 await self._do_roll(dice, d["line"])
-                gug.ignite(LINES[d["line"]])
+                if not self.reduced_motion:
+                    gug.ignite(LINES[d["line"]])
             if e.kind == "m1_fire" and not self.reduced_motion:   # 발동 캐스케이드: 무공이 차례로 번쩍
                 ci = self._cell_index(d.get("name"))
                 if ci is not None:
@@ -480,7 +500,9 @@ class GameScreen(Screen):
             log.write(f"[#5aa67c]전리품: 경험치 +{g.get('xp',0)} · 골드 +{g.get('gold',0)} · 파편 +{g.get('shards',0)}[/]")
             for lv in out.get("leveled", []):
                 log.write(f"[#c8a24a bold]경지 상승! Lv{lv}[/]")
-                self._toast(f"경지 상승! Lv{lv}", "warning")
+            if out.get("leveled"):                          # 다중 레벨업은 1토스트로 합산
+                lvs = out["leveled"]
+                self._toast(f"경지 상승 · Lv{lvs[-1]}" + (f" (+{len(lvs)})" if len(lvs) > 1 else ""), "warning")
             if out.get("drop"):
                 log.write(f"[#c8a24a]전리품 무공: {out['drop']['name_ko']} 획득![/]")
                 self._toast(f"무공 획득 · {out['drop']['name_ko']}", "warning")
