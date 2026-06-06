@@ -232,21 +232,31 @@ class Dice3D(Widget):
         self.sparks = []
         self.border_title = "天命卦 · 천명괘"
 
+    IDLE_REST_FRAMES = 210                       # idle ~7초 부유 후 렌더 정지(자원 절약)
+
     def on_mount(self):
+        self._idle = 0
         self.set_interval(1 / 30, self._tick)   # 상태 진행(회전·물리·스파크)
         self.auto_refresh = 1 / 30              # 리페인트는 Textual auto_refresh로(타이머 내 refresh()는 안 먹힘)
+
+    def _wake(self):
+        # 굴림·포커스·스킨변경 시 렌더 재개(휴식에서 깨어남)
+        self._idle = 0
+        if self.auto_refresh is None:
+            self.auto_refresh = 1 / 30
 
     # ── 게임 화면 API ──
     def set_skin(self, skin: str):
         if skin in DICE_SKINS:
             self.skin = skin
-            self.refresh()
+            self._wake(); self.refresh()
 
     def roll(self, target_line: int, instant: bool = False):
         """엔진이 굴린 줄(0~5)에 맞춰 그 면으로 착지. instant=즉시(축소모션/고배속)."""
         self.result_line = target_line % 6
         self.target = face_for_line(self.result_line)
         self.want_big = True
+        self._wake()
         if instant:
             self.ax, self.ay = self._landed_pose(); self.az = 0.0
             self.phase = "idle"; self._t = 1; self.flash = 4; self._burst()
@@ -259,13 +269,20 @@ class Dice3D(Widget):
 
     def focus(self, big: bool):
         self.want_big = big
+        if big:
+            self._wake()
 
     # ── 프레임 ──
     def _tick(self):
         tgt = 1.0 if (self.want_big or self.phase != "idle") else 0.85
         self.scale_mul += (tgt - self.scale_mul) * 0.25
         if self.phase == "idle":
-            self.ay += 0.014; self.ax += 0.005    # 잔잔한 부유 회전(살아있음·입체 노출). 결과는 캡션이 명시.
+            self._idle = getattr(self, "_idle", 0) + 1
+            if self._idle <= self.IDLE_REST_FRAMES:
+                self.ay = (self.ay + 0.014) % (2 * math.pi)   # 부유 회전(wrap=각도 정밀도)
+                self.ax = (self.ax + 0.005) % (2 * math.pi)
+            elif self.auto_refresh is not None:
+                self.auto_refresh = None                       # 휴식 — 렌더 정지(자원 0, 굴림 시 _wake로 재개)
         elif self.phase == "tumble":
             self.ax += self.vx; self.ay += self.vy; self.az += self.vz
             self.vx *= 0.96; self.vy *= 0.96; self.vz *= 0.96
@@ -322,16 +339,19 @@ class Dice3D(Widget):
         scale = W * 0.30 * self.scale_mul
         cy = Hp * 0.43
         col = rasterize(self.ax, self.ay, self.az, sk, W, Hp, scale, cy, self.FOCAL)
-        clean = [r[:] for r in col]
-        if self.phase == "tumble" and self.hist:
-            for gi, alpha in ((len(self.hist) - 1, 0.5), (0, 0.24)):
-                if 0 <= gi < len(self.hist):
-                    g = self.hist[gi]
-                    for y in range(Hp):
-                        for x in range(W):
-                            if col[y][x] is None and g[y][x] is not None:
-                                col[y][x] = _dim(g[y][x], alpha)
-        self.hist.append(clean); self.hist = self.hist[-2:]
+        # 모션블러는 tumble 때만 — idle 프레임마다 버퍼 복사 안 함(churn 절감)
+        if self.phase == "tumble":
+            if self.hist:
+                for gi, alpha in ((len(self.hist) - 1, 0.5), (0, 0.24)):
+                    if 0 <= gi < len(self.hist):
+                        g = self.hist[gi]
+                        for y in range(Hp):
+                            for x in range(W):
+                                if col[y][x] is None and g[y][x] is not None:
+                                    col[y][x] = _dim(g[y][x], alpha)
+            self.hist.append([r[:] for r in col]); self.hist = self.hist[-2:]
+        elif self.hist:
+            self.hist = []
         self._shadow(col, W, Hp)
         for s in self.sparks:
             px, py = int(s["x"]), int(s["y"])

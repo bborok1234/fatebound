@@ -68,7 +68,7 @@ class GameScreen(Screen):
             yield StatusPanel(self.session, id="status-pane")   # 우: 敵/보스 + 내 상태
         with Container(id="log-pane"):             # 하단 전폭: 천명록
             yield Static("[#9a958a]천명록(天命錄)[/]", classes="label")
-            yield RichLog(id="log", wrap=True, markup=True, auto_scroll=True)
+            yield RichLog(id="log", wrap=True, markup=True, auto_scroll=True, max_lines=500)
         yield Static(id="actionbar")
 
     def on_mount(self):
