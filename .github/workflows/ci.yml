@@ -32,6 +32,8 @@ jobs:
         run: uv sync --locked --dev
       - name: Ruff lint (E9/F/B)
         run: uv run ruff check fatebound
+      - name: Architecture (import-linter · core↛tui)
+        run: uv run lint-imports
       - name: Dependency audit (pip-audit)
         run: uvx pip-audit
         continue-on-error: true   # 초기 비차단(보고만) → 신뢰 쌓이면 차단으로 ratchet

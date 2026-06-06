@@ -84,6 +84,21 @@ def test_dice_materials_differentiated():
     assert r_hyeol <= r_base, f"혈옥(출력↑)이 백옥보다 안 빠름 {r_hyeol} vs {r_base}"
 
 
+def test_battle_perf_budget():
+    """엔진 속도 예산 — 1000 시드배틀이 충분히 빨라야(RSI 플레이루프 토대). 로컬 ~0.15s; CI 여유로 4s."""
+    import time
+    cells = _good_cells()
+    lo = Loadout.compile(Bag(cells=cells))
+    enemy = _enemy("frost_spring_valley", boss=True)
+    tier = balance.ZONE_TIER["frost_spring_valley"]
+    t0 = time.perf_counter()
+    for sd in range(1000):
+        p = lo.make_player("x", 20)
+        BattleM1(cells, p, enemy, tier, Rng(sd)).run()
+    elapsed = time.perf_counter() - t0
+    assert elapsed < 4.0, f"1000 전투 {elapsed:.2f}s — 성능 회귀(예산 4s)"
+
+
 @pytest.mark.parametrize("zone", ["bamboo_grove", "black_wind_forest", "frost_spring_valley"])
 def test_combat_terminates(zone):
     """모든 존에서 전투가 MAX_ROUNDS 안에 종료(무한전투 금지)."""

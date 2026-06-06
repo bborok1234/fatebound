@@ -28,7 +28,7 @@ Repository = "https://github.com/bborok1234/fatebound"
 fatebound = "fatebound.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8", "pyinstaller>=6", "hypothesis>=6", "ruff>=0.9"]
+dev = ["pytest>=8", "pyinstaller>=6", "hypothesis>=6", "ruff>=0.9", "import-linter>=2"]
 
 [tool.ruff]
 target-version = "py311"
@@ -38,6 +38,16 @@ line-length = 120
 # 시작은 관대 — 실제 버그(pyflakes F·구문 E9·버그류 B)만. 스타일은 점진 강화.
 select = ["E9", "F", "B"]
 ignore = ["B008", "B905", "F841"]
+
+# 아키텍처 가드 — 엔진/콘텐츠/세이브는 헤드리스 유지(= RSI verifier·테스트 가능성). 에이전트가 레이어 침식 못 하게.
+[tool.importlinter]
+root_package = "fatebound"
+
+[[tool.importlinter.contracts]]
+name = "core(engine·content·persistence)는 tui에 의존하지 않는다"
+type = "forbidden"
+source_modules = ["fatebound.engine", "fatebound.content", "fatebound.persistence"]
+forbidden_modules = ["fatebound.tui"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["fatebound"]
