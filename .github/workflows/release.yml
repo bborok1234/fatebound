@@ -33,10 +33,11 @@ jobs:
         working-directory: game
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어 — 빌드잡은 git push 안 함(zizmor)
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
         with:
           version: "latest"
-          enable-cache: true
+          enable-cache: false   # 릴리스 빌드는 캐시 미사용(cache-poisoning 방어, zizmor)
           working-directory: game
       - run: uv sync --locked --dev
       - name: Build standalone binary (PyInstaller --onefile)
@@ -60,8 +61,9 @@ jobs:
         working-directory: game
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어 — 빌드잡은 git push 안 함(zizmor)
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
-        with: { version: "latest", enable-cache: true, working-directory: game }
+        with: { version: "latest", enable-cache: false, working-directory: game }
       - run: uv build
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -110,7 +112,8 @@ jobs:
         working-directory: game
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어 — 빌드잡은 git push 안 함(zizmor)
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
-        with: { version: "latest", working-directory: game }
+        with: { version: "latest", enable-cache: false, working-directory: game }
       - run: uv build
       - run: uv publish

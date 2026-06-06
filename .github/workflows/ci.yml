@@ -21,6 +21,7 @@ jobs:
         working-directory: game
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어(zizmor)
       - name: Set up uv
         uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
         with:
@@ -34,6 +35,9 @@ jobs:
         run: uv run ruff check fatebound
       - name: Architecture (import-linter · core↛tui)
         run: uv run lint-imports
+      - name: Actions security (zizmor · 워크플로 공급망)
+        working-directory: ${{ github.workspace }}
+        run: uvx zizmor --min-severity medium .github/workflows/
       - name: Dependency audit (pip-audit)
         run: uvx pip-audit
         continue-on-error: true   # 초기 비차단(보고만) → 신뢰 쌓이면 차단으로 ratchet
@@ -51,6 +55,7 @@ jobs:
         working-directory: game
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with: { persist-credentials: false }   # artipacked 방어(zizmor)
 
       - name: Set up uv  # v8도 가능 — 최신 태그 확인 후 bump
         uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
