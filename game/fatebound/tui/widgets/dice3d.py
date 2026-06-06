@@ -366,7 +366,7 @@ class Dice3D(Widget):
 
 
 def _selftest():
-    for sid, sk in DICE_SKINS.items():
+    for _sid, sk in DICE_SKINS.items():
         col = rasterize(0.5, 0.62, 0.08, sk, Dice3D.PX, Dice3D.PX, Dice3D.PX * 0.30, Dice3D.PX * 0.43)
         lit = sum(1 for r in col for c in r if c is not None)
         assert 0 < lit < Dice3D.PX * Dice3D.PX, f"{sk['name']} {lit}"

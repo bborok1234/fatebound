@@ -187,7 +187,7 @@ class Battle:
                 for _, eff in self.lo.face_effects.get("특수", []):
                     self._apply(eff, self.player, self.enemy)
             return
-        for it, eff in effs:
+        for _it, eff in effs:
             self._apply(eff, self.player, self.enemy)
 
     def summons_turn(self):

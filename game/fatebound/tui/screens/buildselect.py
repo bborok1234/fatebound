@@ -24,7 +24,7 @@ class BuildSelectScreen(Screen):
         yield Static("[#c8a24a]무공의 기틀을 정하라[/]   [#9a958a]회귀한 그대가 가장 먼저 더듬는 힘[/]", id="bs-title")
         with Horizontal(id="bs-body"):
             with Vertical(id="bs-list"):
-                for i, key in enumerate(BUILD_ORDER):
+                for i, _key in enumerate(BUILD_ORDER):
                     yield Static(id=f"bs-row-{i}", classes="bs-row")
             with Container(id="bs-detail-pane"):
                 yield Static(id="bs-detail")

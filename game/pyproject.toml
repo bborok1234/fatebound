@@ -28,7 +28,16 @@ Repository = "https://github.com/bborok1234/fatebound"
 fatebound = "fatebound.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8", "pyinstaller>=6"]
+dev = ["pytest>=8", "pyinstaller>=6", "hypothesis>=6", "ruff>=0.9"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+# 시작은 관대 — 실제 버그(pyflakes F·구문 E9·버그류 B)만. 스타일은 점진 강화.
+select = ["E9", "F", "B"]
+ignore = ["B008", "B905", "F841"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["fatebound"]

@@ -43,7 +43,7 @@ def synergy_cells(bag: "Bag"):
             req = adj.get("required_tag", "")
             direction = adj.get("direction", "any")
             checks = _neighbors(idx) if direction == "any" else [(direction, idx + DIRS.get(direction, 0))]
-            for d, n in checks:
+            for _d, n in checks:
                 if 0 <= n < GRID * GRID and bag.cells[n]:
                     nb = bag.cells[n]
                     if req in ("any", "none", "") or req in set(nb.get("tags", [])):
@@ -94,14 +94,14 @@ class Loadout:
         items = [it for _, it in bag.occupied()]
 
         # 1) dice_mod 면 교체 — 좌상단(행우선) 우선, 충돌 시 첫 아이템만(02 §6)
-        for idx, it in bag.occupied():
+        for _idx, it in bag.occupied():
             for mod in it.get("dice_mod", []):
                 rep = mod.get("replace")
                 if rep in faces:
                     faces[faces.index(rep)] = mod.get("with")
 
         # 2) 효과 바인딩
-        for idx, it in bag.occupied():
+        for _idx, it in bag.occupied():
             for eff in it.get("effects", []):
                 cond = eff.get("condition", "")
                 if cond.startswith("on_face:"):
@@ -118,7 +118,7 @@ class Loadout:
         # 3) 검격=기본 베기(02). 무기가 만든 면이 on_face 피해 없으면 기본 공격 내재
         def has_dmg(face):
             return any(e.get("effect") in ("deal_damage", "damage") for _, e in face_effects.get(face, []))
-        for idx, it in bag.occupied():
+        for _idx, it in bag.occupied():
             if it.get("type") == "weapon":
                 for mod in it.get("dice_mod", []):
                     f = norm_face(mod.get("with"))
@@ -136,7 +136,7 @@ class Loadout:
                 req = adj.get("required_tag", "")
                 direction = adj.get("direction", "any")
                 checks = _neighbors(idx) if direction == "any" else [(direction, idx + DIRS.get(direction, 0))]
-                for d, n in checks:
+                for _d, n in checks:
                     if not (0 <= n < GRID * GRID):
                         continue
                     nb = bag.cells[n]
@@ -161,7 +161,7 @@ class Loadout:
             p.defense += st.get("def", 0); p.spd += st.get("spd", 0)
             p.crit += st.get("crit", 0); p.crit_dmg += max(0.0, st.get("crit_dmg", 1.5) - 1.5)
             p.luk += st.get("luk", 0)
-        for it, eff in self.passives:
+        for _it, eff in self.passives:
             e, v = eff.get("effect"), eff.get("value")
             if e == "increase_attack": p.atk += evaluate(v)
             elif e == "increase_defense": p.defense += evaluate(v)
