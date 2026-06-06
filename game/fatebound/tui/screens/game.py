@@ -32,6 +32,14 @@ COACH = [
 ZONE_KO = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림",
            "frost_spring_valley": "한천비곡", "central_plains_gate": "중원 진입로"}
 
+# 빌드별 첫 전투 1회 just-in-time 안내(#10) — 라이트가 계열 고유 메커니즘을 배우게(접근성).
+BUILD_INTRO = {
+    "poison": "독은 매 합 적에게 쌓인다. 스택이 깊을수록 틱 피해가 커진다 — 깔아두고 버티면 알아서 녹는다.",
+    "guard": "받아넘김 — 막은 피해가 기(氣)로 쌓이고, 전환기 무공이 그 기를 반격으로 되돌린다. 전환기는 좋은 칸(중앙)에.",
+    "crit": "예기 — 합이 지날수록 치명 확률이 차오른다. 천명 깃든 줄이 치명타로 터지니, 강한 무공을 한 줄로 모아라.",
+    "dice": "천명 조작 — 한 줄이 아니라 여러 줄을 동시에 강조한다. 출력을 한 줄에 몰지 말고 그리드에 넓게 펼쳐라.",
+}
+
 
 class GameScreen(Screen):
     # 좁은 터미널: 주사위 패널을 접어 살핌(인스펙터)을 살린다(게임성 우선). 넓으면 전부 표시.
@@ -400,6 +408,10 @@ class GameScreen(Screen):
                 pv = self.session.player_preview()
                 p_hp, p_max = pv.max_hp, pv.max_hp
                 panel.bijang_max = balance.BIJANG_CHARGE
+                ikey = f"intro_{self.session.build}"   # 빌드 고유 메커니즘 첫 전투 1회 안내(#10)
+                if ikey not in self.session.seen_events and self.session.build in BUILD_INTRO:
+                    self.session.seen_events.append(ikey)
+                    self.app.notify(BUILD_INTRO[self.session.build], title="무공의 기틀", severity="information", timeout=8)
             if "tgt_hp" in d:
                 if d.get("tgt") == e_name:
                     e_hp = d["tgt_hp"]
