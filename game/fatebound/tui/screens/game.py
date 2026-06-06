@@ -11,7 +11,7 @@ from textual.widgets import Static, RichLog
 from ..widgets.gugung import GugungWidget
 from ..widgets.statuspanel import StatusPanel
 from ..widgets.dice3d import Dice3D
-from ...engine.combat_m1 import LINES
+from ...engine.combat_m1 import LINES, cell_eff, OUTPUT_C
 from ...engine import render_text, balance
 from ... import persistence
 
@@ -99,6 +99,19 @@ class GameScreen(Screen):
         p = self.query_one("#status-pane", StatusPanel)
         p.detail_item = g.current_item()
         p.faces = self.session.loadout().faces
+        # M1 출력 텔레그래프 — 배치가 출력을 바꾼다. 잡고 다른 칸에 커서 두면 commit 전 예상치.
+        if self.session.use_m1():
+            cells = self.session.bag.cells
+            scale = self.session.player_preview().atk * OUTPUT_C
+            p.output = sum(cell_eff(cells, i, scale) for i in range(9))
+            if g.grabbed is not None and g.grabbed != g.cursor:
+                clone = list(cells)
+                clone[g.grabbed], clone[g.cursor] = clone[g.cursor], clone[g.grabbed]
+                p.preview_output = sum(cell_eff(clone, i, scale) for i in range(9))
+            else:
+                p.preview_output = None
+        else:
+            p.output = p.preview_output = None
         p.refresh()
 
     def _refresh_hub(self):

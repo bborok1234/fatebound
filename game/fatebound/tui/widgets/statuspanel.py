@@ -47,6 +47,8 @@ class StatusPanel(Widget):
         self.faces: list = []
         self.cur_face = ""
         self.statuses: dict = {}
+        self.output = None          # M1 빌드 출력(텔레그래프)
+        self.preview_output = None  # 잡은 무공을 커서 칸에 놓을 때 예상 출력
 
     def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0, cur_face="", statuses=None):
         self.p_hp, self.p_max = p_hp, p_max
@@ -79,6 +81,21 @@ class StatusPanel(Widget):
         else:
             p = s.player_preview()
             g.append(bar(p.hp, p.max_hp, color="#c2453a"))
+        # 출력(出力) 텔레그래프 — 배치가 출력을 바꾼다(M1). 잡고 호버하면 commit 전 델타.
+        if self.output is not None:
+            if self.preview_output is not None:
+                d = self.preview_output - self.output
+                pct = (100 * d / self.output) if self.output else 0
+                arrow = "▲" if d > 0.3 else ("▼" if d < -0.3 else "·")
+                col = "#5aa67c" if d > 0.3 else ("#d4582f" if d < -0.3 else "#9a958a")
+                t = Text("출력 ", style="#9a958a")
+                t.append(f"{self.output:.0f}", style="#c8a24a")
+                t.append(" → ", style="#6b665c")
+                t.append(f"{self.preview_output:.0f} {arrow}{abs(d):.0f} ({pct:+.0f}%)", style=f"{col} bold")
+                g.append(t)
+                g.append(Text("  놓으면 이렇게 바뀐다 (Enter)", style="#55504a"))
+            else:
+                g.append(Text(f"출력(出力) {self.output:.0f}", style="#c8a24a bold"))
         g.append(Text(f"깨달음 {s.insight} · 골드 {s.gold} · 파편 {s.shards}", style="grey62"))
         # 비장 게이지
         bj = "●" * self.bijang + "○" * max(0, self.bijang_max - self.bijang)
