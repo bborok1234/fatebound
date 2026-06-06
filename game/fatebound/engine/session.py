@@ -7,8 +7,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from . import balance, runmap
 from .bag import Bag, Loadout
-from .combat import Battle, BattleResult
-from .combat_m1 import BattleM1
+from .combat_m1 import BattleM1, BattleM1Result
 from .rng import Rng
 from .. import content
 
@@ -222,15 +221,6 @@ class GameSession:
                  "atk": round(m["atk"] * (1 + d * balance.ENDLESS_ATK_SCALE))}
         return m
 
-    def fight(self, boss: bool = False, elite: bool = False) -> tuple[BattleResult, dict]:
-        """전투 1회. (결과, 적dict) 반환. 이벤트 스트림은 result.events."""
-        enemy = self._enemy(boss, elite)
-        lo = self.loadout()
-        player = lo.make_player(self.name, self.level)
-        self._seed += 1
-        res = Battle(lo, player, enemy, balance.ZONE_TIER[self.zone], Rng(self._seed)).run(self.build)
-        return res, enemy
-
     def fight_m1(self, boss: bool = False, elite: bool = False):
         """M1 전투(파일럿) — 매 합 빌드 전체 발동 + 천명괘 줄 강조 + 주사위 재질.
         (BattleM1Result, 적dict). 결과는 apply_result와 호환(outcome만 읽음)."""
@@ -241,11 +231,7 @@ class GameSession:
                        Rng(self._seed), die=getattr(self, "die_skin", "baekok")).run()
         return res, enemy
 
-    def use_m1(self) -> bool:
-        """M1 적용 여부 — m1 데이터 완비 계열. poison(독)·guard(받아넘김)·crit(예기). dice는 아직 스텁."""
-        return self.build in ("poison", "guard", "crit", "dice")
-
-    def apply_result(self, res: BattleResult, enemy: dict, boss: bool, elite: bool = False) -> dict:
+    def apply_result(self, res: BattleM1Result, enemy: dict, boss: bool, elite: bool = False) -> dict:
         """보상/진행/죽음 처리. 반환: {leveled, drop, reincarnated, gains, zone_advanced, boss_cleared}."""
         out = {"leveled": [], "drop": None, "reincarnated": False, "gains": {}}
         if res.outcome == "win":

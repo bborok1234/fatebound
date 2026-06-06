@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from fatebound import content
 from fatebound.engine.bag import Bag, Loadout
-from fatebound.engine.combat import Battle
+from fatebound.engine.combat_m1 import BattleM1
 from fatebound.engine.rng import Rng
 from fatebound.engine.formula import evaluate
 from fatebound.engine import balance
@@ -16,7 +16,7 @@ def _battle(build, zone="bamboo_grove", seed=1, boss=True):
     player = lo.make_player("t", balance.ZONE_LEVEL[zone])
     mobs = content.monsters_for_zone(zone)
     enemy = next((m for m in mobs if m.get("is_boss") == boss), mobs[0])
-    return Battle(lo, player, enemy, balance.ZONE_TIER[zone], Rng(seed)).run(build)
+    return BattleM1(bag.cells, player, enemy, balance.ZONE_TIER[zone], Rng(seed)).run()
 
 
 def test_formula_safe_and_correct():

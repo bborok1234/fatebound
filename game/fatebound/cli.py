@@ -11,13 +11,13 @@ def _selftest() -> int:
     """frozen 바이너리/CI에서 데이터 번들·엔진 동작을 인터랙티브 없이 확인."""
     from . import content
     from .engine.bag import Bag, Loadout
-    from .engine.combat import Battle
+    from .engine.combat_m1 import BattleM1
     from .engine.rng import Rng
     bag = Bag.auto(content.items_for_build("poison"))
     lo = Loadout.compile(bag)
     player = lo.make_player("천기노조", 6)
     boss = next(m for m in content.monsters_for_zone("bamboo_grove") if m.get("is_boss"))
-    res = Battle(lo, player, boss, 1, Rng(1)).run("poison")
+    res = BattleM1(bag.cells, player, boss, 1, Rng(1)).run()
     ok = len(content.items()) >= 60 and len(res.events) > 0 and res.outcome in ("win", "loss", "timeout")
     print(f"selftest {'OK' if ok else 'FAIL'} · items={len(content.items())} "
           f"events={len(res.events)} faces={len(lo.faces)} outcome={res.outcome}")
