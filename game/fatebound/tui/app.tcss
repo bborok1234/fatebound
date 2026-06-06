@@ -19,6 +19,8 @@ ReserveWidget { height: 1fr; }
 GugungWidget { height: auto; padding: 0 1; }
 /* 활성 패널(포커스) 금테 강조 — 어디를 조작 중인지 명확히 */
 #reserve-pane:focus-within, #gugung-pane:focus-within { border: round #c8a24a; }
+/* 좁은 터미널(<118): 주사위 패널 접어 살핌 패널 확보 */
+.narrow #dice-pane { display: none; }
 /* 천명괘(天命卦) — 3D 주사위. 핵심·랜덤성의 축(17 §6) */
 #dice { height: auto; content-align: center middle; }
 #log-pane { height: 11; border: round #444; padding: 0 1; }

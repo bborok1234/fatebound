@@ -34,6 +34,8 @@ ZONE_KO = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림",
 
 
 class GameScreen(Screen):
+    # 좁은 터미널: 주사위 패널을 접어 살핌(인스펙터)을 살린다(게임성 우선). 넓으면 전부 표시.
+    HORIZONTAL_BREAKPOINTS = [(0, "narrow"), (118, "wide")]
     BINDINGS = [
         ("up", "cur(-1,0)"), ("down", "cur(1,0)"), ("left", "cur(0,-1)"), ("right", "cur(0,1)"),
         ("enter", "grab"), ("tab", "toggle_pane"), ("i", "focus_reserve"),
