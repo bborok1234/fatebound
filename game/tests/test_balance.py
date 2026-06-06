@@ -74,6 +74,19 @@ def test_placement_matters():
     assert abs(out(c2) - base) / base >= 0.05, "배치가 출력을 거의 안 바꿈 — M1 묘미 회귀"
 
 
+def test_placement_depth_healthy():
+    """배치 깊이가 건강한 밴드(doc27 P7 다양성 게이트): 단순그리디 대비 의미있게 좋되(라이트 텔레그래프 가치)
+    잔혹하진 않고, 영리한 휴리스틱 너머에도 진짜 깊이가 남아야(헤비 최적화·'1초 소트' 아님).
+    후속 곱-버킷 리팩터가 배치를 평탄화/잔혹화하거나 그리디로 다 풀리게 만들면 여기서 잡힌다."""
+    from fatebound.engine.m1_layout import placement_depth
+    from fatebound.engine.combat_m1 import OUTPUT_C
+    cells = _good_cells()
+    scale = (10 + 2.6 * 11) * OUTPUT_C
+    d = placement_depth(cells, scale, method="hill")
+    assert 8 <= d["gap_vs_naive"] <= 50, f"배치 깊이(단순그리디 대비) {d['gap_vs_naive']:.1f}% — 평탄화/잔혹화 회귀"
+    assert d["gap_vs_smart"] >= 2, f"영리 휴리스틱 너머 깊이 {d['gap_vs_smart']:.1f}% — 배치가 1초 소트로 전락"
+
+
 def test_dice_materials_differentiated():
     """주사위 재질이 전투를 측정상 다르게 만든다(혈옥 최속 ≤ 백옥)."""
     cells = _good_cells()
