@@ -46,3 +46,34 @@ def test_esc_is_session_hide_not_permanent():
             return scr.coach, s.tutorial_done
     coach, done = _scenario(run)
     assert coach is None and done is False, f"Esc가 영구 완료시킴 coach={coach} done={done}"
+
+
+def test_build_intro_fires_once(monkeypatch):
+    """빌드 고유 메커니즘 안내(#10)가 첫 전투에 1회만 발화(재전투 미발화). guard 받아넘김 예."""
+    import asyncio
+    import os
+    os.environ["FATEBOUND_REDUCED_MOTION"] = "1"
+    import fatebound.persistence as P
+    P.save = lambda *a, **k: None
+
+    async def run():
+        from fatebound.tui.app import FateboundApp
+        from fatebound.tui.screens.game import GameScreen
+        from fatebound.engine.session import GameSession
+        app = FateboundApp()
+        s = GameSession.new_game("x", "guard")
+        notes = []
+        async with app.run_test(size=(170, 50)) as pilot:
+            scr = GameScreen(s, first_run=True); await app.push_screen(scr); await pilot.pause()
+            app.notify = lambda msg, **k: notes.append(k.get("title", ""))
+            scr._play(boss=False)
+            for _ in range(80):
+                await asyncio.sleep(0.01); await pilot.pause()
+            n1 = sum(t == "무공의 기틀" for t in notes)
+            scr._play(boss=False)
+            for _ in range(80):
+                await asyncio.sleep(0.01); await pilot.pause()
+            return ("intro_guard" in s.seen_events), n1, sum(t == "무공의 기틀" for t in notes)
+
+    seen, n1, n2 = asyncio.run(run())
+    assert seen and n1 == 1 and n2 == 1, f"빌드 인트로 발화 이상 seen={seen} 첫{n1} 누적{n2}"
