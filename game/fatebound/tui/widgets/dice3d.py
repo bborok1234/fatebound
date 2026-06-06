@@ -284,6 +284,12 @@ class Dice3D(Widget):
                 self.ax, self.ay = pax, pay; self.az = 0.0
                 self.phase = "idle"; self.want_big = False
                 self.post_message(self.Landed(self.result_line))
+        # 매 프레임: 플래시 감쇠 + 스파크 물리(리페인트는 auto_refresh가 담당)
+        self.flash = max(0, self.flash - 1)
+        if self.sparks:
+            for s in self.sparks:
+                s["x"] += s["vx"]; s["y"] += s["vy"]; s["vy"] += 0.18; s["vx"] *= 0.99; s["age"] += 1
+            self.sparks = [s for s in self.sparks if s["age"] < s["life"]]
 
     def _landed_pose(self):
         """착지 자세 — 결과 면을 정면 대신 3/4 각으로(입체감 유지)."""
@@ -291,12 +297,6 @@ class Dice3D(Widget):
         if abs(hx) > 0.1:                  # 상/하 면(ax로 정렬) → ay로 틸트
             return hx, hy + 0.44
         return 0.42, hy                    # 전/후/좌/우 면(ax=0) → ax로 아래 틸트
-        self.flash = max(0, self.flash - 1)
-        if self.sparks:
-            for s in self.sparks:
-                s["x"] += s["vx"]; s["y"] += s["vy"]; s["vy"] += 0.18; s["vx"] *= 0.99; s["age"] += 1
-            self.sparks = [s for s in self.sparks if s["age"] < s["life"]]
-        # 리페인트는 auto_refresh가 담당(on_mount)
 
     def _burst(self):
         acc = DICE_SKINS[self.skin]["edge"]
