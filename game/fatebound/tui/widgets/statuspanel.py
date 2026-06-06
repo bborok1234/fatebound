@@ -134,6 +134,18 @@ class StatusPanel(Widget):
             gist = it.get("gist_ko", "")
             if gist:
                 g.append(Text(gist, style="#e8e2d4"))
+            # M1 역할 — 증폭/기관/조건이 '출력 0=죽은 칸'으로 오독되지 않게
+            m1 = it.get("m1")
+            if m1:
+                role = m1.get("role")
+                rk = {"payload": f"출력 {m1.get('base', 0)} (중앙·줄로 증폭)",
+                      "amplifier": f"증폭 — 인접 무공 +{int(m1.get('amp', 0) * 100)}%",
+                      "engine": "기관 — 매 합 효과를 낸다",
+                      "conditional": "조건 — 상황 충족 시 발동"}.get(role)
+                if rk:
+                    rc = {"payload": "#c8a24a", "amplifier": "#7fa8d4",
+                          "engine": "#b07fd4", "conditional": "#6fae5a"}.get(role, "grey62")
+                    g.append(Text(f"▸ {rk}", style=rc))
             tags = "·".join(it.get("tags", []))
             g.append(Text(f"{it['rarity']} · {tags}", style="grey54"))
             for e in it.get("effects", [])[:3]:
