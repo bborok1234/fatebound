@@ -121,9 +121,6 @@ def test_build_diversity_multiple_m1_families():
     assert len(families) >= 3, f"M1 보유 빌드 패밀리 {families} — 다양 빌드 미충족(가설 미검증)"
 
 
-@pytest.mark.xfail(strict=True, reason="입문 보스1을 라이트(guard/crit STARTER)가 돌파 불가(guard~2%·crit~3% vs poison~83%). "
-                   "사용자 확정 D-D 곡선(보스1 관대 ~60%+) 위반 — RSI 평가 발견(#13). 계열별 레버 튜닝(guard DPS/MAX_ROUNDS, "
-                   "crit 초반 floor) 후 통과→xpass 시 마커 제거. poison 페이싱 글로벌 상수가 guard/crit에 불리.")
 def test_light_clears_boss1():
     """라이트(STARTER 빌드, 입문 레벨)가 입문존 보스를 합리적 승률로 돌파해야 — D-D 난도곡선 출발점.
     3계열 모두 ≥40%(라이트 이중잔존). 현재 guard/crit이 절벽 → xfail로 정직하게 추적."""

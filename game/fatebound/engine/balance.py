@@ -24,7 +24,10 @@ def k_zone(tier: int) -> int:                # 방어 비율 경감 상수
 
 BOSS_HP_SCALE = 0.6        # 보스 과탱 보정(데이터 ×6 → 실효 ×3.6)
 NORMAL_HP_SCALE = 1.8      # 일반 몹 HP↑ — 전투 8~16합 목표(C2)
-MAX_ROUNDS = 30            # 강제 종료
+# 강제 종료. 30 → 36: 입문 보스1(고HP)을 라이트 스타터(poison/guard=느린 출력)가
+# 30합 내 못 죽여 timeout으로 죽던 절벽 해소(#13, D-D 곡선). 엔드게임 GOOD 전투는 7~13합이라 무영향,
+# crit(13합 결착)도 무영향 — 느린 출력 계열의 입문 floor만 올린다. 보스 HP는 불변(밸런스 캐넌).
+MAX_ROUNDS = 36
 TARGET_ROUNDS = (8, 16)
 
 # ── 상태이상(08 §7, 14) ──

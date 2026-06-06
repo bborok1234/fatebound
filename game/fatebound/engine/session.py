@@ -15,6 +15,19 @@ from .. import content
 BUILD_LABEL = {"poison": "독", "crit": "치명", "guard": "방어·반격", "dice": "주사위 조작"}
 ZONE_ORDER = ["bamboo_grove", "black_wind_forest", "frost_spring_valley"]
 
+# 계열별 '입문에 충분한' 6무공 스타터(#13, D-D 곡선). 제네릭 budget 정렬은 guard·crit을 절벽으로 떨굼:
+#  - guard는 role=payload가 없어 sorted(pool)[:6]=약블록6벌 → 출력 0에 가까워 보스1 timeout.
+#  - crit은 약페이로드 + 저밀도 crit → 램프 전 전사.
+# 손으로 고른 6벌은 각 계열의 입문 출력/생존 floor를 보장(여전히 6벌 = 성장 여지 유지). 미정의 계열은 제네릭.
+STARTER_SETS = {
+    # guard: 블록2 + 강전환기1(四兩撥千斤 conv0.6) + 받아넘김 출력(증폭-페이로드 2) + 전환기1 → 기→반격 충분.
+    "guard": ["protective_qi_shell", "iron_palm_gauntlet", "four_ounce_thousand_catty",
+              "armor_breaking_hand", "soul_shattering_strike", "bedrock_heart_method"],
+    # crit: 페이로드 출력(예기검 base7 + 마검 base5 + 쾌검 base4) + 예기 누적 엔진2 + crit 밀도. 고분산 유지.
+    "crit": ["danhon_seomgeom", "demon_heart_blade", "keen_focus_band",
+             "finisher_killing_intent", "swift_short_sword", "blood_claw_gauntlet"],
+}
+
 
 @dataclass
 class GameSession:
@@ -46,13 +59,17 @@ class GameSession:
         # 시작은 6종만 — 나머지는 여정(드랍·기연·객잔·사건)에서 획득(성장 여지).
         pool = content.items_for_build(build)
         bud = lambda it: it.get("power_budget", 0)
-        # M1 빌드(m1 역할 보유): 페이로드 없으면 "전체 발동"이 0이 되므로 페이로드 앵커(출력 3 + 서포트 3).
-        payloads = sorted([it for it in pool if (it.get("m1") or {}).get("role") == "payload"], key=bud)
-        if payloads:
-            others = sorted([it for it in pool if it not in payloads], key=bud)
-            starter = payloads[:3] + others[:3]
+        if build in STARTER_SETS:
+            by_id = {it["item_id"]: it for it in pool}
+            starter = [by_id[i] for i in STARTER_SETS[build] if i in by_id]
         else:
-            starter = sorted(pool, key=bud)[:6]
+            # M1 빌드(m1 역할 보유): 페이로드 없으면 "전체 발동"이 0이 되므로 페이로드 앵커(출력 3 + 서포트 3).
+            payloads = sorted([it for it in pool if (it.get("m1") or {}).get("role") == "payload"], key=bud)
+            if payloads:
+                others = sorted([it for it in pool if it not in payloads], key=bud)
+                starter = payloads[:3] + others[:3]
+            else:
+                starter = sorted(pool, key=bud)[:6]
         s.owned = [it["item_id"] for it in starter]
         s.bag = Bag.auto([it for it in content.items() if it["item_id"] in s.owned])
         s.ensure_map()

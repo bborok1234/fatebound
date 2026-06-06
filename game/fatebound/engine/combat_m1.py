@@ -33,6 +33,10 @@ CONV_BASE = 0.30       # 전환기 기본 전환율(칸 배수×인접 증폭이
 # ── crit 예기(銳氣, doc27) ── 매 합 치명확률 누적 → 천명 강조 줄이 치명타로 폭발(고분산 고점).
 #    비-crit 빌드엔 무영향(crit_now=0·crit_ramp=0이면 no-op).
 CRIT_CAP = 75.0        # 예기 치명확률 상한(%) — 100%면 분산이 사라져 고점 정체성 소멸
+# crit 입문 floor(#13, D-D 곡선) — crit 무공은 방어 스탯이 없어(글래스캐넌) 입문 보스1을 램프 전 전사로 떨굼.
+# crit 계열(crit_ramp>0)에만, *입문존(tier1)에만* 적용되는 floor. 둘 다 비-crit엔 no-op, 엔드(tier3)엔 0.
+CRIT_RAMP_BOOTSTRAP = 15.0   # 시작 치명확률 +(램프 전 첫 폭발 앞당김). 고분산 유지(여전히 확률).
+CRIT_INTRO_GUARD = 10.0      # 입문 생존 쿠션(방어 가산). tier1 전액→tier3 0(엔드 viability·고분산 정체성 무영향).
 
 # ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
 #    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).
@@ -117,6 +121,11 @@ class BattleM1:
         self.crit_now = max(0.0, self.player.crit)
         self.crit_dmg = max(1.0, self.player.crit_dmg)
         self.crit_ramp = sum((_m1(it) or {}).get("crit_ramp", 0.0) for it in self.cells)
+        # crit 입문 floor: 예기 무공 보유(crit_ramp>0) + 입문존(tier1)에서만. zone_factor=1.0@tier1→0.0@tier3.
+        if self.crit_ramp > 0:
+            zone_factor = max(0.0, (100 - self.K) / 50.0)   # K=50(t1)→1.0, 75(t2)→0.5, 100(t3)→0.0
+            self.crit_now = min(CRIT_CAP, self.crit_now + CRIT_RAMP_BOOTSTRAP * zone_factor)
+            self.block += CRIT_INTRO_GUARD * zone_factor      # 입문 생존 쿠션(엔드선 0 → viability 불변)
 
     def _e(self, kind, **d):
         self.events.append(ev(kind, **d))
