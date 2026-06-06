@@ -22,12 +22,12 @@ DELAY = {"round_start": 0.18, "dice": 0.16, "damage": 0.14, "tick": 0.12, "bijan
          "heal": 0.10, "shield": 0.10, "focus": 0.06, "info": 0.10, "end": 0.2,
          "m1_line": 0.0, "m1_fire": 0.05}      # m1_line은 주사위 굴림이 페이싱
 
-# 디제틱 가이드(첫 회귀에만, 17 §13.2)
+# 디제틱 가이드(첫 회귀에만, 17 §13.2) — 한 번에 한 메커니즘씩(just-in-time)
 COACH = [
-    "여기가 [#c8a24a]구궁(九宮)[/]. [#c8a24a]방향키[/]로 놓인 무공을 하나씩 살펴보라.",
-    "[#5aa67c]녹색[/]으로 이어진 둘은 [#5aa67c]상생(相生)[/]한다. [#c8a24a]Enter[/]로 집어 옮겨 붙여보라.",
-    "준비됐으면 [#c8a24a]Space[/]로 [#c8a24a]강호 지도[/]를 열어 첫 길을 고르라.",
-    "[#e0b341]비장(秘藏)의 수[/]는 전투 중 차올라 [#e0b341]저절로[/] 터지는 필살 한 수. 익혔다. ([#9a958a]Esc로 닫기[/])",
+    "여기가 [#c8a24a]구궁(九宮)[/]. [#c8a24a]방향키[/]나 [#c8a24a]마우스 클릭[/]으로 놓인 무공을 살펴보라.",
+    "[#c8a24a]Enter[/]로 무공을 집어 다른 칸에 대보라 — 오른쪽 [#c8a24a]살핌[/]에 [#5aa67c]출력 변화(▲%)[/]가 미리 뜬다. [#e0b341]중앙 칸은 ×1.5[/].",
+    "[#c8a24a]Tab[/]으로 [#c8a24a]보관함[/], [#c8a24a]Ctrl+P[/]로 무공·명령 검색. 모은 무공을 구궁에 배치하라.",
+    "준비됐으면 [#c8a24a]Space[/]로 [#c8a24a]강호 지도[/]를 열어 첫 길을 고르라. ([#9a958a]Esc로 닫기[/])",
 ]
 ZONE_KO = {"bamboo_grove": "입문 죽림", "black_wind_forest": "흑풍림",
            "frost_spring_valley": "한천비곡", "central_plains_gate": "중원 진입로"}
@@ -81,6 +81,10 @@ class GameScreen(Screen):
         z = ZONE_KO.get(self.session.zone, self.session.zone)
         log.write(f"[#9a958a]── {z} ──[/]")
         log.write("[#9a958a]구궁을 정비하고, [/][#c8a24a]Space[/][#9a958a]로 강호에 나서라.  ([/][#c8a24a]?[/][#9a958a] 도움말)[/]")
+        # 복귀 유저(온보딩 지난)에게 새 조작 1회 안내
+        if self.coach is None and not self.reduced_motion:
+            self.call_after_refresh(lambda: self.app.notify(
+                "새 조작 · Ctrl+P 검색 · 마우스로 칸 클릭 · Tab 보관함 · 잡으면 출력 변화 미리보기", timeout=6))
 
     # ── HUD ──
     def _topbar(self):
@@ -207,6 +211,8 @@ class GameScreen(Screen):
             self.set_focus(w)
         except Exception:
             pass
+        if name == "reserve":
+            self._coach_advance(2)        # 보관함 열기 = 온보딩 3단계로
         self._sync_detail()
 
     def action_toggle_pane(self):
