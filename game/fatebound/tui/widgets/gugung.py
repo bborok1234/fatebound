@@ -31,6 +31,7 @@ class GugungWidget(Widget):
         self.session = session
         self.active: set = set()        # 천명괘로 강조된 줄(전투 중 점화)
         self.ghost_item = None          # 커서 칸에 미리볼 무공(잡기/보관함 선택, 화면이 설정)
+        self.ghost_delta = None         # 고스트 칸에 함께 보일 출력 델타(예 "▲+43%")
         self.pulse_idx = None           # 발동 캐스케이드: 지금 터지는 칸(전투 중)
 
     def on_click(self, event) -> None:
@@ -110,7 +111,9 @@ class GugungWidget(Widget):
                 elif ghost:
                     gnm = self.ghost_item["name_ko"]
                     name = Text("⇲" + gnm, style="#c8a24a bold italic", justify="center")
-                    sub = Text("여기 놓기", style="#9a958a italic", justify="center")
+                    dtxt = self.ghost_delta or "여기 놓기"                          # 원인(칸)+결과(델타) 같은 자리
+                    dcol = "#5aa67c" if dtxt.startswith("▲") else ("#d4582f" if dtxt.startswith("▼") else "#9a958a")
+                    sub = Text(dtxt, style=f"{dcol} bold italic", justify="center")
                     name.stylize("on #2d3a22"); sub.stylize("on #2d3a22")          # 미리보기 배경(연녹)
                 elif idx in self.active:
                     name.stylize("bold on #4a3a12"); sub.stylize("on #4a3a12")     # 천명 줄 점화(금빛)

@@ -141,10 +141,16 @@ class GameScreen(Screen):
                 cur, nxt = self._syn_pairs(cells), self._syn_pairs(clone)
                 p.syn_formed = self._name_pairs(nxt - cur, clone)
                 p.syn_broken = self._name_pairs(cur - nxt, cells)
+                dd = p.preview_output - p.output
+                pc = (100 * dd / p.output) if p.output else 0
+                ar = "▲" if dd > 0.05 else ("▼" if dd < -0.05 else "·")
+                g.ghost_delta = f"{ar}{pc:+.0f}%"          # 고스트 칸에 델타 동거(원인+결과)
             else:
                 p.preview_output = p.syn_formed = p.syn_broken = None
+                g.ghost_delta = None
         else:
             p.output = p.preview_output = p.syn_formed = p.syn_broken = None
+            g.ghost_delta = None
         g.refresh()
         p.refresh()
 
