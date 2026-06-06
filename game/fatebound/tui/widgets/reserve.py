@@ -6,6 +6,7 @@
 from __future__ import annotations
 from textual.widget import Widget
 from textual.reactive import reactive
+from textual.message import Message
 from rich.text import Text
 from rich.console import Group
 
@@ -16,6 +17,11 @@ RARITY_DOT = {"common": "○", "rare": "◆", "epic": "◆", "legendary": "★"}
 class ReserveWidget(Widget):
     can_focus = True
     sel: reactive[int] = reactive(0)
+
+    class Clicked(Message):
+        def __init__(self, row: int) -> None:
+            self.row = row
+            super().__init__()
 
     def __init__(self, session, **kw):
         super().__init__(**kw)
@@ -44,11 +50,10 @@ class ReserveWidget(Widget):
 
     # ── 마우스 ──
     def on_click(self, event):
-        # 헤더 1줄 다음부터 목록 — 클릭 y로 행 선택
-        row = event.y - 1
+        # 헤더 1줄 다음부터 목록 — 클릭 y로 행 선택(화면이 포커스·sync 처리)
+        row = event.offset.y - 1
         if 0 <= row < len(self.items()):
-            self.sel = row
-            self.focus()
+            self.post_message(self.Clicked(row))
 
     # ── 렌더 ──
     def render(self):

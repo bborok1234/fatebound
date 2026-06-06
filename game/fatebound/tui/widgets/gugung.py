@@ -4,6 +4,7 @@
 from __future__ import annotations
 from textual.widget import Widget
 from textual.reactive import reactive
+from textual.message import Message
 from rich.table import Table
 from rich.text import Text
 from rich.box import HEAVY
@@ -20,11 +21,23 @@ class GugungWidget(Widget):
     cursor: reactive[int] = reactive(0)
     grabbed: reactive[int | None] = reactive(None)
 
+    class CellClicked(Message):
+        def __init__(self, idx: int) -> None:
+            self.idx = idx
+            super().__init__()
+
     def __init__(self, session, **kw):
         super().__init__(**kw)
         self.session = session
         self.active: set = set()        # 천명괘로 강조된 줄(전투 중 점화)
         self.ghost_item = None          # 커서 칸에 미리볼 무공(잡기/보관함 선택, 화면이 설정)
+
+    def on_click(self, event) -> None:
+        # 클릭 좌표 → 3×3 칸(비례 히트테스트). 화면이 집기/놓기 처리.
+        w = max(1, self.size.width); h = max(1, self.size.height)
+        col = min(2, max(0, int(event.offset.x * 3 / w)))
+        row = min(2, max(0, int(event.offset.y * 3 / h)))
+        self.post_message(self.CellClicked(row * 3 + col))
 
     # ── 전투 점화(화면이 호출) ──
     def ignite(self, indices):
