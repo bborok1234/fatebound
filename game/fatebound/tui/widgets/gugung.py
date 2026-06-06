@@ -33,6 +33,7 @@ class GugungWidget(Widget):
         self.ghost_item = None          # 커서 칸에 미리볼 무공(잡기/보관함 선택, 화면이 설정)
         self.ghost_delta = None         # 고스트 칸에 함께 보일 출력 델타(예 "▲+43%")
         self.pulse_idx = None           # 발동 캐스케이드: 지금 터지는 칸(전투 중)
+        self.pulse_amount = None        # 그 칸이 이번 합 낸 출력(기여 귀속)
 
     def on_click(self, event) -> None:
         # 클릭 좌표 → 3×3 칸(비례 히트테스트). 화면이 집기/놓기 처리.
@@ -46,10 +47,10 @@ class GugungWidget(Widget):
         self.active = set(indices); self.refresh()
 
     def douse(self):
-        self.active = set(); self.pulse_idx = None; self.refresh()
+        self.active = set(); self.pulse_idx = None; self.pulse_amount = None; self.refresh()
 
-    def pulse(self, idx):
-        self.pulse_idx = idx; self.refresh()
+    def pulse(self, idx, amount=None):
+        self.pulse_idx = idx; self.pulse_amount = amount; self.refresh()
 
     # ── 조작(화면이 호출) ──
     def move_cursor(self, dr: int, dc: int):
@@ -107,7 +108,11 @@ class GugungWidget(Widget):
 
                 # 커서/집기 — 확실히 보이게(밝은 배경 + 마커). 발동 펄스·점화·고스트가 최우선.
                 if idx == self.pulse_idx:
-                    name.stylize("bold on #e0b341"); sub.stylize("on #e0b341")     # 발동! 캐스케이드 플래시
+                    name.stylize("bold on #e0b341")                                 # 발동! 캐스케이드 플래시
+                    if self.pulse_amount:
+                        sub = Text(f"⚔{self.pulse_amount}", style="#1a1a1f on #e0b341 bold", justify="center")
+                    else:
+                        sub.stylize("on #e0b341")
                 elif ghost:
                     gnm = self.ghost_item["name_ko"]
                     name = Text("⇲" + gnm, style="#c8a24a bold italic", justify="center")

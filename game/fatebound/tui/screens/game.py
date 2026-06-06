@@ -419,10 +419,10 @@ class GameScreen(Screen):
                 await self._do_roll(dice, d["line"])
                 if not self.reduced_motion:
                     gug.ignite(LINES[d["line"]])
-            if e.kind == "m1_fire" and not self.reduced_motion:   # 발동 캐스케이드: 무공이 차례로 번쩍
+            if e.kind == "m1_fire" and not self.reduced_motion:   # 발동 캐스케이드: 무공이 차례로 번쩍(기여 수치 표시)
                 ci = self._cell_index(d.get("name"))
                 if ci is not None:
-                    gug.pulse(ci)
+                    gug.pulse(ci, round(d.get("amount", 0)))
             if e.kind == "status" and d.get("tgt") == e_name:
                 estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
             ln = render_text.line(e)
