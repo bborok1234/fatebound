@@ -42,6 +42,7 @@ class GameSession:
     cleared: list = field(default_factory=list)
     owned: list = field(default_factory=list)        # 보유 item_id
     reincarnations: int = 0
+    endless_depth: int = 0                            # 끝없는 강호 깊이(마지막 존 재격 횟수, #9 — 적 스케일↑)
     insight: int = 0                                  # 깨달음(메타, 능동 런만)
     karma: int = 0                                    # 명성/업(사건 선택 누적, 19)
     essence: int = 0                                  # 정수(사건 보상 화폐)
@@ -206,13 +207,20 @@ class GameSession:
     def _enemy(self, boss: bool, elite: bool = False):
         mobs = content.monsters_for_zone(self.zone)
         if boss:
-            return next((m for m in mobs if m.get("is_boss")), mobs[0])
-        normals = [m for m in mobs if not m.get("is_boss")]
-        if elite and normals:
-            return max(normals, key=lambda m: m.get("level", 0))   # 가장 강한 잡졸
-        cands = [m for m in normals if m["level"] <= self.level + 1] or normals
-        self._seed += 1
-        return Rng(self._seed * 7919).choice(cands) if cands else mobs[0]
+            m = next((x for x in mobs if x.get("is_boss")), mobs[0])
+        else:
+            normals = [x for x in mobs if not x.get("is_boss")]
+            if elite and normals:
+                m = max(normals, key=lambda x: x.get("level", 0))   # 가장 강한 잡졸
+            else:
+                cands = [x for x in normals if x["level"] <= self.level + 1] or normals
+                self._seed += 1
+                m = Rng(self._seed * 7919).choice(cands) if cands else mobs[0]
+        if self.endless_depth > 0:                  # 끝없는 강호 — 깊이별 적 스케일(DPS 레이스, #9)
+            d = self.endless_depth
+            m = {**m, "hp": round(m["hp"] * (1 + d * balance.ENDLESS_HP_SCALE)),
+                 "atk": round(m["atk"] * (1 + d * balance.ENDLESS_ATK_SCALE))}
+        return m
 
     def fight(self, boss: bool = False, elite: bool = False) -> tuple[BattleResult, dict]:
         """전투 1회. (결과, 적dict) 반환. 이벤트 스트림은 result.events."""
@@ -258,7 +266,9 @@ class GameSession:
                     self.zone = ZONE_ORDER[zi + 1]
                     out["zone_advanced"] = self.zone
                 else:
+                    self.endless_depth += 1          # 끝없는 강호 깊이 +1 → 다음 재격부터 적 스케일↑(#9)
                     out["zone_advanced"] = None      # 마지막 존 — 같은 강호를 다시(끝없는)
+                    out["endless_depth"] = self.endless_depth
                 self.map_steps = []; self.ensure_map()
                 out["boss_cleared"] = True
             # 드랍: 미보유 빌드 아이템
@@ -278,7 +288,7 @@ class GameSession:
             "v": 1, "name": self.name, "build": self.build, "die_skin": self.die_skin, "zone": self.zone,
             "level": self.level, "xp": self.xp, "gold": self.gold, "shards": self.shards,
             "cleared": list(self.cleared), "owned": list(self.owned),
-            "reincarnations": self.reincarnations, "insight": self.insight,
+            "reincarnations": self.reincarnations, "endless_depth": self.endless_depth, "insight": self.insight,
             "karma": self.karma, "essence": self.essence,
             "tutorial_done": self.tutorial_done, "seen_events": list(self.seen_events),
             "map_steps": self.map_steps, "map_step": self.map_step,
@@ -292,6 +302,7 @@ class GameSession:
                 level=d.get("level", 6), xp=d.get("xp", 0), gold=d.get("gold", 50),
                 shards=d.get("shards", 0), cleared=list(d.get("cleared", [])),
                 owned=list(d.get("owned", [])), reincarnations=d.get("reincarnations", 0),
+                endless_depth=d.get("endless_depth", 0),
                 insight=d.get("insight", 0), karma=d.get("karma", 0), essence=d.get("essence", 0),
                 tutorial_done=d.get("tutorial_done", False), seen_events=list(d.get("seen_events", [])),
                 map_steps=d.get("map_steps", []), map_step=d.get("map_step", 0),
