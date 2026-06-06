@@ -30,6 +30,10 @@ KI_GAIN = 0.60         # 막은 피해 → 기 적립률
 KI_CAP_MULT = 0.50     # 기 상한 = player.max_hp × 이값(폭주 방지)
 CONV_BASE = 0.30       # 전환기 기본 전환율(칸 배수×인접 증폭이 곱해짐 = 배치 깊이)
 
+# ── crit 예기(銳氣, doc27) ── 매 합 치명확률 누적 → 천명 강조 줄이 치명타로 폭발(고분산 고점).
+#    비-crit 빌드엔 무영향(crit_now=0·crit_ramp=0이면 no-op).
+CRIT_CAP = 75.0        # 예기 치명확률 상한(%) — 100%면 분산이 사라져 고점 정체성 소멸
+
 # ── 천명괘 주사위 = 아이템(재질). 비주얼 스킨 + RNG/출력 튜닝(코스메틱+스탯). [[dice-visual-and-itemization]]
 #    spot_mult=줄 강조 배수, dmg_mult=출력 배수, reroll_weak=하위 줄 1회 재굴림(일관성).
 DICE_MODS = {
@@ -109,6 +113,10 @@ class BattleM1:
         self.ki = 0.0
         self.ki_cap = self.player.max_hp * KI_CAP_MULT
         self.converters = [i for i in range(9) if (_m1(self.cells[i]) or {}).get("fx") == "convert_ki"]
+        # crit 예기: 치명확률(player.crit %) + 합마다 누적(crit_ramp 보유 무공). 비-crit이면 0 → no-op.
+        self.crit_now = max(0.0, self.player.crit)
+        self.crit_dmg = max(1.0, self.player.crit_dmg)
+        self.crit_ramp = sum((_m1(it) or {}).get("crit_ramp", 0.0) for it in self.cells)
 
     def _e(self, kind, **d):
         self.events.append(ev(kind, **d))
@@ -137,6 +145,13 @@ class BattleM1:
             self._e("m1_line", line=li, name=LINE_KO[li])
             base = sum(effs.values())
             spot = (self.spot - 1) * sum(effs[i] for i in line)
+            # crit 예기: 합마다 치명확률 누적 → 적중 시 천명 강조 줄이 치명타로 폭발(고분산 고점)
+            crit = False
+            if self.crit_now > 0 or self.crit_ramp > 0:
+                self.crit_now = min(CRIT_CAP, self.crit_now + self.crit_ramp)
+                if self.rng.chance(self.crit_now):
+                    spot += sum(effs[i] for i in line) * (self.crit_dmg - 1.0)
+                    crit = True
             total = self._mit(base + spot, self.e_def)
             self.e_hp -= total
             for i in range(9):
@@ -144,7 +159,7 @@ class BattleM1:
                     it = self.cells[i]
                     self._e("m1_fire", name=it["name_ko"], amount=round(effs[i]),
                             spotlit=(i in line), by_player=True)
-            self._e("damage", src=self.player.name, tgt=self.e_name, amount=total, crit=False,
+            self._e("damage", src=self.player.name, tgt=self.e_name, amount=total, crit=crit,
                     label=f"천명 {LINE_KO[li]}", by_player=True,
                     tgt_hp=max(0, self.e_hp), tgt_max=self.e_max)
             # 전환기: 적립된 기(氣)를 반격 출력으로. 유능제강 — 칸 위치(중앙×1.5)×인접 증폭이
