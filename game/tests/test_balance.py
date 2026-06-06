@@ -112,11 +112,9 @@ def test_battle_perf_budget():
     assert elapsed < 4.0, f"1000 전투 {elapsed:.2f}s — 성능 회귀(예산 4s)"
 
 
-@pytest.mark.xfail(strict=True, reason="M1 스탯이 poison에만 존재(crit/guard/dice 0/15). "
-                   "2번째 빌드 패밀리에 M1을 채우면 통과→strict라 xpass 시 마커 제거 강제(진전 인지). "
-                   "RSI 플레이루프 발견 2026-06: D1~D4 '다양 빌드 동시잔존' 가설이 표본 1로 미검증.")
 def test_build_diversity_multiple_m1_families():
-    """이중잔존(D1~D4) 가설은 ≥2개 viable 빌드 패밀리를 요구 — 현재 poison 하나뿐임을 정직하게 자인."""
+    """이중잔존(D1~D4)은 ≥2개 viable 빌드 패밀리를 요구. poison+guard 충족(2026-06 guard 받아넘김 도입).
+    crit/dice 추가 시 ≥3으로 상향. 한 계열이라도 M1 스텁으로 회귀하면 잡는다."""
     from fatebound.engine.combat_m1 import _m1
     families = [b for b in ("poison", "crit", "guard", "dice")
                 if sum(1 for it in content.items_for_build(b) if _m1(it)) >= 9]

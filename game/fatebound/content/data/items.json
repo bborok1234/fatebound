@@ -1732,7 +1732,7 @@
     ],
     "power_budget": 10.4,
     "stats": {
-      "hp": 10,
+      "hp": 25,
       "atk": 0,
       "def": 3,
       "spd": 0,
@@ -1744,7 +1744,13 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "체력 30% 이하일 때 반격(피해 30%)."
+    "gist_ko": "체력 30% 이하일 때 반격(피해 30%).",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 4.0
+    }
   },
   {
     "item_id": "protective_qi_shell",
@@ -1776,9 +1782,9 @@
     ],
     "power_budget": 9.8,
     "stats": {
-      "hp": 0,
+      "hp": 20,
       "atk": 0,
-      "def": 1,
+      "def": 4,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -1788,7 +1794,13 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 면에서 보호막."
+    "gist_ko": "방어 면에서 보호막.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 5.0
+    }
   },
   {
     "item_id": "blue_steel_pauldron",
@@ -1817,7 +1829,7 @@
     "stats": {
       "hp": 30,
       "atk": 0,
-      "def": 8,
+      "def": 3,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -1835,7 +1847,13 @@
     ],
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 +8. 체력 +30."
+    "gist_ko": "방어 +8. 체력 +30.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 4.5
+    }
   },
   {
     "item_id": "minor_recovery_pill",
@@ -1887,7 +1905,14 @@
     ],
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "회복 면에서 체력 회복."
+    "gist_ko": "회복 면에서 체력 회복.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "block": 0.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "dulling_strike_axe",
@@ -1920,7 +1945,7 @@
     ],
     "power_budget": 9.3,
     "stats": {
-      "hp": 0,
+      "hp": 15,
       "atk": 0,
       "def": 1,
       "spd": -1,
@@ -1932,7 +1957,14 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "특수 면에서 적 약화(공격 -20%)."
+    "gist_ko": "특수 면에서 적 약화(공격 -20%).",
+    "m1": {
+      "role": "conditional",
+      "base": 2,
+      "amp": 0.0,
+      "block": 2.0,
+      "fx": "weaken"
+    }
   },
   {
     "item_id": "bedrock_heart_method",
@@ -1959,9 +1991,9 @@
     ],
     "power_budget": 9.6,
     "stats": {
-      "hp": 40,
+      "hp": 20,
       "atk": 0,
-      "def": 7,
+      "def": 2,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -1971,7 +2003,15 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 10,
-    "gist_ko": "방어 +7. 체력 +40."
+    "gist_ko": "방어 +7. 체력 +40.",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.0,
+      "block": 3.0,
+      "conv": 0.32,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "rebound_heart_mirror",
@@ -1999,9 +2039,9 @@
     ],
     "power_budget": 19.8,
     "stats": {
-      "hp": 10,
+      "hp": 25,
       "atk": 0,
-      "def": 6,
+      "def": 3,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -2019,7 +2059,14 @@
     ],
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "상시 반격(피해 30%). 방어 +6."
+    "gist_ko": "상시 반격(피해 30%). 방어 +6.",
+    "m1": {
+      "role": "conditional",
+      "base": 0,
+      "amp": 0.0,
+      "block": 2.5,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "four_ounce_thousand_catty",
@@ -2052,9 +2099,9 @@
     ],
     "power_budget": 15,
     "stats": {
-      "hp": 10,
+      "hp": 15,
       "atk": 0,
-      "def": 0,
+      "def": 1,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -2072,7 +2119,15 @@
     ],
     "balance_status": "under",
     "target_nominal": 20,
-    "gist_ko": "방어 면에서 반격(피해 30%)."
+    "gist_ko": "방어 면에서 반격(피해 30%).",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.0,
+      "block": 2.0,
+      "conv": 0.6,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "armor_breaking_hand",
@@ -2105,8 +2160,8 @@
     ],
     "power_budget": 20,
     "stats": {
-      "hp": 0,
-      "atk": 0,
+      "hp": 15,
+      "atk": 2,
       "def": 5,
       "spd": 0,
       "crit": 0,
@@ -2117,7 +2172,13 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 취약(받는 피해 +25%)."
+    "gist_ko": "특수 면에서 취약(받는 피해 +25%).",
+    "m1": {
+      "role": "amplifier",
+      "base": 5,
+      "amp": 0.4,
+      "block": 0.0
+    }
   },
   {
     "item_id": "immovable_king_body",
@@ -2151,9 +2212,9 @@
     ],
     "power_budget": 19.7,
     "stats": {
-      "hp": 50,
+      "hp": 45,
       "atk": 0,
-      "def": 14,
+      "def": 6,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -2163,7 +2224,13 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "방어 +14. 3합마다 체력 회복."
+    "gist_ko": "방어 +14. 3합마다 체력 회복.",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 7.0
+    }
   },
   {
     "item_id": "soul_shattering_strike",
@@ -2197,7 +2264,7 @@
     "power_budget": 20.2,
     "stats": {
       "hp": 20,
-      "atk": 0,
+      "atk": 3,
       "def": 4,
       "spd": -2,
       "crit": 0,
@@ -2208,7 +2275,13 @@
     "build": "guard",
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "특수 면에서 기절(확률 30%)."
+    "gist_ko": "특수 면에서 기절(확률 30%).",
+    "m1": {
+      "role": "amplifier",
+      "base": 7,
+      "amp": 0.25,
+      "block": 0.0
+    }
   },
   {
     "item_id": "heaven_returning_counter",
@@ -2243,9 +2316,9 @@
     ],
     "power_budget": 19.9,
     "stats": {
-      "hp": 0,
+      "hp": 20,
       "atk": 0,
-      "def": 3,
+      "def": 2,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -2263,11 +2336,19 @@
     ],
     "balance_status": "ok",
     "target_nominal": 20,
-    "gist_ko": "상시 반격(피해 30%). 체력 30% 이하일 때 회복."
+    "gist_ko": "상시 반격(피해 30%). 체력 30% 이하일 때 회복.",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.0,
+      "block": 2.5,
+      "conv": 0.5,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "mirror_reverse_heart_guard",
-    "name_ko": "반탄호심경",
+    "name_ko": "반조심경",
     "rarity": "epic",
     "size": [
       1,
@@ -2312,9 +2393,9 @@
       }
     ],
     "stats": {
-      "hp": 40,
+      "hp": 30,
       "atk": 0,
-      "def": 16,
+      "def": 3,
       "spd": -2,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -2324,7 +2405,15 @@
     "build": "guard",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "상시 반격(피해 30%). 체력 50% 이하일 때 회복. 방어 +16."
+    "gist_ko": "상시 반격(피해 30%). 체력 50% 이하일 때 회복. 방어 +16.",
+    "m1": {
+      "role": "converter",
+      "base": 0,
+      "amp": 0.25,
+      "block": 4.0,
+      "conv": 0.7,
+      "fx": "convert_ki"
+    }
   },
   {
     "item_id": "armor_guardian_qi_plate",
@@ -2378,9 +2467,9 @@
       }
     ],
     "stats": {
-      "hp": 20,
+      "hp": 55,
       "atk": 0,
-      "def": 6,
+      "def": 8,
       "spd": 0,
       "crit": 0,
       "crit_dmg": 1.5,
@@ -2390,7 +2479,14 @@
     "build": "guard",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "방어 면에서 보호막 + 반격(피해 30%)."
+    "gist_ko": "방어 면에서 보호막 + 반격(피해 30%).",
+    "m1": {
+      "role": "guard",
+      "base": 0,
+      "amp": 0.0,
+      "block": 9.0,
+      "fx": "heal_low"
+    }
   },
   {
     "item_id": "fist_avalanche_counter",
@@ -2437,8 +2533,8 @@
       }
     ],
     "stats": {
-      "hp": 0,
-      "atk": 6,
+      "hp": 25,
+      "atk": 4,
       "def": 6,
       "spd": 0,
       "crit": 0,
@@ -2449,7 +2545,14 @@
     "build": "guard",
     "balance_status": "under",
     "target_nominal": 35,
-    "gist_ko": "공격 면에서 베기 + 반격(피해 30%)."
+    "gist_ko": "공격 면에서 베기 + 반격(피해 30%).",
+    "m1": {
+      "role": "amplifier",
+      "base": 9,
+      "amp": 0.5,
+      "block": 0.0,
+      "fx": "counter"
+    }
   },
   {
     "item_id": "cheongi_soban",
