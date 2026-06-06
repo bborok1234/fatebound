@@ -150,23 +150,19 @@ class GameScreen(Screen):
                 ghost = it
         g.ghost_item = ghost
         # 출력 텔레그래프(배치가 출력을 바꾼다). 위치쌍(idx) 기준 상생 비교 → 동명 무공도 안전.
-        if self.session.use_m1():
-            scale, spot = self._scale_spot()
-            p.output = self._build_output(cells, scale, spot)
-            if clone is not None:
-                p.preview_output = self._build_output(clone, scale, spot)
-                cur, nxt = self._syn_pairs(cells), self._syn_pairs(clone)
-                p.syn_formed = self._name_pairs(nxt - cur, clone)
-                p.syn_broken = self._name_pairs(cur - nxt, cells)
-                dd = p.preview_output - p.output
-                pc = (100 * dd / p.output) if p.output else 0
-                ar = "▲" if dd > 0.05 else ("▼" if dd < -0.05 else "·")
-                g.ghost_delta = f"{ar}{pc:+.0f}%"          # 고스트 칸에 델타 동거(원인+결과)
-            else:
-                p.preview_output = p.syn_formed = p.syn_broken = None
-                g.ghost_delta = None
+        scale, spot = self._scale_spot()
+        p.output = self._build_output(cells, scale, spot)
+        if clone is not None:
+            p.preview_output = self._build_output(clone, scale, spot)
+            cur, nxt = self._syn_pairs(cells), self._syn_pairs(clone)
+            p.syn_formed = self._name_pairs(nxt - cur, clone)
+            p.syn_broken = self._name_pairs(cur - nxt, cells)
+            dd = p.preview_output - p.output
+            pc = (100 * dd / p.output) if p.output else 0
+            ar = "▲" if dd > 0.05 else ("▼" if dd < -0.05 else "·")
+            g.ghost_delta = f"{ar}{pc:+.0f}%"          # 고스트 칸에 델타 동거(원인+결과)
         else:
-            p.output = p.preview_output = p.syn_formed = p.syn_broken = None
+            p.preview_output = p.syn_formed = p.syn_broken = None
             g.ghost_delta = None
         g.refresh()
         p.refresh()
@@ -384,8 +380,7 @@ class GameScreen(Screen):
         panel = self.query_one("#status-pane", StatusPanel)
         dice = self.query_one("#dice", Dice3D)
         gug = self.query_one("#gugung", GugungWidget)
-        m1 = self.session.use_m1()
-        res, enemy = (self.session.fight_m1 if m1 else self.session.fight)(boss, elite)
+        res, enemy = self.session.fight_m1(boss, elite)
         log.clear()
         if elite:
             log.write("[#d4582f]── 정예와의 일전 ──[/]")
@@ -400,7 +395,6 @@ class GameScreen(Screen):
         bj = 0
         cur_face = ""
         estatus: dict = {}
-        rollc = 0
         for e in res.events:
             d = e.data
             if e.kind == "battle_start":
@@ -423,10 +417,6 @@ class GameScreen(Screen):
                 bj = 0
             if e.kind == "round_start":
                 gug.douse()                               # 지난 합 점화 해제
-            if e.kind == "dice":                          # M0: 천명괘(코스메틱 굴림)
-                bj = min(panel.bijang_max, bj + 1)
-                cur_face = d.get("face", cur_face)
-                await self._do_roll(dice, rollc % 6); rollc += 1
             if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
                 await self._do_roll(dice, d["line"])
                 if not self.reduced_motion:
