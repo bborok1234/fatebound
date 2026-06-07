@@ -33,8 +33,8 @@
       {
         "name_ko": "무리 사냥",
         "condition": "every_3_turns",
-        "effect": "increase_attack",
-        "value": "6",
+        "effect": "buff_atk",
+        "value": 0.462,
         "cooldown": 0
       }
     ],
@@ -61,8 +61,8 @@
       {
         "name_ko": "기습 일격",
         "condition": "every_2_turns",
-        "effect": "deal_damage",
-        "value": "0.8 * atk",
+        "effect": "extra_damage",
+        "value": 0.8,
         "cooldown": 0
       }
     ],
@@ -110,8 +110,8 @@
       {
         "name_ko": "선공 견제사",
         "condition": "every_3_turns",
-        "effect": "deal_damage",
-        "value": "0.9 * atk",
+        "effect": "extra_damage",
+        "value": 0.9,
         "cooldown": 0
       }
     ],
@@ -140,7 +140,7 @@
         "name_ko": "철포삼 운기",
         "condition": "below_50_hp",
         "effect": "gain_shield",
-        "value": "0.5 * atk",
+        "value": 0.5,
         "cooldown": 3
       }
     ],
@@ -168,8 +168,8 @@
       {
         "name_ko": "혈정 운반",
         "condition": "below_30_hp",
-        "effect": "increase_speed",
-        "value": "4",
+        "effect": "buff_spd",
+        "value": 0.5,
         "cooldown": 0
       }
     ],
@@ -197,15 +197,15 @@
       {
         "name_ko": "광폭 난도질",
         "condition": "every_3_turns",
-        "effect": "deal_damage",
-        "value": "1.5 * atk",
+        "effect": "extra_damage",
+        "value": 1.5,
         "cooldown": 0
       },
       {
         "name_ko": "발악",
         "condition": "below_30_hp",
-        "effect": "increase_attack",
-        "value": "30",
+        "effect": "buff_atk",
+        "value": 0.833,
         "cooldown": 0
       }
     ],
@@ -254,7 +254,7 @@
         "name_ko": "야행보(夜行步)",
         "condition": "every_3_turns",
         "effect": "buff_spd",
-        "value": "spd+4, 2턴",
+        "value": 0.286,
         "cooldown": 3
       }
     ],
@@ -281,8 +281,8 @@
       {
         "name_ko": "흑풍참(黑風斬)",
         "condition": "every_2_turns",
-        "effect": "damage",
-        "value": "atk*1.5",
+        "effect": "extra_damage",
+        "value": 1.5,
         "cooldown": 2
       }
     ],
@@ -310,7 +310,7 @@
         "name_ko": "혈정 누출(血晶漏出)",
         "condition": "below_30_hp",
         "effect": "lifesteal",
-        "value": "피해의 30% 흡혈",
+        "value": 0.3,
         "cooldown": 0
       }
     ],
@@ -339,7 +339,7 @@
         "name_ko": "철벽수세(鐵壁守勢)",
         "condition": "every_3_turns",
         "effect": "buff_def",
-        "value": "def+12, 2턴",
+        "value": 0.632,
         "cooldown": 3
       }
     ],
@@ -367,8 +367,9 @@
       {
         "name_ko": "암습일도(暗襲一刀)",
         "condition": "every_4_turns",
-        "effect": "damage",
-        "value": "atk*2.0, 치명 확정",
+        "effect": "extra_damage",
+        "value": 2.0,
+        "crit": true,
         "cooldown": 4
       }
     ],
@@ -397,7 +398,7 @@
         "name_ko": "혈정 광폭(血晶狂暴)",
         "condition": "below_40_hp",
         "effect": "buff_atk",
-        "value": "atk+15, 3턴",
+        "value": 0.455,
         "cooldown": 0
       }
     ],
@@ -426,14 +427,16 @@
         "name_ko": "혈정 흡정대법(血晶吸精大法)",
         "condition": "every_4_turns",
         "effect": "lifesteal",
-        "value": "atk*1.8 피해 + 피해의 50% 흡혈",
+        "value": 0.5,
+        "atk_mult": 1.8,
         "cooldown": 4
       },
       {
         "name_ko": "흑풍난무(黑風亂舞)",
         "condition": "below_30_hp",
-        "effect": "damage",
-        "value": "atk*1.3, 3연격",
+        "effect": "extra_damage",
+        "value": 1.3,
+        "hits": 3,
         "cooldown": 5
       }
     ],
@@ -463,7 +466,7 @@
         "name_ko": "한독아",
         "condition": "every_3_turns",
         "effect": "apply_poison",
-        "value": "6",
+        "value": 6,
         "cooldown": 3
       }
     ],
@@ -512,8 +515,8 @@
       {
         "name_ko": "광혈장",
         "condition": "below_30_hp",
-        "effect": "atk_buff",
-        "value": "30%",
+        "effect": "buff_atk",
+        "value": 0.3,
         "cooldown": 4
       }
     ],
@@ -541,8 +544,8 @@
       {
         "name_ko": "빙벽수",
         "condition": "every_4_turns",
-        "effect": "def_buff",
-        "value": "40%",
+        "effect": "buff_def",
+        "value": 0.4,
         "cooldown": 4
       }
     ],
@@ -570,8 +573,8 @@
       {
         "name_ko": "빙혈섬",
         "condition": "on_crit",
-        "effect": "bonus_damage",
-        "value": "50%",
+        "effect": "extra_damage",
+        "value": 0.5,
         "cooldown": 2
       }
     ],
@@ -599,8 +602,8 @@
       {
         "name_ko": "혈정봉",
         "condition": "every_3_turns",
-        "effect": "heal_self",
-        "value": "8%",
+        "effect": "heal",
+        "value": 0.08,
         "cooldown": 3
       }
     ],
@@ -628,8 +631,9 @@
       {
         "name_ko": "혈정호신강",
         "condition": "below_50_hp",
-        "effect": "shield",
-        "value": "15%",
+        "effect": "gain_shield",
+        "value": 0.15,
+        "hp_pct": true,
         "cooldown": 5
       }
     ],
@@ -657,15 +661,15 @@
       {
         "name_ko": "혈정폭주",
         "condition": "below_50_hp",
-        "effect": "atk_buff",
-        "value": "50%",
+        "effect": "buff_atk",
+        "value": 0.5,
         "cooldown": 5
       },
       {
         "name_ko": "잠식의 빙뢰",
         "condition": "every_4_turns",
         "effect": "apply_poison",
-        "value": "8",
+        "value": 8,
         "cooldown": 4
       }
     ],
@@ -695,14 +699,14 @@
         "name_ko": "혈독 운무(血毒雲霧)",
         "condition": "every_3_turns",
         "effect": "apply_poison",
-        "value": "3",
+        "value": 3,
         "cooldown": 0
       },
       {
         "name_ko": "혈정 폭주(血晶暴走)",
         "condition": "below_30_hp",
         "effect": "amplify_poison_pct",
-        "value": "40",
+        "value": 40,
         "cooldown": 0
       }
     ],
@@ -731,14 +735,14 @@
         "name_ko": "혈음진(血音陣)",
         "condition": "every_2_turns",
         "effect": "heal",
-        "value": "0.08 * hp",
+        "value": 0.08,
         "cooldown": 0
       },
       {
         "name_ko": "절맥 일격(絶脈一擊)",
         "condition": "below_50_hp",
         "effect": "apply_stun",
-        "value": "1",
+        "value": 1,
         "cooldown": 3
       }
     ],
