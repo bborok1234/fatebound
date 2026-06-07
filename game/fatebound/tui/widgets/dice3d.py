@@ -236,14 +236,15 @@ class Dice3D(Widget):
 
     def on_mount(self):
         self._idle = 0
-        self.set_interval(1 / 30, self._tick)   # 상태 진행(회전·물리·스파크)
+        self._tick_timer = self.set_interval(1 / 30, self._tick)   # 상태 진행(회전·물리·스파크)
         self.auto_refresh = 1 / 30              # 리페인트는 Textual auto_refresh로(타이머 내 refresh()는 안 먹힘)
 
     def _wake(self):
-        # 굴림·포커스·스킨변경 시 렌더 재개(휴식에서 깨어남)
+        # 굴림·포커스·스킨변경 시 렌더·틱 재개(휴식에서 깨어남)
         self._idle = 0
         if self.auto_refresh is None:
             self.auto_refresh = 1 / 30
+            self._tick_timer.resume()           # idle 휴식 때 멈춰둔 상태틱 재개
 
     # ── 게임 화면 API ──
     def set_skin(self, skin: str):
@@ -283,6 +284,7 @@ class Dice3D(Widget):
                 self.ax = (self.ax + 0.005) % (2 * math.pi)
             elif self.auto_refresh is not None:
                 self.auto_refresh = None                       # 휴식 — 렌더 정지(자원 0, 굴림 시 _wake로 재개)
+                self._tick_timer.pause()                       # 상태틱도 정지(30fps no-op 영구 호출 제거 — CPU 0)
         elif self.phase == "tumble":
             self.ax += self.vx; self.ay += self.vy; self.az += self.vz
             self.vx *= 0.96; self.vy *= 0.96; self.vz *= 0.96
