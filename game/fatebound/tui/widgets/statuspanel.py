@@ -1,10 +1,14 @@
 """상태 패널(17 §13.4) — 플레이어/적 HP·천명괘·상생쌍·커서 무공 디테일. 전투 중 라이브 갱신."""
 from __future__ import annotations
 from textual.widget import Widget
+from textual.color import Gradient
 from rich.console import Group
 from rich.text import Text
 from rich.rule import Rule
 from ...engine.bag import synergy_cells
+
+HEALTH_GRAD = Gradient((0.0, "#d4582f"), (0.5, "#c8a24a"), (1.0, "#5aa67c"))   # 체력: 적→금→옥(연속 전이)
+ENEMY_GRAD = Gradient((0.0, "#5a1a14"), (1.0, "#e0563a"))                       # 적 HP: 붉은 결
 
 RARITY = {"common": "grey70", "rare": "#4a90a4", "epic": "#c8a24a", "legendary": "#d4582f"}
 EFFECT_KO = {
@@ -22,17 +26,20 @@ STATUS_COLOR = {"poison": "#6fae5a", "burn": "#d4582f", "weak": "#b06a3a",
                 "vulnerable": "#b07fd4", "stun": "#b07fd4"}
 
 
-def bar(cur: float, mx: float, width: int = 16, color: str = "#c2453a") -> Text:
+def bar(cur: float, mx: float, width: int = 16, grad: Gradient | None = None) -> Text:
+    """그라데이션 게이지 — 칸별 연속 색 전이(단색 점프 폐기, doc28 미감 천장)."""
+    grad = grad or HEALTH_GRAD
     mx = max(1, mx)
     ratio = cur / mx
-    if ratio <= 0.3 and cur > 0:        # 저HP 위험 강조(juice, 17 §2.4)
-        color = "#ff6b5e"
     filled = max(0, min(width, round(width * ratio)))
+    danger = ratio <= 0.3 and cur > 0       # 저HP 위험(juice, 17 §2.4)
     t = Text()
-    t.append("▰" * filled, style=color)
-    t.append("▱" * (width - filled), style="#3a3a42")
-    warn = " ⚠" if (ratio <= 0.3 and cur > 0) else ""
-    t.append(f" {max(0,int(cur))}/{int(mx)}{warn}", style="grey70" if not warn else "#ff6b5e")
+    for i in range(filled):                 # 각 칸을 위치별 그라데이션 색으로
+        pos = i / (width - 1) if width > 1 else 1.0
+        t.append("▰", style=grad.get_color(pos).hex)
+    t.append("▱" * (width - filled), style="#33333a")
+    warn = " ⚠" if danger else ""
+    t.append(f" {max(0, int(cur))}/{int(mx)}{warn}", style="#ff6b5e" if danger else "grey70")
     return t
 
 
@@ -80,10 +87,10 @@ class StatusPanel(Widget):
         g = []
         g.append(Text(f"{s.name} · 제{s.reincarnations+1}생 · Lv{s.level}", style="#c8a24a"))
         if self.p_max:
-            g.append(bar(self.p_hp, self.p_max, color="#c2453a"))
+            g.append(bar(self.p_hp, self.p_max))
         else:
             p = s.player_preview()
-            g.append(bar(p.hp, p.max_hp, color="#c2453a"))
+            g.append(bar(p.hp, p.max_hp))
         # 출력(出力) 텔레그래프 — 배치가 출력을 바꾼다(M1). 잡고 호버하면 commit 전 델타.
         if self.output is not None:
             if self.preview_output is not None:
@@ -115,7 +122,7 @@ class StatusPanel(Widget):
                          + Text("  〔보스〕", style="#1a1a1f on #d4582f bold"))
             else:
                 g.append(Text(f"· 敵 {self.e_name}", style="#d4582f"))
-            g.append(bar(self.e_hp, self.e_max, color="#d4582f"))
+            g.append(bar(self.e_hp, self.e_max, grad=ENEMY_GRAD))
             if self.statuses:
                 bt = Text()
                 for st, n in self.statuses.items():
