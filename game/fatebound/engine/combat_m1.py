@@ -84,17 +84,18 @@ def cell_eff(cells, idx, scale, vuln=False):
     m = _m1(it)
     if not m or m.get("base", 0) <= 0:
         return 0.0
+    bld = it.get("build")
     adj = 0.0
-    for n in ORTH[idx]:
+    for n in ORTH[idx]:                                  # 증폭은 같은 계열 이웃만(doc27 P3 클러스터 게이트·계열 누수 차단, #46)
         nb = _m1(cells[n])
-        if nb:
-            adj += nb.get("amp", 0.0)
+        if nb and nb.get("amp", 0.0) and cells[n].get("build") == bld:
+            adj += nb["amp"]
     r, c = divmod(idx, GRID)
     row = [cells[r * GRID + j] for j in range(GRID)]
     col = [cells[j * GRID + c] for j in range(GRID)]
     line_bonus = 0.0
-    for line in (row, col):
-        if all(_m1(x) and _m1(x).get("role") == "payload" for x in line):
+    for line in (row, col):                              # 순줄: 같은 계열 페이로드 3칸(doc23 §14 純 — 혼합 치즈 차단, #46)
+        if all(_m1(x) and _m1(x).get("role") == "payload" and x.get("build") == bld for x in line):
             line_bonus = LINE_PURE_BONUS
     center = CENTER_MULT if idx == 4 else 1.0
     out = m["base"] * scale * (1 + adj) * (1 + line_bonus) * center
