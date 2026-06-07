@@ -50,11 +50,14 @@ class TitleScreen(Screen):
     def _save_line(self):
         line = ""
         if self.has_save:
-            s = persistence.load()
-            if s:
-                z = ZONE_KO.get(s.zone, s.zone)
-                line = (f"[#9a958a]이어하기: 제{s.reincarnations+1}생 · {z} · "
-                        f"{BUILD_LABEL.get(s.build, s.build)} 계열 · Lv{s.level}[/]")
+            try:                                    # 손상/구버전 세이브에 타이틀이 죽지 않게(프로덕션 견고성)
+                s = persistence.load()
+                if s:
+                    z = ZONE_KO.get(s.zone, s.zone) if isinstance(s.zone, str) else "?"
+                    line = (f"[#9a958a]이어하기: 제{s.reincarnations+1}생 · {z} · "
+                            f"{BUILD_LABEL.get(s.build, s.build)} 계열 · Lv{s.level}[/]")
+            except Exception:
+                line = ""                           # 읽기 실패 → 이어하기 줄만 생략(앱은 정상)
         self.query_one("#title-save", Static).update(line)
 
     def watch_sel(self):

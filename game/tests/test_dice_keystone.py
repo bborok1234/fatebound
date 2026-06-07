@@ -51,10 +51,8 @@ def test_variance_consistency_axis():
 
 def test_die_skin_persists(tmp_path, monkeypatch):
     """선택한 재질이 세이브에 영속(키스톤은 런 내내 유지)."""
-    monkeypatch.setenv("FATEBOUND_SAVE_DIR", str(tmp_path))
-    import importlib
     from fatebound import persistence
-    importlib.reload(persistence)
+    monkeypatch.setattr(persistence, "SAVE_DIR", tmp_path)   # reload 대신 직접 패치(전역 오염 방지·자동 복원)
     from fatebound.engine.session import GameSession
     s = GameSession.new_game("x", "crit", die_skin="hyeolok")
     persistence.save(s)
