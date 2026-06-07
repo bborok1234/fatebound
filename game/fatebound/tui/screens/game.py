@@ -445,8 +445,9 @@ class GameScreen(Screen):
             if e.kind == "heal" and d.get("tgt") == pname:
                 p_hp = d.get("tgt_hp", p_hp)
             if e.kind == "bijang":
-                bj = 0
+                bj = 0                                    # 비장 발동 → 게이지 비움(다시 충전)
             if e.kind == "round_start":
+                bj = d.get("bijang", bj)                  # 비장 충전 게이지 fill(매 합 +1)
                 gug.douse()                               # 지난 합 점화 해제
             if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
                 gug.spot(d["line"])                       # 강조줄 행/열 라벨 점등(◀천명) — dice→칸 매핑 명료화(#35)
