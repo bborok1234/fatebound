@@ -22,6 +22,7 @@ build/
 
 # ── 개발 아티팩트 ────────────────────────────────────────────
 *.svg
+snapshot_report.html
 .omc/
 .DS_Store
 

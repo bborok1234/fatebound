@@ -13,7 +13,11 @@ from ...engine.bag import synergy_cells
 RARITY = {"common": "grey70", "rare": "#4a90a4", "epic": "#c8a24a", "legendary": "#d4582f bold"}
 RARITY_DOT = {"common": "○", "rare": "◆", "epic": "◆", "legendary": "★"}
 GRID = 3
-CW = 12  # 칸 내부폭(셀) — 한글 5자(10셀) + 여유. 이름 절단 금지.
+CW = 18  # 칸 내부폭(셀) — 구궁=화면 주인공(#35). 한글 이름 + 카드 여백. 이름 절단 금지.
+ROW_KO = ["1행", "2행", "3행"]   # 천명괘 가로줄(LINES 0~2). 좌측 라벨.
+COL_KO = ["1열", "2열", "3열"]   # 천명괘 세로줄(LINES 3~5). 상단 라벨.
+SPOT_C = "#e0b341"               # 천명 강조줄(라벨·점등 금빛)
+DIM_C = "#55504a"                # 비강조 라벨
 
 
 class GugungWidget(Widget):
@@ -34,12 +38,15 @@ class GugungWidget(Widget):
         self.ghost_delta = None         # 고스트 칸에 함께 보일 출력 델타(예 "▲+43%")
         self.pulse_idx = None           # 발동 캐스케이드: 지금 터지는 칸(전투 중)
         self.pulse_amount = None        # 그 칸이 이번 합 낸 출력(기여 귀속)
+        self.spot_line = None           # 천명괘 강조줄(0~5: 행0~2/열3~5). 화면이 m1_line에서 설정 → 라벨 점등
 
     def on_click(self, event) -> None:
-        # 클릭 좌표 → 3×3 칸(비례 히트테스트). 화면이 집기/놓기 처리.
-        w = max(1, self.size.width); h = max(1, self.size.height)
-        col = min(2, max(0, int(event.offset.x * 3 / w)))
-        row = min(2, max(0, int(event.offset.y * 3 / h)))
+        # 클릭 좌표 → 3×3 칸(비례 히트테스트). 좌측 행라벨 열(~5)·상단 헤더(~2) 보정.
+        LW, HH = 5, 2
+        w = max(1, self.size.width - LW); h = max(1, self.size.height - HH)
+        gx = max(0, event.offset.x - LW); gy = max(0, event.offset.y - HH)
+        col = min(2, max(0, int(gx * 3 / w)))
+        row = min(2, max(0, int(gy * 3 / h)))
         self.post_message(self.CellClicked(row * 3 + col))
 
     # ── 전투 점화·발동(화면이 호출) ──
@@ -47,7 +54,11 @@ class GugungWidget(Widget):
         self.active = set(indices); self.refresh()
 
     def douse(self):
-        self.active = set(); self.pulse_idx = None; self.pulse_amount = None; self.refresh()
+        self.active = set(); self.pulse_idx = None; self.pulse_amount = None; self.spot_line = None; self.refresh()
+
+    def spot(self, line):
+        """천명괘 강조줄 설정(0~5) → 해당 행/열 라벨 점등. 화면이 m1_line에서 호출."""
+        self.spot_line = line; self.refresh()
 
     def pulse(self, idx, amount=None):
         self.pulse_idx = idx; self.pulse_amount = amount; self.refresh()
@@ -77,13 +88,20 @@ class GugungWidget(Widget):
     def render(self):
         bag = self.session.bag
         syn, _ = synergy_cells(bag)
-        t = Table(show_header=False, box=HEAVY, padding=0, border_style="#55504a",
+        t = Table(show_header=True, box=HEAVY, padding=0, border_style="#55504a",
                   expand=False, pad_edge=False)
-        for _ in range(GRID):
-            t.add_column(justify="center", width=CW, no_wrap=True)
+        t.add_column("", justify="right", width=4, no_wrap=True, vertical="middle")   # 좌측 행 라벨
+        for c in range(GRID):                                # 상단 열 라벨 — 천명 강조 시 점등
+            clit = (self.spot_line == GRID + c)
+            hdr = Text((("▼" if clit else "") + COL_KO[c]), justify="center",
+                       style=f"{SPOT_C} bold" if clit else DIM_C)
+            t.add_column(hdr, justify="center", width=CW, no_wrap=True)
 
         for r in range(GRID):
-            row = []
+            rlit = (self.spot_line == r)                     # 행 강조줄 → 좌측 라벨 점등(◀천명)
+            rlab = Text(ROW_KO[r] + ("◀" if rlit else " "), justify="right",
+                        style=f"{SPOT_C} bold" if rlit else DIM_C)
+            row = [rlab]
             for c in range(GRID):
                 idx = r * GRID + c
                 it = bag.cells[idx]
@@ -130,8 +148,9 @@ class GugungWidget(Widget):
                     name.stylize("bold on #3b4660")
                     sub.stylize("on #3b4660")
 
+                # 셀 카드화 — 위·아래 여백으로 격자를 키워 코어(구궁)가 패널을 채우게(존재감↑, #35)
                 cell = Text("\n", justify="center")
-                cell.append_text(name); cell.append("\n"); cell.append_text(sub)
+                cell.append_text(name); cell.append("\n\n"); cell.append_text(sub); cell.append("\n")
                 row.append(cell)
             t.add_row(*row)
         return t

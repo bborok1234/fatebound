@@ -6,7 +6,7 @@ import asyncio
 import os
 from textual import work, on
 from textual.screen import Screen
-from textual.containers import Horizontal, Container
+from textual.containers import Horizontal, Vertical, Container
 from textual.widgets import Static, RichLog
 from ..widgets.gugung import GugungWidget
 from ..widgets.statuspanel import StatusPanel
@@ -65,13 +65,14 @@ class GameScreen(Screen):
         yield Static(id="topbar")
         yield Static(id="coach", classes="hidden")
         with Horizontal(id="main"):
-            with Container(id="reserve-pane"):    # 좌: 보관함(인라인, 모달 대체)
-                yield ReserveWidget(self.session, id="reserve")
-            with Container(id="dice-pane"):       # 天命卦 3D 주사위(핵심·랜덤성의 축)
-                yield Static("[#c8a24a]天命卦 · 천명괘[/]", classes="label")
-                yield Dice3D(skin=getattr(self.session, "die_skin", "baekok"), id="dice")
-            with Container(id="gugung-pane"):      # 중앙: 구궁(배치=결정 공간)
-                yield Static("[#9a958a]구궁(九宮) · 무공 배치[/]", classes="label")
+            with Vertical(id="side-pane"):        # 좌: 보관함(위, 넉넉) + 천명괘(아래, 데모트된 이펙트)
+                with Container(id="reserve-pane"):
+                    yield ReserveWidget(self.session, id="reserve")
+                with Container(id="dice-pane"):   # 天命卦 — 이펙트(작게). 강조줄 매핑은 구궁 라벨이 책임
+                    yield Static("[#9a958a]天命卦[/]", classes="label")
+                    yield Dice3D(skin=getattr(self.session, "die_skin", "baekok"), id="dice")
+            with Container(id="gugung-pane"):      # 중앙: 구궁 = 화면 주인공(배치=결정 공간)
+                yield Static("[#c8a24a]九宮 · 무공 배치[/]", classes="label")
                 yield GugungWidget(self.session, id="gugung")
             yield StatusPanel(self.session, id="status-pane")   # 우: 敵/보스 + 내 상태
         with Container(id="log-pane"):             # 하단 전폭: 천명록
@@ -84,6 +85,7 @@ class GameScreen(Screen):
         self._topbar()
         self._actionbar()
         self._sync_detail()
+        self._set_mode(False)                              # 시작=배치 모드(#35)
         self._coach_refresh()
         log = self.query_one("#log", RichLog)
         log.can_focus = False
@@ -188,6 +190,33 @@ class GameScreen(Screen):
         self.query_one("#gugung", GugungWidget).refresh()
         self._sync_detail()
         self._topbar()
+
+    def _set_mode(self, combat: bool):
+        """배치↔전투 모드 전환(#35·doc28). 전투=주사위 굴림 쇼케이스·보관함 숨김·관전, 배치=결정 집중."""
+        main = self.query_one("#main")
+        main.set_class(combat, "combat")
+        main.set_class(not combat, "placement")
+
+    def _contribution_chart(self, contrib: dict, log):
+        """전투 결산 — 칸별 누적 기여 막대(TFT식 사후 분석, doc28). 누가 캐리·누가 유휴인지 = 다음 배치 결정 입력."""
+        cells = self.session.bag.cells
+        rows = [(i, contrib.get(i, 0)) for i in range(9) if cells[i] is not None]
+        if not rows:
+            return
+        rows.sort(key=lambda x: -x[1])
+        mx = max((v for _, v in rows), default=0) or 1
+
+        def pad(s, w):                                      # 한글=2폭 고려 좌측정렬
+            width = sum(2 if ord(c) > 0x1100 else 1 for c in s)
+            return s + " " * max(0, w - width)
+
+        log.write("")
+        log.write("[#c8a24a]⟐ 전투 결산 · 기여(貢獻)[/] [grey54]— 다음 배치의 길잡이[/]")
+        for rank, (i, v) in enumerate(rows):
+            fill = round(10 * v / mx)
+            bar = "▰" * fill + "▱" * (10 - fill)
+            tag = " [#5aa67c]◆ 캐리[/]" if (rank == 0 and v > 0) else (" [#6a6a72]· 유휴[/]" if v == 0 else "")
+            log.write(f"  [grey70]{pad(cells[i]['name_ko'], 12)}[/][#c8a24a]{bar}[/] [grey70]{round(v):>4}[/]{tag}")
 
     # ── 코치 ──
     def _coach_refresh(self):
@@ -376,6 +405,7 @@ class GameScreen(Screen):
     async def _play(self, boss: bool, elite: bool = False):
         self.busy = True
         self._actionbar(combat=True)
+        self._set_mode(True)                               # 전투 모드 — 주사위 굴림 쇼케이스·보관함 숨김·관전(#35)
         log = self.query_one("#log", RichLog)
         panel = self.query_one("#status-pane", StatusPanel)
         dice = self.query_one("#dice", Dice3D)
@@ -395,6 +425,7 @@ class GameScreen(Screen):
         bj = 0
         cur_face = ""
         estatus: dict = {}
+        contrib: dict = {}                                 # 칸별 누적 기여(전투 결산 막대용, #35·doc28)
         for e in res.events:
             d = e.data
             if e.kind == "battle_start":
@@ -418,6 +449,7 @@ class GameScreen(Screen):
             if e.kind == "round_start":
                 gug.douse()                               # 지난 합 점화 해제
             if e.kind == "m1_line":                       # M1: 줄 강조 → 굴림 + 구궁 점화
+                gug.spot(d["line"])                       # 강조줄 행/열 라벨 점등(◀천명) — dice→칸 매핑 명료화(#35)
                 await self._do_roll(dice, d["line"])
                 if not self.reduced_motion:
                     lit = list(LINES[d["line"]])
@@ -429,10 +461,12 @@ class GameScreen(Screen):
                     self.app.notify("매 합 6줄 중 한 줄(금빛)이 강조돼 그 줄 무공이 더 세게 친다. "
                                     "강한 무공을 한 줄로 모아 두면 천명이 깃들 때 크게 터진다.",
                                     title="天命卦 천명괘", severity="information", timeout=7)
-            if e.kind == "m1_fire" and not self.reduced_motion:   # 발동 캐스케이드: 무공이 차례로 번쩍(기여 수치 표시)
+            if e.kind == "m1_fire":                       # 발동: 기여 누적(항상) + 캐스케이드 펄스(모션 시)
                 ci = self._cell_index(d.get("name"))
                 if ci is not None:
-                    gug.pulse(ci, round(d.get("amount", 0)))
+                    contrib[ci] = contrib.get(ci, 0) + d.get("amount", 0)
+                    if not self.reduced_motion:
+                        gug.pulse(ci, round(d.get("amount", 0)))
             if e.kind == "status" and d.get("tgt") == e_name:
                 estatus[d["status"]] = d.get("stacks", estatus.get(d["status"], 0) + 1)
             ln = render_text.line(e)
@@ -440,12 +474,13 @@ class GameScreen(Screen):
                 if e.kind == "round_start" and d.get("n", 1) > 1:
                     log.write("")                          # 합 사이 한 줄 띄워 가독성
                 log.write(self._style(e, ln))
-            panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj, cur_face=cur_face, statuses=dict(estatus))
+            panel.set_combat(p_hp, p_max, e_name, e_hp, e_max, bj, cur_face=cur_face, statuses=dict(estatus), boss=boss)
             # hitstop — 치명·비장은 한 박자 더 머문다(임팩트, 17 §2.4)
             hit = 0.12 if ((e.kind == "damage" and d.get("crit")) or e.kind == "bijang") else 0.0
             if e.kind not in ("dice", "m1_line"):         # 주사위 굴림이 자체 페이싱
                 await asyncio.sleep((DELAY.get(e.kind, 0.1) + hit) / self.speed)
         gug.douse()
+        self._contribution_chart(contrib, log)             # 전투 결산 — 누가 캐리·누가 유휴(다음 배치 입력, #35·doc28)
         out = self.session.apply_result(res, enemy, boss, elite)
         self._after(res, out, log)
         persistence.save(self.session)
@@ -454,6 +489,7 @@ class GameScreen(Screen):
             self.session.advance_node()
             persistence.save(self.session)
         self.busy = False
+        self._set_mode(False)                              # 전투 종료 → 배치 모드 복귀(#35)
         self._refresh_hub(); self._actionbar()
         # 첫 전투 완주 = 튜토리얼 소임 완료(코치 단계·Esc 숨김 무관). 이후 재등장 안 함(#16).
         self.coach = None

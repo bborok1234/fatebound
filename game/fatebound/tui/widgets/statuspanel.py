@@ -52,12 +52,13 @@ class StatusPanel(Widget):
         self.syn_formed = None      # 스왑 시 새로 생기는 상생쌍
         self.syn_broken = None      # 스왑 시 깨지는 상생쌍
 
-    def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0, cur_face="", statuses=None):
+    def set_combat(self, p_hp, p_max, e_name, e_hp, e_max, bijang=0, cur_face="", statuses=None, boss=False):
         self.p_hp, self.p_max = p_hp, p_max
         self.e_name, self.e_hp, self.e_max = e_name, e_hp, e_max
         self.bijang = bijang
         self.cur_face = cur_face
         self.statuses = statuses or {}
+        self.e_boss = boss          # 위협 글리프(StS 적 가독성, doc28) — 보스는 도드라지게
         self.refresh()
 
     def _synergy_lines(self):
@@ -109,7 +110,11 @@ class StatusPanel(Widget):
         # 적(전투 중) + 상태이상 배지
         if self.e_max:
             g.append(Rule(style="#3a3a42"))
-            g.append(Text(f"敵 {self.e_name}", style="#d4582f"))
+            if getattr(self, "e_boss", False):     # 보스=위협 도드라짐(글리프+꼬리표)
+                g.append(Text("☠ 敵 ", style="#d4582f bold") + Text(self.e_name, style="#d4582f bold")
+                         + Text("  〔보스〕", style="#1a1a1f on #d4582f bold"))
+            else:
+                g.append(Text(f"· 敵 {self.e_name}", style="#d4582f"))
             g.append(bar(self.e_hp, self.e_max, color="#d4582f"))
             if self.statuses:
                 bt = Text()
