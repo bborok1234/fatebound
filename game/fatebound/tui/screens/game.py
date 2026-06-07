@@ -43,7 +43,7 @@ BUILD_INTRO = {
 
 class GameScreen(Screen):
     # 좁은 터미널: 주사위 패널을 접어 살핌(인스펙터)을 살린다(게임성 우선). 넓으면 전부 표시.
-    HORIZONTAL_BREAKPOINTS = [(0, "narrow"), (118, "wide")]
+    HORIZONTAL_BREAKPOINTS = [(0, "narrow"), (150, "wide")]   # <150=narrow: 사이드 접고 살핌 flex(클립 방지, #40)
     BINDINGS = [
         ("up", "cur(-1,0)"), ("down", "cur(1,0)"), ("left", "cur(0,-1)"), ("right", "cur(0,1)"),
         ("enter", "grab"), ("tab", "toggle_pane"), ("i", "focus_reserve"),
