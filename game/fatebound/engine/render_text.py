@@ -40,8 +40,12 @@ def line(e: Event) -> str | None:
         s = _TICK_KO.get(d["status"], d["status"])
         return f"    {s} {d['amount']}  (HP {d['tgt_hp']})"
     if k == "heal":
+        if d.get("by_player") is False:                 # 적 자가 회복(흡혈·운기)
+            return f"    {d['tgt']}이(가) 기력을 회복한다. +{d['amount']}  (적 HP {d.get('tgt_hp')})"
         return f"    숨을 고른다. 체력 +{d['amount']}"
     if k == "shield":
+        if d.get("by_player") is False:                 # 적이 보호막을 두름
+            return f"    {d['tgt']}이(가) 호신강을 두른다. 보호막 +{d['amount']}"
         return f"    기를 둘러 막는다. 보호막 +{d['amount']}"
     if k == "counter":
         if d.get("by_player"):
