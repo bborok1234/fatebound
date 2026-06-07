@@ -60,8 +60,10 @@ GugungWidget { height: 1fr; width: 1fr; }
 .placement #dice-pane { display: none; }
 .combat #reserve-pane { display: none; }
 .combat #dice-pane { height: 1fr; }          /* 전투 땐 주사위가 사이드를 채워 굴림 쇼케이스 */
-/* 좁은 터미널(<118): 주사위 패널 접어 살핌 패널 확보 */
-.narrow #dice-pane { display: none; }
+/* 좁은 터미널(<150) degradation(#40): 사이드(보관함+주사위) 접고 살핌을 flex로 — 클립 대신 visible.
+   코어(구궁)+살핌+로그만 남겨 핵심 정보 보존. 보관함은 폭 회복 시 복귀. */
+.narrow #side-pane   { display: none; }
+.narrow #status-pane { width: 1fr; }          /* 고정 56→남은 폭 채움(화면 밖 클립 방지) */
 /* 천명괘(天命卦) — 3D 주사위. 핵심·랜덤성의 축(17 §6). 부모 align이 중앙 */
 #dice { height: auto; content-align: center middle; }
 #log-pane { height: 18; border: round #444; padding: 0 1; }   /* 전투 피드 존재감 — 11→18 */
