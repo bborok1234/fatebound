@@ -22,6 +22,22 @@ def test_snapshot_buildselect(snap_compare):
     assert snap_compare(FateboundApp(), run_before=run_before, terminal_size=TERM)
 
 
+def test_snapshot_game_placement(snap_compare):
+    """메인 게임 배치모드(#35 리뉴얼) — 구궁 R/C 라벨·보관함·살핌. 주사위 숨김(배치). 170x50."""
+    import os
+    os.environ["FATEBOUND_REDUCED_MOTION"] = "1"
+    from fatebound.tui.app import FateboundApp
+    from fatebound.tui.screens.game import GameScreen
+    from fatebound.engine.session import GameSession
+
+    async def run_before(pilot):
+        scr = GameScreen(GameSession.new_game("천기노조", "poison"), first_run=False)
+        await pilot.app.push_screen(scr)
+        await pilot.pause()
+
+    assert snap_compare(FateboundApp(), run_before=run_before, terminal_size=(170, 50))
+
+
 def test_snapshot_dice_select(snap_compare):
     """천명괘(주사위) 선택 단계 — 계열 확정 후 2단계(#6 키스톤). 전환 애니메이션 없이 die 단계 직접(결정론)."""
     from fatebound.tui.app import FateboundApp

@@ -9,21 +9,30 @@ Screen { background: #1a1a1f; color: #e8e2d4; }
 #coach  { dock: top; height: auto; background: #2c2a20; color: #e8e2d4; padding: 0 1; border-bottom: solid #4a4636; }
 #actionbar { dock: bottom; height: 1; background: #26262e; color: #9a958a; padding: 0 1; }
 
-/* 북극성: 보관함(좌) | 天命卦 | 구궁 | 살핌(우) · 천명록(하단 전폭) */
-#main { height: 1fr; }
-#reserve-pane { width: 20; border: round #444; padding: 0 1; }
-#dice-pane   { width: 38; border: round #c8a24a; background: #16161b; padding: 0 1; }
-#gugung-pane { width: 42; border: round #444; padding: 0 1; }
-#status-pane { width: 1fr; border: round #555; padding: 0 1; }
+/* 북극성: (보관함) | 天命卦 | 구궁(코어) | 살핌(우) · 천명록(하단 전폭).
+   죽은 공간 제거 — 주사위·격자는 세로 중앙, 빈 보관함은 접어 칼럼 회수, 코어(구궁)=금테 강조. */
+/* board-hero(#35): 좌 사이드(보관함+데모트 주사위 세로) | 구궁=주인공(금테·중앙) | 살핌. 하단 전폭 로그.
+   행을 가로 중앙 — 폭 합(28+72+56=156)을 170에 중앙정렬해 죽은공간은 대칭 여백으로. */
+#main { height: 1fr; align: center top; }
+#side-pane    { width: 28; }                                   /* 보관함(위·넉넉) + 천명괘(아래·작게) */
+#reserve-pane { height: 1fr; border: round #444; padding: 0 1; }   /* 넉넉한 랙 — 세로 대부분(빈 상태도 표시) */
+#dice-pane    { height: 12; border: round #4a4636; background: #16161b; padding: 0 1; align: center middle; }  /* 이펙트(작게) */
+#gugung-pane  { width: 72; border: round #c8a24a; padding: 0 1; align: center middle; }   /* 주인공 — 격자 꽉 차게 */
+#status-pane  { width: 56; border: round #555; padding: 0 1; }   /* 고정폭 — 텍스트라 1fr이면 벌룬 */
 ReserveWidget { height: 1fr; }
-GugungWidget { height: auto; padding: 0 1; }
-/* 활성 패널(포커스) 금테 강조 — 어디를 조작 중인지 명확히 */
-#reserve-pane:focus-within, #gugung-pane:focus-within { border: round #c8a24a; }
+GugungWidget { height: auto; width: auto; padding: 0 1; }
+/* 활성 패널(포커스) 금테 강조 */
+#reserve-pane:focus-within { border: round #e0b341; }
+#gugung-pane:focus-within { border: round #e0b341; }
+/* 모드 적응(#35·doc28): 배치=결정(굴릴 것 없는 주사위 숨김·보관함 focus) / 전투=관전(주사위 굴림 쇼케이스·보관함 숨김) */
+.placement #dice-pane { display: none; }
+.combat #reserve-pane { display: none; }
+.combat #dice-pane { height: 1fr; }          /* 전투 땐 주사위가 사이드를 채워 굴림 쇼케이스 */
 /* 좁은 터미널(<118): 주사위 패널 접어 살핌 패널 확보 */
 .narrow #dice-pane { display: none; }
-/* 천명괘(天命卦) — 3D 주사위. 핵심·랜덤성의 축(17 §6) */
+/* 천명괘(天命卦) — 3D 주사위. 핵심·랜덤성의 축(17 §6). 부모 align이 중앙 */
 #dice { height: auto; content-align: center middle; }
-#log-pane { height: 11; border: round #444; padding: 0 1; }
+#log-pane { height: 18; border: round #444; padding: 0 1; }   /* 전투 피드 존재감 — 11→18 */
 #log { height: 1fr; }
 
 /* ── 타이틀 ── */
