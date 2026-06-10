@@ -37,9 +37,10 @@ def mit(dmg: float, dfn: float, k: float = 50.0) -> float:
     return dmg * (1 - dfn / (dfn + k))
 
 
-def run_battle(enemy_key: str, seed: int = 0):
+def run_battle(enemy_key: str, seed: int = 0, chain: list[str] | None = None):
     """라운드 제너레이터 — 스테이지가 합당 0.22s로 재생. 마지막 이벤트에 result·분해."""
     rng = random.Random(seed)
+    moves = [P.MOVES[k] for k in (chain or P.CHAIN)]
     e = dict(P.ENEMIES[enemy_key])
     p = dict(P.PLAYER)
     e_hp, e_max = e["hp"], e["hp"]
@@ -51,10 +52,12 @@ def run_battle(enemy_key: str, seed: int = 0):
     for rnd in range(1, 31):
         ev = RoundEvent(round=rnd, enemy_max=e_max, player_hp=int(p["hp"]))
         amp = 1.0
-        for w in P.CHAIN:
+        for i, w in enumerate(moves):           # 클러스터 게이트: 인접 같은 계열만
             if w["role"] == "amp":
-                amp += w["amp"]
-        for w in P.CHAIN:
+                adj = [moves[j] for j in (i - 1, i + 1) if 0 <= j < len(moves)]
+                if any(a["series"] == w["series"] for a in adj):
+                    amp += w["amp"]
+        for w in moves:
             cho = rng.choice(w["chosik"])
             if w["role"] == "gen":
                 gain = w["gen"] * amp * P.SIMBEOP["mult"]

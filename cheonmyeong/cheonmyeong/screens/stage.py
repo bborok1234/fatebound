@@ -28,7 +28,7 @@ class StageScreen(Screen):
         super().__init__()
         self.enemy_key = enemy_key
         self.enemy = P.ENEMIES[enemy_key]
-        self.gen = combat.run_battle(enemy_key, seed)
+        self.gen = None  # on_mount에서 app.state.chain으로
         self.speed = 1
         self.finished = False
         self.state = dict(enemy_hp=self.enemy["hp"], poison=0.0, charge=0,
@@ -42,6 +42,8 @@ class StageScreen(Screen):
         yield Static(id="hints")
 
     def on_mount(self) -> None:
+        chain = getattr(self.app, "state", None)
+        self.gen = combat.run_battle(self.enemy_key, 7, chain=chain.chain if chain else None)
         self.query_one("#log", RichLog).styles.height = "1fr"
         self.draw_hud()
         v = Text()
@@ -94,10 +96,18 @@ class StageScreen(Screen):
             + render.fg(T.AMBER if st["charge"] >= 5 else T.DIM)
             + render.gauge(st["charge"]) + render.R
             + (render.fg(T.AMBER) + " 充" + render.R if st["charge"] >= 6 else ""))
-        lines.append(
-            render.fg(T.DIM) + " 사슬 " + render.R + render.fg(T.INK)
-            + "[독침]═[독무]═[독증폭]═" + render.fg((180, 150, 220)) + "[만독발현]"
-            + render.R + render.fg(T.DIM) + f"   심법 [{P.SIMBEOP['name']}]" + render.R)
+        chain = getattr(self.app, "state", None)
+        keys = chain.chain if chain else list(P.CHAIN)
+        chain_s = ""
+        for i, k in enumerate(keys):
+            col = (180, 150, 220) if P.MOVES[k]["role"] == "burst" else T.INK
+            chain_s += render.fg(col) + f"[{k}]" + render.R
+            if i < len(keys) - 1:
+                a, b = P.MOVES[keys[i]], P.MOVES[keys[i + 1]]
+                chain_s += render.fg(T.POISON if a["series"] == b["series"] else T.DIM) \
+                    + ("═" if a["series"] == b["series"] else "┄") + render.R
+        lines.append(render.fg(T.DIM) + " 사슬 " + render.R + chain_s
+                     + render.fg(T.DIM) + f"   심법 [{P.SIMBEOP['name']}]" + render.R)
         lines.append(render.fg(T.DIM) + " " + "─" * 64 + render.R)
         self.query_one("#hud", Static).update(ansi("\n".join(lines)))
 

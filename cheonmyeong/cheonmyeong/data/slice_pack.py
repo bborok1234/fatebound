@@ -13,13 +13,28 @@ SERIES_CARDS = [
     ("기문", "천명", "운을 읽고 비트는 변칙", "다음 수를 알면 안 맞는다.", False),
 ]
 
-# ── 독계 시작 키트 (3권 01 — 시작 사슬 + 심법) ──────────────────────────
-CHAIN = [
-    dict(name="독침", role="gen", gen=2, chosik=["청사출수", "독아일섬", "만천화우", "암향표"]),
-    dict(name="독무", role="gen", gen=1, chosik=["낙독분분", "무영지독", "녹무만리"]),
-    dict(name="독증폭", role="amp", amp=0.20, chosik=["독기응집", "만독귀원"]),
-    dict(name="만독발현", role="burst", thr=6, mult=2.6, chosik=["만독발현", "독화난만", "백독붕"]),
-]
+# ── 독계 무공 풀 (3권 01) — 사슬은 GameState가 들고 서재가 편집한다 ──────
+MOVES = {
+    "독침":   dict(name="독침", series="독", role="gen", gen=2,
+                 chosik=["청사출수", "독아일섬", "만천화우", "암향표"],
+                 gist="매 합 중독 +2 — 사슬 앞쪽의 기본 충전기"),
+    "독무":   dict(name="독무", series="독", role="gen", gen=1,
+                 chosik=["낙독분분", "무영지독", "녹무만리"],
+                 gist="독 안개 살포 — 중독 +1 (광역)"),
+    "독증폭": dict(name="독증폭", series="독", role="amp", amp=0.20,
+                 chosik=["독기응집", "만독귀원"],
+                 gist="인접 독 무공의 틱 +20% (같은 계열 인접 한정)"),
+    "만독발현": dict(name="만독발현", series="독", role="burst", thr=6, mult=2.6,
+                  chosik=["만독발현", "독화난만", "백독붕"],
+                  gist="중독 ≥6이면 전량 소비 ×2.6 방어 무시 폭발"),
+    "천화비우": dict(name="천화비우", series="독", role="gen", gen=1.5,
+                  chosik=["만천화우", "화우만리", "홍화구벽"],
+                  gist="회피 불가 암기 탄막 — 중독 +1.5 (독왕세가 간판)"),
+}
+CHAIN = ["독침", "독무", "독증폭", "만독발현"]          # 시작 사슬(유파 정석)
+SHELF = ["천화비우"]                                  # 서가(미장착 — 독왕세가 전수)
+YUPA = dict(name="독왕세가 정석", chain=list(CHAIN),
+            gist="쌓고(생성×2) 불리고(증폭) 터뜨린다(발산) — 독계의 기본기")
 SIMBEOP = dict(name="만독심결", mult=1.5, gist="중독이 두 배로 쌓인다")
 SMYEONG = dict(name="칠보단혼", floor=6, mult=4.3,
                gist="충전 6 자동 — 사혈을 짚고 쌓인 독을 한 번에 정산")

@@ -26,6 +26,10 @@ class MapScreen(Screen):
         ("i", "idle", "걸어둔다"),
         ("d", "breakthrough", "벽을 친다"),
         ("j", "journal", "일지"),
+        ("b", "study", "서재(채비)"),
+        ("l", "loot", "전리품"),
+        ("t", "mystery", "천기록"),
+        ("o", "oneline", "한 줄"),
         ("q", "quit_app", "강호를 접는다"),
     ]
 
@@ -71,7 +75,7 @@ class MapScreen(Screen):
         # 전선 바 (벽 요약 — 세션 첫 시선)
         if "흑풍림" in st.explored:
             bar = (fg(T.DIM) + " 전선: " + R + fg((150, 200, 150)) + "흑풍림 개방" + R
-                   + fg(T.DIM) + " · 다음 벽: 일류(한천비곡 길목) — M2에서" + R)
+                   + fg(T.DIM) + " · 다음 벽: 일류(한천비곡 길목) — 어스름 속에서 기다린다" + R)
         elif st.wall_ready:
             glow = T.lerp(T.SEAL, (255, 190, 100), self.pulse)
             bar = (fg(T.DIM) + " 전선: " + R + fg(glow) + "◈ 이류의 벽 — 깰 만하다"
@@ -84,9 +88,9 @@ class MapScreen(Screen):
         v = (fg(T.GOLD) + " 천기노조" + R + fg(T.DIM)
              + " — 한 발 디디면 한 뼘 보이는 법이지." + R)
         self.query_one("#voice", Static).update(ansi(v))
-        hint = (fg(T.DIM) + " [I]죽림에 걸어둔다(하루)  "
+        hint = (fg(T.DIM) + " [I]걸어둔다  "
                 + (fg(T.SEAL) + "[D]벽을 친다  " + fg(T.DIM) if st.wall_ready else "")
-                + "[J]일지  [Q]접는다" + R)
+                + "[B]서재  [L]전리품  [T]천기록  [J]일지  [O]한 줄  [Q]접는다" + R)
         self.query_one("#hints", Static).update(ansi(hint))
 
     def overlay(self, rows: list[str]) -> list[str]:
@@ -134,6 +138,22 @@ class MapScreen(Screen):
         from .journal import JournalScreen
         if self.st.journal:
             self.app.push_screen(JournalScreen())
+
+    def action_study(self) -> None:
+        from .study import StudyScreen
+        self.app.push_screen(StudyScreen())
+
+    def action_loot(self) -> None:
+        from .extras import LootScreen
+        self.app.push_screen(LootScreen())
+
+    def action_mystery(self) -> None:
+        from .extras import MysteryScreen
+        self.app.push_screen(MysteryScreen())
+
+    def action_oneline(self) -> None:
+        from .extras import OneLineScreen
+        self.app.push_screen(OneLineScreen())
 
     def action_quit_app(self) -> None:
         self.app.exit()

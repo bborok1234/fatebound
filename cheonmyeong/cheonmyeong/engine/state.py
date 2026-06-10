@@ -47,9 +47,31 @@ class GameState:
     clues: int = 0
     journal: list[dict] = field(default_factory=list)
     battles_won: int = 1                # 첫 전투
+    chain: list[str] = field(default_factory=list)
+    shelf: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.rng = random.Random(self.seed)
+        from ..data import slice_pack as P
+        if not self.chain:
+            self.chain = list(P.CHAIN)
+        if not self.shelf:
+            self.shelf = list(P.SHELF)
+
+    # ── 검산 텔레그래프 (서재 — rulebook 엔진 그대로, 이원화 금지) ──
+    def appraise(self, chain: list[str] | None = None, n: int = 24) -> dict:
+        from . import combat
+        rounds = []
+        wins = 0
+        for s in range(n):
+            last = None
+            for ev in combat.run_battle("죽림 산적", seed=s * 13 + 1, chain=chain or self.chain):
+                last = ev
+            if last and last.result == "win":
+                wins += 1
+                rounds.append(last.round)
+        avg = sum(rounds) / len(rounds) if rounds else 0
+        return dict(avg=avg, winrate=wins / n)
 
     # ── 벽 상태 (전선 바) ──
     @property
