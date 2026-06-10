@@ -36,6 +36,7 @@ class Drop:
 @dataclass
 class GameState:
     seed: int = 11
+    name: str = "천기노조"
     day: int = 1
     gyeongji: str = "삼류"
     star: int = 1                       # 소단계(10성)
@@ -118,7 +119,7 @@ class GameState:
             self.gyeongji = "이류"
             self.star = 1
             self.wall_progress = 0.0
-            self.explored.append("흑풍림")
+            # explored 추가는 디졸브 완료 시점(MapScreen._step) — 안개 걷힘이 보여야 한다
         else:
             self.dono_fails += 1            # 실패=진척 (01 §3)
         return ok

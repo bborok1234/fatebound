@@ -6,7 +6,7 @@ from rich.text import Text
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Static
+from textual.widgets import Input, Static
 
 from .. import theme as T
 from ..data import slice_pack as P
@@ -53,6 +53,10 @@ class OpeningScreen(Screen):
         pick.append("\n  천기노조", style=f"bold {_c(T.GOLD)}")
         pick.append(f" — {P.VOICE['series_pick']}\n", style=_c(T.DIM))
         yield Static(pick)
+        name_row = Input(value="천기노조", id="name")
+        name_row.border_title = "이름 (기본값 그대로 Enter면 통과)"
+        name_row.styles.width = 36
+        yield name_row
         with Vertical():
             with Horizontal():
                 for i, (n, r, g, q, a) in enumerate(P.SERIES_CARDS[:4]):
@@ -67,5 +71,10 @@ class OpeningScreen(Screen):
         yield Static(hint)
 
     def action_pick(self) -> None:
+        name = self.query_one("#name", Input).value.strip() or "천기노조"
+        self.app.state.name = name  # type: ignore[attr-defined]
         from .stage import StageScreen
         self.app.push_screen(StageScreen("죽림 산적"))
+
+    def on_input_submitted(self, _: Input.Submitted) -> None:
+        self.action_pick()

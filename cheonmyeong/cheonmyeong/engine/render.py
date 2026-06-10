@@ -7,10 +7,17 @@ import random
 from .. import theme as T
 
 R = "\x1b[0m"
+_T1 = T.tier() == 1
 
 
-def fg(c): return f"\x1b[38;2;{c[0]};{c[1]};{c[2]}m"
-def bg(c): return f"\x1b[48;2;{c[0]};{c[1]};{c[2]}m"
+def _q(c) -> int:
+    """24bit → 256색 큐브 양자화 (04 §2.1 T1 강등)."""
+    r_, g_, b_ = (round(x / 255 * 5) for x in c)
+    return 16 + 36 * r_ + 6 * g_ + b_
+
+
+def fg(c): return f"\x1b[38;5;{_q(c)}m" if _T1 else f"\x1b[38;2;{c[0]};{c[1]};{c[2]}m"
+def bg(c): return f"\x1b[48;5;{_q(c)}m" if _T1 else f"\x1b[48;2;{c[0]};{c[1]};{c[2]}m"
 
 
 # 죽림 산적 (sprite_spike 검증 그리드)

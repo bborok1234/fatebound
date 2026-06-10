@@ -9,9 +9,11 @@ from .. import theme as T
 
 R = "\x1b[0m"
 
+from .render import bg as _bg, fg as _fg
 
-def fg(c): return f"\x1b[38;2;{int(c[0])};{int(c[1])};{int(c[2])}m"
-def bg(c): return f"\x1b[48;2;{int(c[0])};{int(c[1])};{int(c[2])}m"
+
+def fg(c): return _fg(tuple(int(x) for x in c))
+def bg(c): return _bg(tuple(int(x) for x in c))
 def mix(a, b, t): return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
 
 

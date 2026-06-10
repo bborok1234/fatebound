@@ -22,7 +22,7 @@ class JournalScreen(Screen):
         e = st.journal[-1]
         t = Text()
         t.append(f" ◆ 일지 — {e['day']}일째, 죽림에서\n", style=f"bold {_c(T.INK)}")
-        t.append(f" ▸ 사냥 {e['hunts']}판 — 전승. 독 틱이 일을 다 했다\n\n", style=_c(T.DIM))
+        t.append(f" ▸ 사냥 {e['hunts']}판 — 전승. 만독발현이 일을 다 했다\n\n", style=_c(T.DIM))
         # 하이라이트 카드(큐레이션 — 최대 3)
         cards = 0
         if e["best"]:

@@ -5,6 +5,9 @@ description = "천명회귀 — 회귀한 여고수의 방치 무협 (수직 슬
 requires-python = ">=3.12"
 dependencies = ["textual>=0.80"]
 
+[dependency-groups]
+dev = ["pytest>=8"]
+
 [project.scripts]
 cheonmyeong = "cheonmyeong.app:main"
 

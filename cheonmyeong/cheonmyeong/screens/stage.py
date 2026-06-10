@@ -22,14 +22,17 @@ def ansi(s: str) -> Text:
 
 
 class StageScreen(Screen):
-    BINDINGS = [("space", "speed", "배속"), ("s", "settle", "즉시 정산"), ("enter", "done", "계속")]
+    BINDINGS = [("space", "speed", "배속"), ("enter", "settle", "즉시 정산"),
+                ("escape", "leave", "이탈"), ("a", "next_battle", "다음 판")]
 
-    def __init__(self, enemy_key: str, seed: int = 7):
+    def __init__(self, enemy_key: str, seed: int | None = None):
         super().__init__()
         self.enemy_key = enemy_key
         self.enemy = P.ENEMIES[enemy_key]
+        self.seed = seed
         self.gen = None  # on_mount에서 app.state.chain으로
         self.speed = 1
+        self._pause = 0
         self.finished = False
         self.state = dict(enemy_hp=self.enemy["hp"], poison=0.0, charge=0,
                           player_hp=P.PLAYER["hp"])
@@ -42,15 +45,16 @@ class StageScreen(Screen):
         yield Static(id="hints")
 
     def on_mount(self) -> None:
-        chain = getattr(self.app, "state", None)
-        self.gen = combat.run_battle(self.enemy_key, 7, chain=chain.chain if chain else None)
+        st = getattr(self.app, "state", None)
+        seed = self.seed if self.seed is not None else (st.seed * 1000 + st.battles_won if st else 7)
+        self.gen = combat.run_battle(self.enemy_key, seed, chain=st.chain if st else None)
         self.query_one("#log", RichLog).styles.height = "1fr"
         self.draw_hud()
         v = Text()
         v.append("  천기노조", style=f"bold {_c(T.GOLD)}")
         v.append(f" — {self.enemy['intro']}", style=_c(T.DIM))
         self.query_one("#voice", Static).update(v)
-        h = Text("  [Space]배속 ×1·×2·×4   [S]즉시 정산   (관전 — 다음에 시작하는 판부터)", style=_c(T.DIM))
+        h = Text("  [Space]배속 ×1·×2·×4   [Enter]즉시 정산   [Esc]이탈   (관전 — 다음에 시작하는 판부터)", style=_c(T.DIM))
         self.query_one("#hints", Static).update(h)
         self.timer = self.set_interval(0.22, self.tick)
 
@@ -83,8 +87,9 @@ class StageScreen(Screen):
         poi = int(st["poison"])
         nxt = " → 만독발현 다음 합" if poi >= 6 else ""
         res_col = T.AMBER if poi >= 5 else T.DIM
+        pname = getattr(getattr(self.app, "state", None), "name", "무명")
         lines.append(
-            render.fg(T.GOLD) + " 무명" + render.R + render.fg(T.DIM)
+            render.fg(T.GOLD) + f" {pname}" + render.R + render.fg(T.DIM)
             + f" (독계·삼류)  速{P.PLAYER['spd']}"
             + (" 선공" if first == "무명" else "") + "  체력 " + render.R
             + render.hp_bar(st["player_hp"], P.PLAYER["hp"], 12, (90, 140, 90))
@@ -114,6 +119,9 @@ class StageScreen(Screen):
     # ── 재생 ──
     def tick(self) -> None:
         if self.finished:
+            return
+        if self._pause > 0:
+            self._pause -= 1               # 정적 0.3s(한 박자) — 컷인 직전(01 §1)
             return
         for _ in range(self.speed):
             try:
@@ -146,14 +154,16 @@ class StageScreen(Screen):
         self.draw_hud()
 
     def cutin(self, log: RichLog, ev: combat.RoundEvent) -> None:
-        """인라인 컷인 약식(M0) — 대형 박스+계열색. 래스터 밴드는 M1에서 스파이크 이식."""
-        c = render.fg(T.AMBER)
+        """인라인 컷인(전폭 밴드 약식 — 계열색·정적 한 박자. 래스터 블룸·타이포는 본 구현)."""
+        self._pause = 2                       # 정적 ~0.3s 후 다음 합 재생
+        c = render.fg(T.POISON)
+        w = max(40, min(self.app.size.width - 8, 100))
         name = " ".join(P.SMYEONG["name"])
-        bar = "─" * (len(name) + 10)
+        pad = (w - len(name) * 2 - 6) // 2
         log.write(ansi(""))
-        log.write(ansi(f"  {c}┌{bar}┐{render.R}"))
-        log.write(ansi(f"  {c}│  ✦ {name} ✦  │{render.R}"))
-        log.write(ansi(f"  {c}└{bar}┘{render.R}"))
+        log.write(ansi("  " + c + "▄" * w + render.R))
+        log.write(ansi("  " + c + " " * pad + f"✦  {name}  ✦" + render.R))
+        log.write(ansi("  " + c + "▀" * w + render.R))
         log.write(ansi("  " + render.fg((255, 240, 200)) + f"☠ {ev.smyeong_dmg:.0f}" + render.R
                        + render.fg(T.DIM) + " — 사혈을 짚고, 쌓인 독을 한 번에." + render.R))
 
@@ -178,7 +188,7 @@ class StageScreen(Screen):
         for ln in card:
             log.write(ansi(ln))
         self.app.summary = dict(enemy=self.enemy_key, rounds=ev.round, total=total)  # type: ignore[attr-defined]
-        h = Text("  [Enter] 전선 지도로 — 강호가 열린다", style=_c(T.AMBER))
+        h = Text("  [Esc] 전선 지도로   [A] 다음 판 관전", style=_c(T.AMBER))
         self.query_one("#hints", Static).update(h)
 
     def action_speed(self) -> None:
@@ -188,7 +198,7 @@ class StageScreen(Screen):
             self.query_one("#hints", Static).update(h)
 
     def action_settle(self) -> None:
-        """즉시 정산 — 남은 합을 한 번에(관전 다이얼, 02 §2)."""
+        """[Enter] 즉시 정산 — 남은 합을 한 번에(정본 02 §2)."""
         if self.finished:
             return
         for ev in self.gen:
@@ -197,7 +207,18 @@ class StageScreen(Screen):
                 self.finish(ev)
                 return
 
-    def action_done(self) -> None:
-        if self.finished:
-            from .map import MapScreen
-            self.app.switch_screen(MapScreen())
+    def action_leave(self) -> None:
+        """[Esc] 이탈 — 전투는 정산되고 기록은 박제(무손실), 지도로."""
+        if not self.finished:
+            self.action_settle()
+        from .map import MapScreen
+        self.app.switch_screen(MapScreen())
+
+    def action_next_battle(self) -> None:
+        """[A] 다음 판 관전 — 다음에 시작하는 판부터(정본)."""
+        if not self.finished:
+            return
+        st = self.app.state  # type: ignore[attr-defined]
+        st.battles_won += 1
+        nxt = "청죽 살모사" if self.enemy_key == "죽림 산적" else "죽림 산적"
+        self.app.switch_screen(StageScreen(nxt))

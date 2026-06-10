@@ -51,7 +51,8 @@ class MapScreen(Screen):
         h = (min(self.app.size.height - 8, 24)) * 2
         self.wm = worldmap.WorldMap(w, h)
         self.refresh_map()
-        self.set_interval(0.45, self.tick_pulse)
+        self.phase = 0.0
+        self.set_interval(0.10, self.tick_pulse)
 
     @property
     def st(self):
@@ -59,7 +60,9 @@ class MapScreen(Screen):
 
     def tick_pulse(self) -> None:
         if self.st.wall_ready and self.dissolve is None:
-            self.pulse = 1.0 - self.pulse
+            import math
+            self.phase += 1.1                       # 정본: 사인 위상 1.1/f · 0.10s/f (01 §6)
+            self.pulse = 0.5 + 0.5 * math.sin(self.phase)
             self.refresh_map()
 
     def refresh_map(self) -> None:
@@ -169,6 +172,8 @@ class MapScreen(Screen):
         if self.dissolve >= 1.0:
             self._anim.stop()
             self.dissolve = None
+            if "흑풍림" not in self.st.explored:
+                self.st.explored.append("흑풍림")   # 채색 확정 — 디졸브가 끝난 뒤에
             v = (fg(T.DIM) + " 어스름이 걷힌다 — " + R + fg((150, 200, 150)) + "흑풍림" + R
                  + fg(T.DIM) + "에 색이 들었다. 검은 솔바람 너머, 다음 벽이 보인다." + R)
             self.query_one("#voice", Static).update(ansi(v))

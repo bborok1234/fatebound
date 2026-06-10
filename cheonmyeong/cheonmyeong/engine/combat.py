@@ -46,21 +46,35 @@ def run_battle(enemy_key: str, seed: int = 0, chain: list[str] | None = None):
     e_hp, e_max = e["hp"], e["hp"]
     poison = 0.0
     charge = 0
+    pending_smyeong = False                     # 충전 완료 = 예약 — 발동은 다음 합 개시(01 §3.2 정본)
     bd = {"slots": {}, "smyeong": 0.0, "dot": 0.0, "taken": 0.0}
     first = "무명" if p["spd"] >= e["spd"] else e["kind"]
 
     for rnd in range(1, 31):
         ev = RoundEvent(round=rnd, enemy_max=e_max, player_hp=int(p["hp"]))
-        amp = 1.0
-        for i, w in enumerate(moves):           # 클러스터 게이트: 인접 같은 계열만
+        # ── 예약된 성명절기 — 이 합의 첫 행동으로 발동 ──
+        if pending_smyeong:
+            dmg = max(poison, P.SMYEONG["floor"]) * P.SMYEONG["mult"] * (p["atk"] * P.OUTPUT_C)
+            e_hp -= dmg
+            bd["smyeong"] += dmg
+            poison = 0.0
+            charge = 0
+            pending_smyeong = False
+            ev.smyeong = True
+            ev.smyeong_dmg = dmg
+            ev.actions.append(Action(P.SMYEONG["name"], P.SMYEONG["name"],
+                                     f"☠ {dmg:.0f}", dmg=dmg, kind="smyeong"))
+        # 증폭: 계열별 배수(인접 같은 계열만 — rulebook_sim 모델 정합)
+        amp = {}
+        for i, w in enumerate(moves):
             if w["role"] == "amp":
                 adj = [moves[j] for j in (i - 1, i + 1) if 0 <= j < len(moves)]
                 if any(a["series"] == w["series"] for a in adj):
-                    amp += w["amp"]
+                    amp[w["series"]] = amp.get(w["series"], 1.0) + w["amp"]
         for w in moves:
             cho = rng.choice(w["chosik"])
             if w["role"] == "gen":
-                gain = w["gen"] * amp * P.SIMBEOP["mult"]
+                gain = w["gen"] * amp.get(w["series"], 1.0) * P.SIMBEOP["mult"]
                 poison += gain
                 ev.actions.append(Action(w["name"], cho, f"중독 +{gain:.0f}", kind="gen"))
             elif w["role"] == "amp":
@@ -72,23 +86,13 @@ def run_battle(enemy_key: str, seed: int = 0, chain: list[str] | None = None):
                 poison = 0.0
                 ev.actions.append(Action(w["name"], cho, f"{dmg:.0f} 방어 무시", dmg=dmg, kind="burst"))
                 ev.burst = True
-        charge += 1
-        if charge >= 6 and e_hp > 0:
-            dmg = max(poison, P.SMYEONG["floor"]) * P.SMYEONG["mult"] * (p["atk"] * P.OUTPUT_C)
-            e_hp -= dmg
-            bd["smyeong"] += dmg
-            poison = 0.0
-            charge = 0
-            ev.smyeong = True
-            ev.smyeong_dmg = dmg
-            ev.actions.append(Action(P.SMYEONG["name"], P.SMYEONG["name"],
-                                     f"☠ {dmg:.0f}", dmg=dmg, kind="smyeong"))
-        # 독 틱(잔여 스택 비례 — 방어무시)
-        if poison > 0:
-            tick = poison * P.POISON_PER_STACK + e_max * P.POISON_HP_PCT
-            e_hp -= tick
-            bd["dot"] += tick
-            ev.actions.append(Action("중독", "독이 돈다", f"틱 {tick:.0f}", dmg=tick, kind="dot"))
+        # 충전: 6 도달 = 충전 완료(예약·充 점멸) — 발동은 다음 합 개시
+        if charge < 6:
+            charge += 1
+        if charge >= 6 and not pending_smyeong and e_hp > 0:
+            charge = 6
+            pending_smyeong = True
+        # (정종 독: 중독은 만독발현이 소비하는 자원 — standing DoT 아님, rulebook_sim 정합)
         ev.poison = poison
         ev.charge = charge
         ev.enemy_hp = max(0, int(e_hp))
