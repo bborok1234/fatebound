@@ -168,7 +168,7 @@ class StageScreen(Screen):
         for ln in card:
             log.write(ansi(ln))
         self.app.summary = dict(enemy=self.enemy_key, rounds=ev.round, total=total)  # type: ignore[attr-defined]
-        h = Text("  [Enter] 계속 (M0 끝 — M1에서 전선 지도로 이어집니다)", style=_c(T.AMBER))
+        h = Text("  [Enter] 전선 지도로 — 강호가 열린다", style=_c(T.AMBER))
         self.query_one("#hints", Static).update(h)
 
     def action_speed(self) -> None:
@@ -189,4 +189,5 @@ class StageScreen(Screen):
 
     def action_done(self) -> None:
         if self.finished:
-            self.app.exit()
+            from .map import MapScreen
+            self.app.switch_screen(MapScreen())

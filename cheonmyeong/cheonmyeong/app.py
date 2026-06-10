@@ -4,6 +4,7 @@ from __future__ import annotations
 from textual.app import App
 
 from . import theme as T
+from .engine.state import GameState
 from .screens.opening import OpeningScreen
 
 
@@ -16,6 +17,10 @@ class Cheonmyeong(App):
     """
     TITLE = "천명회귀"
     summary: dict | None = None
+
+    def __init__(self):
+        super().__init__()
+        self.state = GameState()
 
     def on_mount(self) -> None:
         self.push_screen(OpeningScreen())
@@ -31,9 +36,12 @@ def main() -> None:
     G = f"\x1b[38;2;{T.GOLD[0]};{T.GOLD[1]};{T.GOLD[2]}m"
     R = "\x1b[0m"
     if s:
+        st = app.state
+        front = "죽림·흑풍림" if "흑풍림" in st.explored else "죽림"
+        nxt = "일류(한천비곡 길목)" if "흑풍림" in st.explored else "이류의 벽"
         print(f"{D} ┌─ 강호행 기록 ──────────────────────────────┐{R}")
-        print(f"{D} │ {I}회귀 첫 사냥 — {s['enemy']} 승리 · {s['rounds']}합{D}            │{R}")
-        print(f"{D} │ 피해 {s['total']:.0f} · 독계 사슬이 제값을 했다{D}              │{R}")
+        print(f"{D} │ {I}{st.day-1}일의 강호행 — {st.gyeongji} {st.star}성 · 전투 {st.battles_won}승{D}        │{R}")
+        print(f"{D} │ 전선: {G}{front}{R}{D} / 다음 벽: {nxt}{D}              │{R}")
         print(f"{D} │ {G}천기노조{R}{D} — 몸은 풋내기여도 독은 늙지 않았다.   │{R}")
         print(f"{D} └────────────────────────────────────────────┘{R}")
     else:
